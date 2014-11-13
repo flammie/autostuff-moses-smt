@@ -197,7 +197,7 @@ AC_SUBST([SED], [$ac_cv_path_SED])
 
 
 # 
-AC_CONFIG_FILES([Makefile hren/Makefile fin-eng/Makefile \
+AC_CONFIG_FILES([Makefile fin-eng/Makefile \
                  build-lm-makeable.sh],
                 [chmod +x build-lm-makeable.sh])
 AS_IF([test x$with_pbs_mail != xno],
