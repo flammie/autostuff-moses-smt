@@ -1,0 +1,48 @@
+## Include this to get downloads and preprocessing for europarls as corpus
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+europarl.tgz:
+	$(WGET) http://www.statmt.org/europarl/v7/europarl.tgz
+
+tools.tgz:
+	$(WGET) http://www.statmt.org/europarl/v7/tools.tgz
+
+europarl-v7.$(L1)-$(L2).dupes.aligned: europarl.tgz tools.tgz
+	if ! test -d europarl ; then\
+		mkdir europarl ;\
+	fi
+	tar zxf europarl.tgz -C europarl
+	tar zxf tools.tgz -C europarl
+	europarl/sentence-align-corpus.perl $(L1) $(L2)
+	mv europarl/aligned $@
+
+europarl-v7.$(L1)-$(L2).dupes.pasted: europarl-v7.$(L1)-$(L2).dupes.aligned
+	for f in `find $</$(L1)-$(L2)/$(L1) -type f` ; do\
+		paste $$f `echo $$f | $(SED) -e 's:/$(L1)/:/$(L2)/:'` ;\
+	done > $@
+
+europarl-v7.$(L1)-$(L2).uniq.paste: europarl-v7.$(L1)-$(L2).dupes.pasted
+	sort < $< > $@
+
+%.$(L1)-$(L2).$(L1).text: %.$(L1)-$(L2).uniq.paste
+	cut -f 1 < $< > $@
+
+%.$(L1)-$(L2).$(L2).text: %.$(L1)-$(L2).uniq.paste
+	cut -f 2 < $< > $@
+
+# vim: set ft=automake:

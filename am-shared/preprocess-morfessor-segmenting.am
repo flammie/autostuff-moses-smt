@@ -1,0 +1,171 @@
+## Include this to automake project to get preprocessing and post-processing
+## recipes for unsupervised morphological segmentation and joining.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is language code for morphologically simple language
+# L2 is language code for morphologically complex language
+# MORFESSOR_L2 is filename for morfessor binary for segmenting
+# FLATCAT_L2 is filename for flatcat binary for segmenting
+
+
+segments: $(SEGMENTS)
+
+# plain segments
+%.$(L2).morfessed: %.tok.$(L2) $(MORFESSOR_L2)
+	$(MORFESSOR_SEGMENT) -l $(MORFESSOR_L2)  $<  > $@
+
+# special markers in segment boundaries
+%.morfessor.1best.morfs.$(L2): %.tok.$(L2) $(MORFESSOR_L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
+		-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
+	$(MORFESSOR) -l $(MORFESSOR_L2) \
+		--output-format-separator '>>> <<<' \
+		--output-newlines \
+		--output-format '{analysis} ' -T $<.nosp |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
+		-e 's/^[↩→← ]\+$$//' > $@
+
+%.flatcat.1best.morfs.$(L2): %.tok.$(L2) $(FLATCAT_L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
+		-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
+	$(MORFESSOR_FLATCAT_SEGMENT) $(FLATCAT_L2) -S $(FLATCAT_L2).ini \
+		--category-separator '//////' \
+		--remove-nonmorphemes \
+		--output-construction-separator '>>> <<<' \
+		--output-newlines \
+		--output-format '{analysis} ' $<.nosp -o - |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
+		-e 's/^[↩→← ]\+$$//' > $@
+
+# n-best segments
+%.morfessed.5best.$(L2): %.tok.$(L2) $(MORFESSOR_L2)
+	$(IRSTLM_ADD_START_END) < $< |\
+		$(MORFESSOR) -l $(MORFESSOR_L2) \
+		--output-format-separator '>>> <<<' \
+		--output-format '{compound}\t{analysis}\t{logprob}\n' \
+		--nbest 5 -T - |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' > $@
+
+%.flatcats.5best.$(L2): %.tok.$(L2) $(FLATCAT_L2)
+	$(IRSTLM_ADD_START_END) < $< |\
+		$(MORFESSOR_FLATCAT) -l $(FLATCAT_L2) \
+		--category-separator '//////' \
+		--remove-nonmorphemes \
+		--output-construction-separator '>>> <<<' \
+		--output-format '{compound}\t{analysis}\t{logprob}\n' \
+		--nbest 5 - -o - |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' > $@
+
+# Python lattice format
+%.morfessor.5best.plf.$(L2): %.morfessed.5best.$(L2)
+	$(PYTHON) @abs_top_builddir@/morfessor2plf.py --nbest 5 --input-format-separator '→ ←' \
+		< $< > $@
+
+%.flatcat.5best.plf.$(L2): %.flatcats.5best.$(L2)
+	$(PYTHON) @abs_top_builddir@/morfessor2plf.py --nbest 5 --input-format-separator '→ ←' \
+		< $< > $@
+
+# data scaling
+%.morfessor-half.1best.morfs.$(L2): %.tok.$(L2) $(MORFESSOR_HALF_L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
+		-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
+	$(MORFESSOR) -l $(MORFESSOR_HALF_L2) \
+		--output-format-separator '>>> <<<' \
+		--output-newlines \
+		--output-format '{analysis} ' -T $<.nosp |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
+		-e 's/^[↩→← ]\+$$//'> $@
+
+%.morfessor-quarter.1best.morfs.$(L2): %.tok.$(L2) $(MORFESSOR_QUARTER_L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
+	-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
+	$(MORFESSOR) -l $(MORFESSOR_QUARTER_L2) \
+		--output-format-separator '>>> <<<' \
+		--output-newlines \
+		--output-format '{analysis} ' -T $<.nosp |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
+		-e 's/^[↩→← ]\+$$//'> $@
+
+%.morfessor-eighth.1best.morfs.$(L2): %.tok.$(L2) $(MORFESSOR_EIGHTH_L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
+		-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
+	$(MORFESSOR) -l $(MORFESSOR_EIGHTH_L2) \
+		--output-format-separator '>>> <<<' \
+		--output-newlines \
+		--output-format '{analysis} ' -T $<.nosp |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
+		-e 's/^[↩→← ]\+$$//'> $@
+
+# To make prefix rules work, we need to create matching L1 file names by copying
+%.morfessor.1best.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.nomarkers.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.spaceplusspace.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.suffixmarkered.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.unsplit2.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.unsplit5.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor-half.1best.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor-quarter.1best.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor-eighth.1best.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.flatcat.1best.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.flatcat.1best.unsplit2.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+%.flatcat.1best.unsplit5.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+
+# baseline desegmentation:  join matching segments, delete rest
+%.suffixmarkered.$(TRANSLATION_L1_L2): %.suffixmarkered.$(TRANSLATION_L1_SEGMENTED_L2)
+	$(SED) -e 's/ ←//g' \
+		-e 's/[→←]//g' < $< > $@
+
+%.spaceplusspace.$(TRANSLATION_L1_L2): %.spaceplusspace.$(TRANSLATION_L1_SEGMENTED_L2)
+	$(SED) -e 's/ + //g' \
+		-e 's/[→←]//g' < $< > $@
+
+%.$(TRANSLATION_L1_L2): %.$(TRANSLATION_L1_SEGMENTED_L2)
+	$(SED) -e 's/→ ←//g' \
+		-e 's/[[:space:]]*←[^[:space:].,?!()"]*//g' \
+		-e 's/[^[:space:].,?!()"]*→[[:space:]]*//g' \
+		-e 's/[→←]//g' < $< > $@
+
+# vim: set ft=automake:

@@ -1,0 +1,79 @@
+## Include this to your automake project to translate protected segments
+## as full.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is the language code for the morphologically poor language
+# L2 is the language code for the morphologically rich language
+# TRANSLATION_L2_L1 is the suffix for translation file from L2 to L1
+# MORFESSOR_5RARE_INFIX is filename segment identifying morfessor model
+#       translation for word-forms that are rarer than 5 and baseline for others
+# MORFESSOR_2RARE_INFIX is the same for unique word-forms
+# MOSES_MORFESSOR1BEST_L2_L1 is the file with the timestamp of the morfessor
+#       ranslation model from L2 to L1
+# MOSES_MORFESSOR1BEST_L2_L1_DIR is the directory for morfessor moses model
+#       containing moses.ini among others.
+# replace MORFESSOR with FLATCAT to add FLATCAT stuffs
+
+# from simple to complex as usual
+%.$(MORFESSOR_5RARE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.tok.$(L1) $(MOSES_MORFESSOR5RARE_L1_L2)
+	$(MOSES) -f $(MOSES_MORFESSOR5RARE_L1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(MORFESSOR_2RARE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.tok.$(L1) $(MOSES_MORFESSOR2RARE_L1_L2)
+	$(MOSES) -f $(MOSES_MORFESSOR2RARE_L1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(FLATCAT_5RARE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.tok.$(L1) $(MOSES_FLATCAT5RARE_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT5RARE_L1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(FLATCAT_2RARE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.tok.$(L1) $(MOSES_FLATCAT2RARE_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT2RARE_L1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+
+
+# leaving common segments unsegmented, translate common words as full, always
+%.$(MORFESSOR_5RARE_INFIX).$(TRANSLATION_L2_L1): %.morfessor.1best.unsplit5.tok.$(L2) $(MOSES_MORFESSOR5RARE_L2_L1)
+	$(MOSES) -f $(MOSES_MORFESSOR5RARE_L2_L1_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) |\
+		$(SED) -e 's/[→←↝↜]//g'> $@
+
+%.$(MORFESSOR_2RARE_INFIX).$(TRANSLATION_L2_L1): %.morfessor.1best.unsplit2.tok.$(L2) $(MOSES_MORFESSOR2RARE_L2_L1)
+		$(MOSES) -f $(MOSES_MORFESSOR2RARE_L2_L1_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) |\
+		$(SED) -e 's/[→←↝↜]//g'> $@
+
+%.$(FLATCAT_5RARE_INFIX).$(TRANSLATION_L2_L1): %.flatcat.1best.unsplit5.tok.$(L2) $(MOSES_FLATCAT5RARE_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT5RARE_L2_L1_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) |\
+		$(SED) -e 's/[→←↝↜]//g'> $@
+
+%.$(FLATCAT_2RARE_INFIX).$(TRANSLATION_L2_L1): %.flatcat.1best.unsplit2.tok.$(L2) $(MOSES_FLATCAT2RARE_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT2RARE_L2_L1_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) |\
+		$(SED) -e 's/[→←↝↜]//g'> $@
+
+# vim: set ft=automake:

@@ -1,0 +1,58 @@
+## Include to automake to add preprocessing for protectign common word-forms
+## from segmentation
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L2 is language code for morphologically complex language
+
+# find rare words
+$(BASELINE_CORPUS).rarer5.$(L2): $(BASELINE_CORPUS).tok.$(L2)
+	tr ' ' '\n' < $< |\
+		fgrep -v '/' |\
+		sort |\
+		uniq -c |\
+		$(AWK) '$$1 > 5 {print($$2);}' > $@
+
+$(BASELINE_CORPUS).rarer2.$(L2): $(BASELINE_CORPUS).tok.$(L2)
+	tr ' ' '\n' < $< |\
+		fgrep -v '/' |\
+		sort |\
+		uniq -c |\
+		$(AWK) '$$1 > 2 {print($$2);}' > $@
+
+%.protect5.tok.$(L2): %.tok.$(L2) $(BASELINE_CORPUS).rarer5.$(L2)
+	while read r ; do \
+		echo "s/^$$r /↝$$r↜ /" >> $*.protect5.sed ;\
+		echo "s/ $$r$$/ ↝$$r↜/" >> $*.protect5.sed ;\
+		echo "s/ $r / ↝$r↜ /g" >> $*.protect5.sed ;\
+	done < $(BASELINE_CORPUS).rarer5.$(L2)
+	$(SED) -f $*.protect5.sed < $*.tok.$(L2) > $@
+
+%.protect2.tok.$(L2): %.tok.$(L2) $(BASELINE_CORPUS).rarer2.$(L2)
+	while read r ; do \
+		echo "s/^$$r /↝$$r↜ /" >> $*.protect2.sed ;\
+		echo "s/ $$r$$/ ↝$$r↜/" >> $*.protect2.sed ;\
+		echo "s/ $r / ↝$r↜ /g" >> $*.protect2.sed ;\
+	done < $(BASELINE_CORPUS).rarer2.$(L2)
+	$(SED) -f $*.protect2.sed < $*.tok.$(L2) > $@
+
+%.unsplit5.tok.$(L2): %.protect5.tok.$(L2) unsplit-protected.awk
+	$(AWK) -f unsplit-protected.awk < $< > $@
+
+%.unsplit2.tok.$(L2): %.protect2.tok.$(L2) unsplit-protected.awk
+	$(AWK) -f unsplit-protected.awk < $< > $@
+
+# vim: set ft=automake:

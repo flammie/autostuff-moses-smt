@@ -1,0 +1,56 @@
+## Include in your automake project to create fake sgml's for mt evaluating
+## scripts.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is the language code of morphologically simple language
+# L2 is the language code of morphologically complex language
+
+# SGML wrapping for others
+%.src.$(L1).sgml: %.$(L1).text
+	$(WRAP_XML) src $(L1) $(L2) $< | grep -v "<seg id[^>]*></seg>" > $@
+
+%.src.$(L2).sgml: %.$(L2).text
+	$(WRAP_XML) src $(L2) $(L1) $< | grep -v "<seg id[^>]*></seg>" > $@
+
+%.ref.$(L1).sgml: %.$(L1).text
+	$(WRAP_XML) ref $(L2) $(L1) $< | grep -v "<seg id[^>]*></seg>" > $@
+
+%.ref.$(L2).sgml: %.$(L2).text
+	$(WRAP_XML) ref $(L1) $(L2) $< | grep -v "<seg id[^>]*></seg>" > $@
+
+%.translated.$(L1).sgml: %.translated.$(L1)
+	$(WRAP_XML) tst $(L2) $(L1) $< | grep -v "<seg id[^>]*></seg>" > $@
+
+%.translated.$(L2).sgml: %.translated.$(L2)
+	$(WRAP_XML) tst $(L1) $(L2) $< | grep -v "<seg id[^>]*></seg>" > $@
+
+# vim: set ft=automake:

@@ -1,0 +1,46 @@
+## Include to automake to create pretty tables from raw evaluation
+## output
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+%.row.$(L1): %.nistbleu.$(L1) %.ter.$(L1) %.meteor.$(L1) %.oov.$(L2)
+	fgrep "NIST score" < $*.nistbleu.$(L1) |\
+		$(SED) -e 's/.*BLEU score = //' -e 's/for system .*//' > $*.1
+	fgrep "Total TER" < $*.ter.$(L1) |\
+		$(SED) -e 's/Total TER: //' -e 's/(.*//' > $*.2
+	fgrep "Final score:" < $*.meteor.$(L1) |\
+		$(SED) -e 's/Final score: *//' > $*.3
+	fgrep "OOV 1-gram tok" < $*.oov.$(L2) |\
+		$(SED) -e 's/.*tokens[[:space:]]*[[:digit:]]*[[:space:]]*//' > $*.4
+	echo $* > $*.0
+	paste $*.0 $*.1 $*.2 $*.3 $*.4 > $@
+
+%.row.$(L2): %.nistbleu.$(L2) %.ter.$(L2) %.meteor.$(L2) %.oov.$(L1)
+	fgrep "NIST score" < $*.nistbleu.$(L2) |\
+		$(SED) -e 's/.*BLEU score = //' -e 's/for system .*//' > $*.1
+	fgrep "Total TER" < $*.ter.$(L2) |\
+		$(SED) -e 's/Total TER: //' -e 's/(.*//' > $*.2
+	fgrep "Final score:" < $*.meteor.$(L2) |\
+		$(SED) -e 's/Final score: *//' > $*.3
+	fgrep "OOV 1-gram tok" < $*.oov.$(L1) |\
+		$(SED) -e 's/.*tokens[[:space:]]*[[:digit:]]*[[:space:]]*//' > $*.4
+	echo $* > $*.0
+	paste $*.0 $*.1 $*.2 $*.3 $*.4 > $@
+
+%.rows: %.$(L1)-$(L2).row.$(L2) %.$(L2)-$(L1).row.$(L1)
+	paste $*.$(L1)-$(L2).row.$(L2) $*.$(L2)-$(L1).row.$(L1) > $@
+
+# vim: set ft=automake:

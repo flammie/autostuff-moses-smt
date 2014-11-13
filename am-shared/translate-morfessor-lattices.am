@@ -1,0 +1,41 @@
+## Include this file to your automake project to translate morfessor n-best
+## lattices.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is the language code of the morphologically poor language
+# L2 is the language code of the morphologically rich language
+# MORFESSOR_5BEST_INFIX is the file name fragment identifying 5 best lattice
+#       translation results
+# MOSES_MORFESSOR1BEST_L2_L1 is the file name with time stamp of morfessor
+#       translation model from L2 to L1
+# MOSES_MORFESSOR1BEST_L2_L1 is the directory with moses translation model for
+#       morfessor from L2 to L1 including moses.ini among others
+# replace MORFESSOR with FLATCAT for flatcat segmentations
+
+%.$(MORFESSOR_5BEST_INFIX).$(TRANSLATION_L2_L1): %.morfessor.5best.plf.$(L2) $(MOSES_MORFESSOR1BEST_L2_L1)
+	$(MOSES) -f $(MOSES_MORFESSOR1BEST_L2_L1_DIR)/model/moses.ini -inputtype 2 < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) |\
+		$(SED) -e 's/[→←↝↜]//g' > $@
+
+%.$(FLATCAT_5BEST_INFIX).$(TRANSLATION_L2_L1): %.flatcat.5best.plf.$(L2) $(MOSES_FLATCAT1BEST_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_L2_L1_DIR)/model/moses.ini -inputtype 2 < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) |\
+		$(SED) -e 's/[→←↝↜]//g' > $@
+
+# vim: set ft=automake:

@@ -1,0 +1,177 @@
+## Include this to your automake project to count oovs.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# MOSES_BASELINE_PREFIX is the filename part for moses baseline pre-processing
+# MORFESSORS_BASELINE_PREFIX is the same for morfessor
+# MOSES_BASELINE_INFIX is the filename part for moses baseline translations
+# MORFESSOR_BASELINE_INFIX is the same for morfessor baseline
+# MORFESSOR_..._INFIX is the same for morfessor ...
+# APERTIUM_BASELINE_INFIX is the same for apertium translations
+# replace MORFESSOR with FLATCAT for flatcats
+# OOV_L1_L2 is the suffix for oov analysis from L1
+# OOV_L2_L1 is the suffix for oov analysis from L2
+
+# MOSES_OOV
+%.$(MOSES_BASELINE_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_BASELINE_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_BASELINE_PREFIX).tok.$(L1) > $@
+
+%.$(MOSES_TUNED_INFIX).$(OOV_L1_L2): %.$(MOSES_BASELINE_INFIX).$(OOV_L1_L2)
+	cp -v $< $@
+
+%.$(MOSES_HALF_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_HALF_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_HALF_PREFIX).tok.$(L1) > $@
+
+%.$(MOSES_SAMPLE_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_SAMPLE_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_SAMPLE_PREFIX).tok.$(L1) > $@
+
+%.$(MOSES_QUARTER_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_QUARTER_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_QUARTER_PREFIX).tok.$(L1) > $@
+
+%.$(MOSES_EIGHTH_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_EIGHTH_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_EIGHTH_PREFIX).tok.$(L1) > $@
+
+%.$(MORFESSOR_BASELINE_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L1) > $@
+
+%.$(MORFESSOR_NOMARKERS_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L1) > $@
+
+%.$(MORFESSOR_PLUS_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L1) > $@
+
+%.$(MORFESSOR_SUFFIX_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L1) > $@
+
+
+%.$(MORFESSOR_TUNED_INFIX).$(OOV_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L1_L2)
+	cp -v $< $@
+
+%.$(MORFESSOR_5RARE_INFIX).$(OOV_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L1_L2)
+	cp -v $< $@
+
+%.$(MORFESSOR_2RARE_INFIX).$(OOV_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L1_L2)
+	cp -v $< $@
+
+%.$(MORFESSOR_HALF_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_HALF_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_HALF_PREFIX).tok.$(L1) > $@
+
+%.$(MORFESSOR_QUARTER_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_QUARTER_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_QUARTER_PREFIX).tok.$(L1) > $@
+
+%.$(MORFESSOR_EIGHTH_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_EIGHTH_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_EIGHTH_PREFIX).tok.$(L1) > $@
+
+%.$(MORFESSOR_SAMPLE_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_SAMPLE_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_SAMPLE_PREFIX).tok.$(L1) > $@
+
+%.$(FLATCAT_BASELINE_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_FLATCAT1BEST_PREFIX).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_FLATCAT1BEST_PREFIX).tok.$(L1) > $@
+
+%.$(FLATCAT_TUNED_INFIX).$(OOV_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(OOV_L1_L2)
+	cp -v $< $@
+
+%.$(FLATCAT_5RARE_INFIX).$(OOV_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(OOV_L1_L2)
+	cp -v $< $@
+
+%.$(FLATCAT_2RARE_INFIX).$(OOV_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(OOV_L1_L2)
+	cp -v $< $@
+
+
+%.$(MOSES_BASELINE_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_BASELINE_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_BASELINE_PREFIX).tok.$(L2) > $@
+
+%.$(MOSES_TUNED_INFIX).$(OOV_L2_L1): %.$(MOSES_BASELINE_INFIX).$(OOV_L2_L1)
+	cp -v $< $@
+
+%.$(MOSES_HALF_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HALF_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_HALF_PREFIX).tok.$(L2) > $@
+
+%.$(MOSES_QUARTER_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_QUARTER_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_QUARTER_PREFIX).tok.$(L2) > $@
+
+%.$(MOSES_EIGHTH_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_EIGHTH_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_EIGHTH_PREFIX).tok.$(L2) > $@
+
+%.$(MOSES_SAMPLE_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_SAMPLE_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_SAMPLE_PREFIX).tok.$(L2) > $@
+
+%.$(MORFESSOR_BASELINE_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L2) > $@
+
+%.$(MORFESSOR_NOMARKERS_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).tok.$(L2) > $@
+
+%.$(MORFESSOR_PLUS_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).tok.$(L2) > $@
+
+%.$(MORFESSOR_SUFFIX_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).tok.$(L2) > $@
+
+%.$(MORFESSOR_TUNED_INFIX).$(OOV_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L2_L1)
+	cp -v $< $@
+
+%.$(MORFESSOR_2RARE_INFIX).$(OOV_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L2_L1)
+	cp -v $< $@
+
+%.$(MORFESSOR_5RARE_INFIX).$(OOV_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L2_L1)
+	cp -v $< $@
+
+%.$(MORFESSOR_HALF_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_HALF_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_HALF_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_HALF_PREFIX).tok.$(L2) > $@
+
+%.$(MORFESSOR_QUARTER_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_QUARTER_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_QUARTER_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_QUARTER_PREFIX).tok.$(L2) > $@
+
+%.$(MORFESSOR_EIGHTH_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_EIGHTH_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_EIGHTH_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_EIGHTH_PREFIX).tok.$(L2) > $@
+
+%.$(MORFESSOR_SAMPLE_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_SAMPLE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_SAMPLE_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_SAMPLE_PREFIX).tok.$(L2) > $@
+
+%.$(FLATCAT_BASELINE_INFIX).$(OOV_L2_L1): %.$(FLATCAT_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_FLATCAT1BEST_PREFIX).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_FLATCAT1BEST_PREFIX).tok.$(L2) > $@
+
+
+%.$(FLATCAT_2RARE_INFIX).$(OOV_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(OOV_L2_L1)
+	cp -v $< $@
+
+%.$(FLATCAT_5RARE_INFIX).$(OOV_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(OOV_L2_L1)
+	cp -v $< $@
+
+%.$(FLATCAT_TUNED_INFIX).$(OOV_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(OOV_L2_L1)
+	cp -v $< $@
+
+# APE OOV
+%.$(APERTIUM_BASELINE_INFIX).$(OOV_L1_L2): %.$(L1).text 
+	$(APERTIUM_DESTXT) < $< |\
+		$(APERTIUM) $(L1_)-$(L2__) > $*.apetags
+	fgrep -c '*' < $*.apetags > $*.oova
+	fgrep -c '@' < $*.apetags > $*.oovb
+	wc -w < $*.apetags > $*.oovw
+	echo scale=2\; 100 \* \(`cat $*.oova` + `cat $*.oovb`\) / `cat $*.oovw` |\
+		bc > $@
+
+%.$(APERTIUM_BASELINE_INFIX).$(OOV_L2_L1): %.$(L2).text 
+	$(APERTIUM_DESTXT) < $< |\
+		$(APERTIUM) $(L2_)-$(L1_) > $*.apetags
+	fgrep -c '*' < $*.apetags > $*.oova
+	fgrep -c '@' < $*.apetags > $*.oovb
+	wc -w < $*.apetags > $*.oovw
+	echo scale=2\; 100 \* \(`cat $*.oova` + `cat $*.oovb`\) / `cat $*.oovw` |\
+		bc > $@
+
+# vim: set ft=automake:

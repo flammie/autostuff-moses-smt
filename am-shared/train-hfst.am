@@ -1,0 +1,88 @@
+## Include this file to automake project to train moses models with HFST
+## morph weights.
+
+
+
+# FST train
+%.tropical: %.freqs %.words tropicalize-uniq-c-add-smoothing.awk
+	awk -f tropicalize-uniq-c-add-smoothing.awk \
+		--assign=CS=`wc -l < $*.words` --assign=LS=`wc -l < $*.freqs` \
+		< $*.freqs > $@
+
+%.hfst: %.tropical
+	hfst-strings2fst -j -f openfst $< -o $@
+
+# FIXME: ideal would be to calc weight from training data e.g.
+# alpha / |CORPUS| + alpha * |DICTIONARY|
+%.wordseparator.hfst: %.freqs %.words
+	echo -e " \t17.09" | hfst-strings2fst -f openfst -o $@
+
+%.compoundloop.hfst: %.hfst %.wordseparator.hfst
+	hfst-concatenate $*.wordseparator.hfst $*.hfst |\
+		hfst-minimize |\
+		hfst-repeat -f 0 |\
+		hfst-minimize -o $@
+
+%.weights.hfst: %.hfst %.compoundloop.hfst
+	hfst-concatenate $*.hfst $*.compoundloop.hfst |\
+		hfst-minimize -o $@
+
+# FIXME replace this with real calculation too
+%.$(L2).unseen.hfst: %.$(L2).freqs %.$(L2).words $(HFST_L2_COMPOUNDS_UNWEIGHTED)
+	hfst-reweight -S " " -a 34.18 $(HFST_L2_COMPOUNDS_UNWEIGHTED) |\
+		hfst-reweight -e -a 17.09 - |\
+		hfst-minimize -o $@
+
+%.$(L2).weighted.hfst: %.$(L2).weights.hfst %.$(L2).unseen.hfst $(HFST_L2_COMPOUNDS_UNWEIGHTED)
+	hfst-compose -F $(HFST_L2_COMPOUNDS_UNWEIGHTED) $*.$(L2).weights.hfst|\
+		hfst-minimize |\
+		hfst-disjunct $*.$(L2).unseen.hfst |\
+		hfst-substitute -f ' ' -t '→ ←' |\
+		hfst-fst2fst -f olw -o $@
+
+# morph count for morph segment model
+%.$(L2).morphs: %.morfessed.text.$(L2)
+	tr -s ' ' '\n' < $< > $@
+
+%.morphfreqs: %.morphs
+	sort < $< | uniq -c | sort -nr > $@
+
+%.morphtropical: %.morphfreqs %.morphs  tropicalize-uniq-c-add-smoothing.awk
+	awk -f tropicalize-uniq-c-add-smoothing.awk \
+		--assign=CS=`wc -l < $*.morphs` --assign=LS=`wc -l < $*.morphfreqs` \
+		< $*.morphfreqs > $@
+
+%.morphfst: %.morphtropical
+	hfst-strings2fst -j -f openfst $< -o $@
+
+# FIXME: ideal would be to calc weight from training data e.g.
+# alpha / |CORPUS| + alpha * |DICTIONARY|
+%.morphseparator.hfst: %.morphfreqs %.morphs
+	echo -e " \t17.09" | hfst-strings2fst -f openfst -o $@
+
+%.morphloop.hfst: %.morphfst %.morphseparator.hfst
+	hfst-concatenate $*.morphseparator.hfst $*.hfst |\
+		hfst-minimize |\
+		hfst-repeat -f 0 |\
+		hfst-minimize -o $@
+
+%.morphweights.hfst: %.hfst %.morphloop.hfst
+	hfst-concatenate $*.hfst $*.morphloop.hfst |\
+		hfst-minimize -o $@
+
+# FIXME replace this with real calculation too
+%.$(L2).unseenmorphs.hfst: %.$(L2).morphfreqs %.$(L2).morphs $(HFST_L2_MORPHS_UNWEIGHTED)
+	hfst-reweight -S " " -a 54.18 $(HFST_L2_MORPHS_UNWEIGHTED) |\
+		hfst-reweight -e -a 27.09 - |\
+		hfst-minimize -o $@
+
+%.$(L2).morphweighted.hfst: %.$(L2).morphweights.hfst %.$(L2).unseenmorphs.hfst $(HFST_L2_MORPHS_UNWEIGHTED)
+	hfst-compose -F $(HFST_L2_MORPHS_UNWEIGHTED) $*.$(L2).morphweights.hfst|\
+		hfst-minimize |\
+		hfst-disjunct $*.$(L2).unseenmorphs.hfst |\
+		hfst-substitute -f ' ' -t '→ ←' |\
+		hfst-fst2fst -f olw -o $@
+
+
+
+# vim: set ft=automake:

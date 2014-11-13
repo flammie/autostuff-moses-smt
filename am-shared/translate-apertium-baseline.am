@@ -1,0 +1,39 @@
+## Include this file to automake project to have apertium baseline translation.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is language code for morphologically simpler language
+# L2 is language code for morphologically complex language
+# APERTIUM_BASELINE_INFIX is file name part identifying apertium translation
+# TRANSLATION_L1_L2 is file name part identifying translation from L1 to L2
+# TRANSLATION_L2_L1 is the same from L2 to L1
+# APERTIUM_L1_L2 is the name of an installed apertium mode for translation L1→L2
+# APERTIUM_L2_L1 is the same from L2 to L1
+
+# baseline apertium translation
+%.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L1_L2): %.$(L1).text 
+	$(APERTIUM_DESTXT) < $< |\
+		$(APERTIUM) $(APERTIUM_L1_L2) |\
+		tr -d '*#@' |\
+		$(APERTIUM_RETXT) > $@
+
+%.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.$(L2).text 
+	$(APERTIUM_DESTXT) < $< |\
+		$(APERTIUM) $(APERTIUM_L2_L1) |\
+		tr -d '*#@' |\
+		$(APERTIUM_RETXT) > $@
+
+# vim: set ft=automake:
