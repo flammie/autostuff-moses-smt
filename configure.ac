@@ -173,8 +173,6 @@ AC_PATH_PROG([APERTIUM_RETXT], [apertium-retxt], [cat])
 AM_CONDITIONAL([CAN_APERTIUM], [test x$APERTIUM != xfalse -a x$with_apertium != xno])
 PKG_CHECK_MODULES([APERTIUM_FIN_ENG], [apertium-fin-eng],, 
                   [AC_MSG_WARN([pkg-config did not find fin-eng make sure apertium command does])])
-PKG_CHECK_MODULES([APERTIUM_HBS_ENG], [apertium-hbs-eng],, 
-                  [AC_MSG_WARN([pkg-config did not find hbs-eng make sure apertium command does])])
 
 # HFST
 PKG_CHECK_MODULES([OMORFI], [omorfi], 
@@ -194,16 +192,12 @@ AC_SUBST([SED], [$ac_cv_path_SED])
 
 
 # 
-AC_CONFIG_FILES([Makefile hren/Makefile fin-eng/Makefile hin-eng/Makefile \
-		 fin-spa/Makefile \
+AC_CONFIG_FILES([Makefile hren/Makefile fin-eng/Makefile \
                  build-lm-makeable.sh],
                 [chmod +x build-lm-makeable.sh])
 AS_IF([test x$with_pbs_mail != xno],
       [AC_CONFIG_FILES([morph-segments-all.pbs
-       hren/morph-segments-hren.pbs
        fin-eng/morph-segments-fin-eng.pbs
-       fin-spa/baseline-fin-spa.pbs
-       hin-eng/morph-segments-hin-eng.pbs
        ])])
 
 AC_OUTPUT
@@ -227,7 +221,6 @@ cat <<EOF
     * fin / omorfi: $OMORFI_PREFIX
   * RBMT / apertium: $APERTIUM
     * fin-eng: $APERTIUM_FIN_ENG
-    * hbs-eng: $APERTIUM_HBS_ENG
   Eval:
   * wrap-xml: $WRAP_XML
   * nist-bleu: $NIST_BLEU13A

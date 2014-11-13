@@ -3,20 +3,8 @@
 ## This is Makefile for abumatran SMT morphs compounds stuff
 ## run make to reproduce.
 
-SUBDIRS=hren fin-eng
+SUBDIRS=fin-eng
 .PHONY: paper
-
-GRAPHICX=alignments.pdf
-PAPER=
-if CAN_LATEX
-PAPER+=morph-segments.pdf
-endif
-
-# clean tex intermediates
-CLEANFILES=$(PAPER) \
-			morph-segments.aux morph-segments.log morph-segments.blg
-
-noinst_DATA=$(PAPER) $(GRAPHICX)
 
 # {{{ paper
 paper: $(PAPER)
