@@ -1,8 +1,5 @@
 #!/bin/bash -l
 
-#SBATCH --cpus-per-task=4
-#SBATCH --mem-per-cpu=12288
-#SBATCH --ntasks-per-node=12
 #SBATCH --nodes=1
 #SBATCH -p longrun
 #SBATCH -o @PACKAGE_NAME@.o%j
