@@ -59,6 +59,11 @@ AC_ARG_WITH([pbs-mail],
             [with_pbs_mail=$withval],
             [with_pbs_mail=no])
 AC_SUBST([PBS_EMAIL], [$with_pbs_mail])
+AC_ARG_WITH([slurm-mail],
+            [AS_HELP_STRING([set email for slurm job @<:@default=disable slurm@:>@])],
+            [with_slurm_mail=$withval],
+            [with_slurm_mail=no])
+AC_SUBST([SLURM_EMAIL], [$with_slurm_mail])
 
 AC_ARG_WITH([tercom-path],
             [AS_HELP_STRING([--with-tercom-path],
@@ -198,6 +203,10 @@ AC_CONFIG_FILES([Makefile hren/Makefile fin-eng/Makefile \
 AS_IF([test x$with_pbs_mail != xno],
       [AC_CONFIG_FILES([morph-segments-all.pbs
        fin-eng/morph-segments-fin-eng.pbs
+       ])])
+AS_IF([test x$with_slurm_mail != xno],
+      [AC_CONFIG_FILES([morph-segments-all.slurm
+       fin-eng/morph-segments-fin-eng.slurm
        ])])
 
 AC_OUTPUT
