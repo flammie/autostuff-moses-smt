@@ -14,4 +14,7 @@ WORK="@abs_top_builddir@/fin-eng/"
 
 cd ${WORK}/
 
-make -j 12
+make -j moses-fi-en morfessor-fi-en flatcat-fi-en \
+    hfst-fi-en apertium-fi-en
+make -j moses-fi-en-evals morfessor-fi-en-evals flatcat-fi-en-evals \
+    hfst-fi-en-evals apertium-fi-en-evals
