@@ -2,6 +2,11 @@
 
 # MOSES_BASELINE_PREFIX is the prefix for the corpus filename 
 
+.PHONY: moses-baseline morfessor-baseline flatcat-baseline \
+	moses-$(L1) moses-$(L2) moses-$(L1)-$(L2) moses-$(L2)-$(L1) \
+	morfessor-$(L1) morfessor-$(L2) morfessor-$(L1)-$(L2) morfessor-$(L1)-$(L2)\
+	flatcat-$(L1) flatcat-$(L2) flatcat-$(L1)-$(L2) flatcat-$(L2)-$(L1)
+
 # Settings for baseline language models
 # L1 to L2
 MOSES_BASELINE_L2=$(MOSES_BASELINE_PREFIX).blm.$(L2)
@@ -85,6 +90,10 @@ LANGUAGE_MODELS_L2=$(MOSES_BASELINE_L2) \
 				$(MOSES_MORFESSOR1BEST_L2) \
 				$(MOSES_FLATCAT1BEST_L2)
 LANGUAGE_MODELS_L1=$(MOSES_BASELINE_L1)
+moses-$(L1): $(MOSES_BASELINE_L1)
+moses-$(L2): $(MOSES_BASELINE_L2)
+morfessor-$(L2): $(MORFESSOR_BASELINE_L2)
+flatcat-$(L2): $(FLATCAT_BASELINE_L2)
 LANGUAGE_MODELS=$(LANGUAGE_MODELS_L2) $(LANGUAGE_MODELS_L1)
 TRANSLATION_MODELS_L1_L2=$(MOSES_BASELINE_L1_L2) \
 				   $(MOSES_MORFESSOR1BEST_L1_L2) \
@@ -94,6 +103,12 @@ TRANSLATION_MODELS_L2_L1=$(MOSES_BASELINE_L2_L1) \
 				   $(MOSES_FLATCAT1BEST_L2_L1)
 TRANSLATION_MODELS=$(TRANSLATION_MODELS_L1_L2) $(TRANSLATION_MODELS_L2_L1)
 MODELS=$(TRUECASE_MODELS) $(LANGUAGE_MODELS) $(TRANSLATION_MODELS)
+moses-$(L1)-$(L2): $(MOSES_BASELINE_L1_L2)
+moses-$(L2)-$(L1): $(MOSES_BASELINE_L2_L1)
+morfessor-$(L1)-$(L2): $(MOSES_MORFESSOR1BEST_L1_L2)
+morfessor-$(L2)-$(L1): $(MOSES_MORFESSOR1BEST_L2_L1)
+flatcat-$(L1)-$(L2): $(MOSES_FLATCAT1BEST_L1_L2)
+flatcat-$(L2)-$(L1): $(MOSES_FLATCAT1BEST_L2_L1)
 
 # Settings for baseline translations
 TRANSLATION_L1_L2=$(L1)-$(L2).translated.$(L2)
