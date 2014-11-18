@@ -3,9 +3,15 @@
 # MOSES_BASELINE_PREFIX is the prefix for the corpus filename 
 
 .PHONY: moses-baseline morfessor-baseline flatcat-baseline \
+	apertium-baseline hfst-baseline \
 	moses-$(L1) moses-$(L2) moses-$(L1)-$(L2) moses-$(L2)-$(L1) \
 	morfessor-$(L1) morfessor-$(L2) morfessor-$(L1)-$(L2) morfessor-$(L1)-$(L2)\
-	flatcat-$(L1) flatcat-$(L2) flatcat-$(L1)-$(L2) flatcat-$(L2)-$(L1)
+	flatcat-$(L1) flatcat-$(L2) flatcat-$(L1)-$(L2) flatcat-$(L2)-$(L1) \
+	moses-$(L1)-$(L2)-evals moses-$(L2)-$(L1)-evals \
+	morfessor-$(L1)-$(L2)-evals morfessor-$(L2)-$(L1)-evals \
+	flatcat-$(L1)-$(L2)-evals flatcat-$(L2)-$(L1)-evals \
+	apertium-$(L1)-$(L2)-evals apertium-$(L2)-$(L1)-evals \
+	hfst-$(L1)-$(L2)-evals hfst-$(L2)-$(L1)-evals
 
 # Settings for baseline language models
 # L1 to L2
@@ -229,20 +235,33 @@ EVALUATIONS=$(EVALUATIONS_L2_L1) $(EVALUATIONS_L1_L2)
 if CAN_TER
 if CAN_METEOR
 if CAN_NISTBLEU
-EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).rows
+EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L1)-$(L2).rows
+EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L2)-$(L1).rows
 if CAN_MORFESS
-EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).rows
+EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(L1)-$(L2).rows
+EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(L2)-$(L1).rows
 endif
 if CAN_FLATCAT
-EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).rows
+EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(L1)-$(L2).rows
+EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(L2)-$(L1).rows
 endif
 if CAN_APERTIUM
-EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).rows
+EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(L1)-$(L2).rows
+EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(L2)-$(L1).rows
 endif
 endif # Nistbleu
 endif # Meteor
 endif # Ter
 
+# convenience for evals
+moses-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L1)-$(L2).rows
+moses-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L2)-$(L1).rows
+morfessor-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(L1)-$(L2).rows
+morfessor-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(L2)-$(L1).rows
+flatcat-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(L1)-$(L2).rows
+flatcat-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(L2)-$(L1).rows
+apertium-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(L1)-$(L2).rows
+apertium-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(L2)-$(L1).rows
 
 
 # vim: set ft=automake:
