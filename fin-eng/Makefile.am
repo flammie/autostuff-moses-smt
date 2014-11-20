@@ -31,8 +31,6 @@ include $(top_srcdir)/am-shared/settings-segment-markers.am
 
 include $(top_srcdir)/am-shared/settings-quick-sampling.am
 
-HFST_MORPHS_INFIX=hfst-morphs
-HFST_COMPOUNDS_INFIX=hfst-compounds
 HFST_L2_MORPHS_UNWEIGHTED=omorfi-morphs.hfst
 HFST_L2_COMPOUNDS_UNWEIGHTED=omorfi-compounds.hfst
 # just unweight now
