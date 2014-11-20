@@ -18,10 +18,10 @@
 		$(IRSTLM_RM_START_END) > $@
 
 # experimenting with different markers
-%.hfst.1best-comp.no-markers.tok.$(L2): %.hfst.1best-comp.tok.$(L2)
+%.hfst.1best-comp.nomarkers.tok.$(L2): %.hfst.1best-comp.tok.$(L2)
 	sed -e 's/→ ←/ /g' < $< > $@
 
-%.hfst.1best-morphs.no-markers.tok.$(L2): %.hfst.1best-morphs.tok.$(L2)
+%.hfst.1best-morphs.nomarkers.tok.$(L2): %.hfst.1best-morphs.tok.$(L2)
 	sed -e 's/→ ←/ /g' < $< > $@
 
 %.hfst.1best-comp.spaceplusspace.tok.$(L2): %.hfst.1best-comp.tok.$(L2)
@@ -46,10 +46,10 @@
 %.hfst.1best-morphs.tok.$(L1): %.tok.$(L1)
 	cp -v $< $@
 
-%.hfst.1best-comp.no-markers.tok.$(L1): %.tok.$(L1)
+%.hfst.1best-comp.nomarkers.tok.$(L1): %.tok.$(L1)
 	cp -v $< $@
 
-%.hfst.1best-morphs.no-markers.tok.$(L1): %.tok.$(L1)
+%.hfst.1best-morphs.nomarkers.tok.$(L1): %.tok.$(L1)
 	cp -v $< $@
 
 %.hfst.1best-comp.spaceplusspace.tok.$(L1): %.tok.$(L1)
