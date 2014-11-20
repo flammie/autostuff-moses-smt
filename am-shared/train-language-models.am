@@ -96,11 +96,11 @@
 	@abs_top_builddir@/$(IRSTLM_BUILD_LM_FIXED) -i $*.sb.$(L1) -p -s improved-kneser-ney -o $@
 
 %.arpa.$(L2): %.lm.$(L2).gz
-	$(IRSTLM_COMPILE_LM) --text $<
+	$(IRSTLM_COMPILE_LM) --text=yes $<
 	mv $*.lm.$(L2).lm $@
 
 %.arpa.$(L1): %.lm.$(L1).gz
-	$(IRSTLM_COMPILE_LM) --text $<
+	$(IRSTLM_COMPILE_LM) --text=yes $<
 	mv $*.lm.$(L1).lm $@
 
 %.blm.$(L2): %.arpa.$(L2)
