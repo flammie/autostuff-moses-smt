@@ -202,7 +202,9 @@ AC_CONFIG_FILES([Makefile fin-eng/Makefile \
                 [chmod +x build-lm-makeable.sh])
 AS_IF([test x$with_pbs_mail != xno],
       [AC_CONFIG_FILES([morph-segments-all.pbs
+       fin-eng/morph-segments-all.pbs
        fin-eng/morph-segments-fin-eng.pbs
+       fin-eng/morph-segments-eng-fin.pbs
        ])])
 AS_IF([test x$with_slurm_mail != xno],
       [AC_CONFIG_FILES([morph-segments-all.slurm
