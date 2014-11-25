@@ -272,18 +272,18 @@ endif # Nistbleu
 endif # Meteor
 endif # Ter
 
-marker-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(MORFESSOR_NOMARKERS_INFIX).$(L1)-$(L2).rows \
+markers-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(MORFESSOR_NOMARKERS_INFIX).$(L1)-$(L2).rows \
 			 $(BASELINE_TEST_PREFIX).$(MORFESSOR_PLUS_INFIX).$(L1)-$(L2).rows \
 			 $(BASELINE_TEST_PREFIX).$(MORFESSOR_SUFFIX_INFIX).$(L1)-$(L2).rows \
 			 $(BASELINE_TEST_PREFIX).$(HFST_NOMARKERS_INFIX).$(L1)-$(L2).rows \
 			 $(BASELINE_TEST_PREFIX).$(HFST_PLUS_INFIX).$(L1)-$(L2).rows \
 			 $(BASELINE_TEST_PREFIX).$(HFST_SUFFIX_INFIX).$(L1)-$(L2).rows
-marker-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(MORFESSOR_NOMARKERS_INFIX).$(L2)-$(L1).rows \
+markers-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(MORFESSOR_NOMARKERS_INFIX).$(L2)-$(L1).rows \
 			 $(BASELINE_TEST_PREFIX).$(MORFESSOR_PLUS_INFIX).$(L2)-$(L1).rows \
 			 $(BASELINE_TEST_PREFIX).$(MORFESSOR_SUFFIX_INFIX).$(L2)-$(L1).rows \
 			 $(BASELINE_TEST_PREFIX).$(HFST_NOMARKERS_INFIX).$(L2)-$(L1).rows \
 			 $(BASELINE_TEST_PREFIX).$(HFST_PLUS_INFIX).$(L2)-$(L1).rows \
 			 $(BASELINE_TEST_PREFIX).$(HFST_SUFFIX_INFIX).$(L2)-$(L1).rows
-
+markers-evals: markers-$(L1)-$(L2)-evals markers-$(L2)-$(L1)-evals
 
 # vim: set ft=automake:
