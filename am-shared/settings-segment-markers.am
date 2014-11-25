@@ -268,7 +268,6 @@ EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(HFST_NOMARKERS_INFIX).$(L2)-$(L1).rows \
 			 $(BASELINE_TEST_PREFIX).$(HFST_PLUS_INFIX).$(L2)-$(L1).rows \
 			 $(BASELINE_TEST_PREFIX).$(HFST_SUFFIX_INFIX).$(L2)-$(L1).rows
 endif
-endif
 endif # Nistbleu
 endif # Meteor
 endif # Ter
