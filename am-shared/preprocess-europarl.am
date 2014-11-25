@@ -28,6 +28,7 @@ europarl-v7.$(L1)-$(L2).dupes.aligned: europarl.tgz tools.tgz
 	fi
 	tar zxf europarl.tgz -C europarl
 	tar zxf tools.tgz -C europarl
+	find europarl/txt/ -name ep-00-1* -delete
 	europarl/sentence-align-corpus.perl $(L1) $(L2)
 	mv europarl/aligned $@
 
@@ -37,7 +38,7 @@ europarl-v7.$(L1)-$(L2).dupes.pasted: europarl-v7.$(L1)-$(L2).dupes.aligned
 	done > $@
 
 europarl-v7.$(L1)-$(L2).uniq.paste: europarl-v7.$(L1)-$(L2).dupes.pasted
-	sort < $< > $@
+	sort < $< | uniq | sort -R > $@
 
 %.$(L1)-$(L2).$(L1).text: %.$(L1)-$(L2).uniq.paste
 	cut -f 1 < $< > $@

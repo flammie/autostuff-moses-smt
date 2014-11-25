@@ -30,12 +30,12 @@
 		$(MOSES_DETOKENIZER) > $@
 
 # Complex to simple
-%.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1): %.hfst.1best-comp.tok.$(L2) $(MOSES_HFST1BESTCOMP_L2_L1)
+%.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1): %.hfst.1best-comp.true.$(L2) $(MOSES_HFST1BESTCOMP_L2_L1)
 	$(MOSES) -f $(MOSES_HFST1BESTCOMP_L2_L1_DIR)/model/moses.ini < $< |\
 		$(MOSES_DETRUECASE) |\
 		$(MOSES_DETOKENIZER) > $@
 
-%.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1): %.hfst.1best-morphs.tok.$(L2) $(MOSES_HFST1BESTMORPH_L2_L1)
+%.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1): %.hfst.1best-morphs.true.$(L2) $(MOSES_HFST1BESTMORPH_L2_L1)
 	$(MOSES) -f $(MOSES_HFST1BESTMORPH_L2_L1_DIR)/model/moses.ini < $< |\
 		$(MOSES_DETRUECASE) |\
 		$(MOSES_DETOKENIZER) > $@

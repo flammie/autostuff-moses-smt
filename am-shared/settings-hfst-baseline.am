@@ -103,7 +103,7 @@ endif # Ter
 hfst-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(HFST_COMPOUNDS_INFIX).$(L1)-$(L2).rows \
 	$(BASELINE_TEST_PREFIX).$(HFST_MORPHS_INFIX).$(L1)-$(L2).rows
 hfst-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(HFST_COMPOUNDS_INFIX).$(L2)-$(L1).rows \
-	$(BASELINE_TEST_PREFIX).$(HFST_MORPHS_INFIX).$(L1)-$(L2).rows
+	$(BASELINE_TEST_PREFIX).$(HFST_MORPHS_INFIX).$(L2)-$(L1).rows
 
 
 # vim: set ft=automake:
