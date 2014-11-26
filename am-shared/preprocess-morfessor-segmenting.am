@@ -115,6 +115,18 @@ segments: $(SEGMENTS)
 		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
 		-e 's/^[↩→← ]\+$$//'> $@
 
+# experimenting with different markers
+%.morfessor.1best.nomarkers.tok.$(L2): %.morfessor.1best.tok.$(L2)
+	sed -e 's/→ ←/ /g' < $< > $@
+
+%.morfessor.1best.spaceplusspace.tok.$(L2): %.morfessor.1best.tok.$(L2)
+	sed -e 's/→ ←/ + /g' < $< > $@
+
+%.morfessor.1best.suffixmarkered.tok.$(L2): %.morfessor.1best.tok.$(L2)
+	sed -e 's/→ ←/ ←/g' < $< > $@
+
+
+
 # To make prefix rules work, we need to create matching L1 file names by copying
 %.morfessor.1best.tok.$(L1): %.tok.$(L1)
 	cp -v $< $@
