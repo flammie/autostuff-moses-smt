@@ -119,22 +119,22 @@
 
 # markers
 %.$(HFSTCOMP_NOMARKERS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_COMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 %.$(HFSTCOMP_PLUS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_COMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 %.$(HFSTCOMP_SUFFIX_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_COMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 %.$(HFSTMORPH_NOMARKERS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_MORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 %.$(HFSTMORPH_PLUS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_MORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 %.$(HFSTMORPH_SUFFIX_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_MORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 # L2 to L1
 #
