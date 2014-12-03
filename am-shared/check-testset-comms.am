@@ -1,0 +1,212 @@
+## Include this to your automake project to count oovs.(or sanity check comms)
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# COMM_L1_L2 is the suffix for oov analysis from L1
+# COMM_L2_L1 is the suffix for oov analysis from L2
+
+
+#
+# {{{COMMS
+COMM_L1_L2=$(L1)-$(L2).comm.$(L1)
+COMM_L2_L1=$(L2)-$(L1).comm.$(L2)
+
+%.sort.$(L1): %.tok.$(L1)
+	sort < $< > $@
+
+%.sort.$(L2): %.sort.$(L2)
+	sort < $< > $@
+
+%.$(MOSES_BASELINE_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_BASELINE_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_BASELINE_PREFIX).sort.$(L1) > $@
+
+%.$(MOSES_TUNED_INFIX).$(COMM_L1_L2): %.$(MOSES_BASELINE_INFIX).$(COMM_L1_L2)
+	cp -v $< $@
+
+%.$(MOSES_HALF_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HALF_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HALF_PREFIX).sort.$(L1) > $@
+
+%.$(MOSES_SAMPLE_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_SAMPLE_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_SAMPLE_PREFIX).sort.$(L1) > $@
+
+%.$(MOSES_QUARTER_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_QUARTER_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_QUARTER_PREFIX).sort.$(L1) > $@
+
+%.$(MOSES_EIGHTH_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_EIGHTH_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_EIGHTH_PREFIX).sort.$(L1) > $@
+
+%.$(MORFESSOR_BASELINE_INFIX).$(COMM_L1_L2):  %.sort.$(L1) $(MOSES_MORFESSOR1BEST_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_PREFIX).sort.$(L1) > $@
+
+%.$(MORFESSOR_NOMARKERS_INFIX).$(COMM_L1_L2):  %.sort.$(L1) $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_PREFIX).sort.$(L1) > $@
+
+%.$(MORFESSOR_PLUS_INFIX).$(COMM_L1_L2):  %.sort.$(L1) $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_PREFIX).sort.$(L1) > $@
+
+%.$(MORFESSOR_SUFFIX_INFIX).$(COMM_L1_L2):  %.sort.$(L1) $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_PREFIX).sort.$(L1) > $@
+
+
+%.$(MORFESSOR_TUNED_INFIX).$(COMM_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(COMM_L1_L2)
+	cp -v $< $@
+
+%.$(MORFESSOR_5RARE_INFIX).$(COMM_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(COMM_L1_L2)
+	cp -v $< $@
+
+%.$(MORFESSOR_2RARE_INFIX).$(COMM_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(COMM_L1_L2)
+	cp -v $< $@
+
+%.$(MORFESSOR_HALF_INFIX).$(COMM_L1_L2):  %.sort.$(L1) $(MOSES_MORFESSOR1BEST_HALF_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_HALF_PREFIX).sort.$(L1) > $@
+
+%.$(MORFESSOR_QUARTER_INFIX).$(COMM_L1_L2):  %.sort.$(L1) $(MOSES_MORFESSOR1BEST_QUARTER_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_QUARTER_PREFIX).sort.$(L1) > $@
+
+%.$(MORFESSOR_EIGHTH_INFIX).$(COMM_L1_L2):  %.sort.$(L1) $(MOSES_MORFESSOR1BEST_EIGHTH_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_EIGHTH_PREFIX).sort.$(L1) > $@
+
+%.$(MORFESSOR_SAMPLE_INFIX).$(COMM_L1_L2):  %.sort.$(L1) $(MOSES_MORFESSOR1BEST_SAMPLE_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_SAMPLE_PREFIX).sort.$(L1) > $@
+
+%.$(FLATCAT_BASELINE_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_FLATCAT1BEST_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_FLATCAT1BEST_PREFIX).sort.$(L1) > $@
+
+%.$(FLATCAT_TUNED_INFIX).$(COMM_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(COMM_L1_L2)
+	cp -v $< $@
+
+%.$(FLATCAT_5RARE_INFIX).$(COMM_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(COMM_L1_L2)
+	cp -v $< $@
+
+%.$(FLATCAT_2RARE_INFIX).$(COMM_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(COMM_L1_L2)
+	cp -v $< $@
+
+%.$(HFST_COMPOUNDS_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTCOMP_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTCOMP_PREFIX).sort.$(L1) > $@
+
+%.$(HFST_MORPHS_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTMORPH_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_PREFIX).sort.$(L1) > $@
+
+%.$(HFSTCOMP_NOMARKERS_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTCOMP_NOMARKERS_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTCOMP_NOMARKERS_PREFIX).sort.$(L1) > $@
+
+%.$(HFSTCOMP_PLUS_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTCOMP_PLUS_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTCOMP_PLUS_PREFIX).sort.$(L1) > $@
+
+%.$(HFSTCOMP_SUFFIX_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).sort.$(L1) > $@
+
+%.$(HFSTMORPH_NOMARKERS_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).sort.$(L1) > $@
+
+%.$(HFSTMORPH_PLUS_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).sort.$(L1) > $@
+
+%.$(HFSTMORPH_SUFFIX_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).sort.$(L1) > $@
+
+%.$(MOSES_BASELINE_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_BASELINE_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_BASELINE_PREFIX).sort.$(L2) > $@
+
+%.$(MOSES_TUNED_INFIX).$(COMM_L2_L1): %.$(MOSES_BASELINE_INFIX).$(COMM_L2_L1)
+	cp -v $< $@
+
+%.$(MOSES_HALF_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HALF_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HALF_PREFIX).sort.$(L2) > $@
+
+%.$(MOSES_QUARTER_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_QUARTER_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_QUARTER_PREFIX).sort.$(L2) > $@
+
+%.$(MOSES_EIGHTH_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_EIGHTH_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_EIGHTH_PREFIX).sort.$(L2) > $@
+
+%.$(MOSES_SAMPLE_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_SAMPLE_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_SAMPLE_PREFIX).sort.$(L2) > $@
+
+%.$(MORFESSOR_BASELINE_INFIX).$(COMM_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.sort.$(L2) $(MOSES_MORFESSOR1BEST_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_PREFIX).sort.$(L2) > $@
+
+%.$(MORFESSOR_NOMARKERS_INFIX).$(COMM_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.sort.$(L2) $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).sort.$(L2) > $@
+
+%.$(MORFESSOR_PLUS_INFIX).$(COMM_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.sort.$(L2) $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).sort.$(L2) > $@
+
+%.$(MORFESSOR_SUFFIX_INFIX).$(COMM_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.sort.$(L2) $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).sort.$(L2) > $@
+
+%.$(MORFESSOR_TUNED_INFIX).$(COMM_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(COMM_L2_L1)
+	cp -v $< $@
+
+%.$(MORFESSOR_2RARE_INFIX).$(COMM_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(COMM_L2_L1)
+	cp -v $< $@
+
+%.$(MORFESSOR_5RARE_INFIX).$(COMM_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(COMM_L2_L1)
+	cp -v $< $@
+
+%.$(MORFESSOR_HALF_INFIX).$(COMM_L2_L1):  %.$(MORFESSOR_HALF_INFIX).1best.sort.$(L2) $(MOSES_MORFESSOR1BEST_HALF_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_HALF_PREFIX).sort.$(L2) > $@
+
+%.$(MORFESSOR_QUARTER_INFIX).$(COMM_L2_L1):  %.$(MORFESSOR_QUARTER_INFIX).1best.sort.$(L2) $(MOSES_MORFESSOR1BEST_QUARTER_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_QUARTER_PREFIX).sort.$(L2) > $@
+
+%.$(MORFESSOR_EIGHTH_INFIX).$(COMM_L2_L1):  %.$(MORFESSOR_EIGHTH_INFIX).1best.sort.$(L2) $(MOSES_MORFESSOR1BEST_EIGHTH_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_EIGHTH_PREFIX).sort.$(L2) > $@
+
+%.$(MORFESSOR_SAMPLE_INFIX).$(COMM_L2_L1):  %.$(MORFESSOR_SAMPLE_INFIX).1best.sort.$(L2) $(MOSES_MORFESSOR1BEST_SAMPLE_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_MORFESSOR1BEST_SAMPLE_PREFIX).sort.$(L2) > $@
+
+%.$(FLATCAT_BASELINE_INFIX).$(COMM_L2_L1): %.$(FLATCAT_BASELINE_INFIX).1best.sort.$(L2) $(MOSES_FLATCAT1BEST_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_FLATCAT1BEST_PREFIX).sort.$(L2) > $@
+
+
+%.$(FLATCAT_2RARE_INFIX).$(COMM_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(COMM_L2_L1)
+	cp -v $< $@
+
+%.$(FLATCAT_5RARE_INFIX).$(COMM_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(COMM_L2_L1)
+	cp -v $< $@
+
+%.$(FLATCAT_TUNED_INFIX).$(COMM_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(COMM_L2_L1)
+	cp -v $< $@
+
+%.$(HFST_COMPOUNDS_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HFST1BESTCOMP_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTCOMP_PREFIX).sort.$(L2) > $@
+
+%.$(HFST_MORPHS_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HFST1BESTMORPH_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_PREFIX).sort.$(L2) > $@
+
+%.$(HFSTCOMP_NOMARKERS_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HFST1BESTCOMP_NOMARKERS_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTCOMP_NOMARKERS_PREFIX).sort.$(L2) > $@
+
+%.$(HFSTCOMP_PLUS_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HFST1BESTCOMP_PLUS_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTCOMP_PLUS_PREFIX).sort.$(L2) > $@
+
+%.$(HFSTCOMP_SUFFIX_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).sort.$(L2) > $@
+
+%.$(HFSTMORPH_NOMARKERS_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).sort.$(L2) > $@
+
+%.$(HFSTMORPH_PLUS_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).sort.$(L2) > $@
+
+%.$(HFSTMORPH_SUFFIX_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).sort.$(L2) > $@
+
+
+# }}}
+#
+# vim: set ft=automake foldmethod=marker:
