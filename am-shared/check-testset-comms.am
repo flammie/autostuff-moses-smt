@@ -27,7 +27,7 @@ COMM_L2_L1=$(L2)-$(L1).comm.$(L2)
 %.sort.$(L1): %.tok.$(L1)
 	sort < $< > $@
 
-%.sort.$(L2): %.sort.$(L2)
+%.sort.$(L2): %.tok.$(L2)
 	sort < $< > $@
 
 %.$(MOSES_BASELINE_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_BASELINE_PREFIX).sort.$(L1)
