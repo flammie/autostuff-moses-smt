@@ -1,4 +1,4 @@
-## Include this to your automake project to count oovs.
+## Include this to your automake project to count oovs.(or sanity check comms)
 
 ## Copyright (c) 2014 Dublin City University / CNGL
 
@@ -25,7 +25,9 @@
 # OOV_L1_L2 is the suffix for oov analysis from L1
 # OOV_L2_L1 is the suffix for oov analysis from L2
 
-# MOSES_OOV
+
+# OOVs 
+# {{{MOSES
 %.$(MOSES_BASELINE_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_BASELINE_PREFIX).tok.$(L1)
 	$(MOSES_OOV) $< < $(MOSES_BASELINE_PREFIX).tok.$(L1) > $@
 
@@ -43,7 +45,9 @@
 
 %.$(MOSES_EIGHTH_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_EIGHTH_PREFIX).tok.$(L1)
 	$(MOSES_OOV) $< < $(MOSES_EIGHTH_PREFIX).tok.$(L1) > $@
-
+# }}}
+#
+# {{{MORFESSOR
 %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L1_L2):  %.tok.$(L1) $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L1)
 	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L1) > $@
 
@@ -89,7 +93,9 @@
 
 %.$(FLATCAT_2RARE_INFIX).$(OOV_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(OOV_L1_L2)
 	cp -v $< $@
-
+# }}}
+#
+# {{{HFST
 %.$(HFST_COMPOUNDS_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_HFST1BESTCOMP_PREFIX).tok.$(L1)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTCOMP_PREFIX).tok.$(L1) > $@
 
@@ -113,7 +119,9 @@
 
 %.$(HFSTMORPH_SUFFIX_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).tok.$(L1)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).tok.$(L1) > $@
-
+# }}}
+#
+# {{{MOSES L2-L1
 %.$(MOSES_BASELINE_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_BASELINE_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_BASELINE_PREFIX).tok.$(L2) > $@
 
@@ -131,17 +139,19 @@
 
 %.$(MOSES_SAMPLE_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_SAMPLE_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_SAMPLE_PREFIX).tok.$(L2) > $@
-
+# }}}
+#
+# {{{MORFESSOR
 %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PREFIX).tok.$(L2) > $@
 
-%.$(MORFESSOR_NOMARKERS_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).tok.$(L2)
+%.$(MORFESSOR_NOMARKERS_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_NOMARKERS_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_NOMARKERS_PREFIX).tok.$(L2) > $@
 
-%.$(MORFESSOR_PLUS_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).tok.$(L2)
+%.$(MORFESSOR_PLUS_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_PLUS_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_PLUS_PREFIX).tok.$(L2) > $@
 
-%.$(MORFESSOR_SUFFIX_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_BASELINE_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).tok.$(L2)
+%.$(MORFESSOR_SUFFIX_INFIX).$(OOV_L2_L1):  %.$(MORFESSOR_SUFFIX_INFIX).1best.tok.$(L2) $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_MORFESSOR1BEST_SUFFIX_PREFIX).tok.$(L2) > $@
 
 %.$(MORFESSOR_TUNED_INFIX).$(OOV_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(OOV_L2_L1)
@@ -178,31 +188,35 @@
 %.$(FLATCAT_TUNED_INFIX).$(OOV_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(OOV_L2_L1)
 	cp -v $< $@
 
-%.$(HFST_COMPOUNDS_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HFST1BESTCOMP_PREFIX).tok.$(L2)
+# }}}
+#
+# {{{ HFST
+%.$(HFST_COMPOUNDS_INFIX).$(OOV_L2_L1): %.hfst.1best-comp.tok.$(L2) $(MOSES_HFST1BESTCOMP_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTCOMP_PREFIX).tok.$(L2) > $@
 
-%.$(HFST_MORPHS_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HFST1BESTMORPH_PREFIX).tok.$(L2)
+%.$(HFST_MORPHS_INFIX).$(OOV_L2_L1): %.hfst.1best-morphs.tok.$(L2) $(MOSES_HFST1BESTMORPH_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTMORPH_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTCOMP_NOMARKERS_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HFST1BESTCOMP_NOMARKERS_PREFIX).tok.$(L2)
+%.$(HFSTCOMP_NOMARKERS_INFIX).$(OOV_L2_L1): %.hfst.1best-comp.nomarkers.tok.$(L2) $(MOSES_HFST1BESTCOMP_NOMARKERS_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTCOMP_NOMARKERS_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTCOMP_PLUS_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HFST1BESTCOMP_PLUS_PREFIX).tok.$(L2)
+%.$(HFSTCOMP_PLUS_INFIX).$(OOV_L2_L1): %.hfst.1best-comp.spaceplusspace.tok.$(L2) $(MOSES_HFST1BESTCOMP_PLUS_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTCOMP_PLUS_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTCOMP_SUFFIX_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).tok.$(L2)
+%.$(HFSTCOMP_SUFFIX_INFIX).$(OOV_L2_L1): %.hfst.1best-comp.suffixmarkered.tok.$(L2) $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTMORPH_NOMARKERS_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).tok.$(L2)
+%.$(HFSTMORPH_NOMARKERS_INFIX).$(OOV_L2_L1): %.hfst.1best-morph.nomarkers.tok.$(L2) $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTMORPH_PLUS_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).tok.$(L2)
+%.$(HFSTMORPH_PLUS_INFIX).$(OOV_L2_L1): %.hfst.1best-morph.spaceplusspace.tok.$(L2) $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTMORPH_SUFFIX_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).tok.$(L2)
+%.$(HFSTMORPH_SUFFIX_INFIX).$(OOV_L2_L1): %.hfst.1best-morph.suffixmarkered.tok.$(L2) $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).tok.$(L2) > $@
-
-# APE OOV
+# }}}
+#
+# {{{APE OOV
 %.$(APERTIUM_BASELINE_INFIX).$(OOV_L1_L2): %.$(L1).text 
 	$(APERTIUM_DESTXT) < $< |\
 		$(APERTIUM) $(L1_)-$(L2__) > $*.apetags
@@ -221,4 +235,7 @@
 	echo scale=2\; 100 \* \(`cat $*.oova` + `cat $*.oovb`\) / `cat $*.oovw` |\
 		bc > $@
 
-# vim: set ft=automake:
+# }}}
+#
+#
+# vim: set ft=automake foldmethod=marker:
