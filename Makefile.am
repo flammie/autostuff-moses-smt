@@ -3,7 +3,7 @@
 ## This is Makefile for abumatran SMT morphs compounds stuff
 ## run make to reproduce.
 
-SUBDIRS=fin-eng
+SUBDIRS=fin-eng hbs-eng fin-lit lit-eng
 .PHONY: paper
 
 # {{{ paper
