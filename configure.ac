@@ -51,9 +51,15 @@ AC_ARG_ENABLE([parallel],
                               [use parallel processing @<:@default=no@:>@])],
               [enable_parallel=$enableval],
               [enable_parallel=no])
-
 AS_IF([test x$enable_parallel != xno], 
       [AC_SUBST([PARALLEL_FLAGS], ["-parallel -cores 8 -sort-parallel 8"])])
+AC_ARG_ENABLE([secondary],
+              [AS_HELP_STRING([--enable-secondary],
+                              [use SECONDARY directive in Makefile (retain intermediate results) @<:@default=no@:>@])],
+              [enable_secondary=$enableval],
+              [enable_secondary=no])
+AM_CONDITIONAL([WANT_SECONDARY], [test x$enable_secondary != xno])
+
 AC_ARG_WITH([pbs-mail],
             [AS_HELP_STRING([set email for pbs job @<:@default=disable pbs@:>@])],
             [with_pbs_mail=$withval],
