@@ -206,13 +206,13 @@
 %.$(HFSTCOMP_SUFFIX_INFIX).$(OOV_L2_L1): %.hfst.1best-comp.suffixmarkered.tok.$(L2) $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTCOMP_SUFFIX_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTMORPH_NOMARKERS_INFIX).$(OOV_L2_L1): %.hfst.1best-morph.nomarkers.tok.$(L2) $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).tok.$(L2)
+%.$(HFSTMORPH_NOMARKERS_INFIX).$(OOV_L2_L1): %.hfst.1best-morphs.nomarkers.tok.$(L2) $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTMORPH_NOMARKERS_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTMORPH_PLUS_INFIX).$(OOV_L2_L1): %.hfst.1best-morph.spaceplusspace.tok.$(L2) $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).tok.$(L2)
+%.$(HFSTMORPH_PLUS_INFIX).$(OOV_L2_L1): %.hfst.1best-morphs.spaceplusspace.tok.$(L2) $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTMORPH_PLUS_PREFIX).tok.$(L2) > $@
 
-%.$(HFSTMORPH_SUFFIX_INFIX).$(OOV_L2_L1): %.hfst.1best-morph.suffixmarkered.tok.$(L2) $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).tok.$(L2)
+%.$(HFSTMORPH_SUFFIX_INFIX).$(OOV_L2_L1): %.hfst.1best-morphs.suffixmarkered.tok.$(L2) $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).tok.$(L2)
 	$(MOSES_OOV) $< < $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).tok.$(L2) > $@
 # }}}
 #

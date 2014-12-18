@@ -16,6 +16,8 @@
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 SAMPLE_SIZE=50000
+DEVSET_SIZE=2000
+TESTSET_SIZE=2000
 
 # split to train / dev / test in 8 / 1 / 1 
 %.train.$(L1).text: %.$(L1).text
@@ -25,10 +27,10 @@ SAMPLE_SIZE=50000
 		>> $@
 
 %.dev.$(L1).text: %.train.$(L1).text
-	cp -v $*.split.$(L1).08 $@
+	head -n $(DEVSET_SIZE) $*.split.$(L1).08 > $@
 
 %.test.$(L1).text: %.train.$(L1).text
-	cp -v $*.split.$(L1).09 $@
+	head -n $(TESTSET_SIZE) $*.split.$(L1).09 > $@
 
 # Split into 2
 %.half.$(L1).text: %.$(L1).text
@@ -58,10 +60,10 @@ SAMPLE_SIZE=50000
 		>> $@
 
 %.dev.$(L2).text: %.train.$(L2).text
-	cp -v $*.split.$(L2).08 $@
+	head -n $(DEVSET_SIZE) $*.split.$(L2).08 > $@
 
 %.test.$(L2).text: %.train.$(L2).text
-	cp -v $*.split.$(L2).09 $@
+	head -n $(TESTSET_SIZE) $*.split.$(L2).09 > $@
 
 
 %.half.$(L2).text: %.$(L2).text
