@@ -10,13 +10,17 @@ L2_LONG=fin
 METEOR_L1_FLAGS=-l en
 METEOR_L2_FLAGS=
 
+if WANT_SECONDARY
 # all secondary
 .SECONDARY:
-.PHONY: corpora models segments translations evaluations fi en fi-en en-fi
+endif
+.PHONY: naacl-2015-pretests naacl-2015-models naacl-2015-evals
 
+# {{{ SETTINGS
 # common prefixes
 BASELINE_CORPUS=europarl-v7.$(L1)-$(L2)
-BASELINE_TEST_PREFIX=realtest2000
+BASELINE_TEST_PREFIX=europarl-v7.$(L1)-$(L2).test
+MTMATRIX_TEST_PREFIX=realtest2000
 UNDHR_TEST_PREFIX=undhr
 APERTIUM_TEST_PREFIX=story
 
@@ -162,6 +166,9 @@ realtest2000.fi.text: realtest2000.fi.gz
 realtest2000.en.text: realtest2000.en.gz
 	zcat $< | $(ICONV) -f latin1 -t utf8 | $(MOSES_DETOKENIZER) > $@
 
+# }}}
+#
+# {{{ MODELS
 
 models: $(MODELS)
 fi: $(LANGUAGE_MODELS_FI)
@@ -218,5 +225,10 @@ include $(top_srcdir)/am-shared/evaluate-ter.am
 include $(top_srcdir)/am-shared/evaluate-meteor.am
 
 include $(top_srcdir)/am-shared/paper-evals.am
+# }}}
+#
+naacl-2015-pretests: markers-fi-en-evals markers-en-fi-evals
+naacl-2015-models:
+naacl-2015-evals:
 
 # vim: set foldmethod=marker:
