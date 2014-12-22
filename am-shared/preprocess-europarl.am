@@ -38,7 +38,7 @@ europarl-v7.$(L1)-$(L2).dupes.pasted: europarl-v7.$(L1)-$(L2).dupes.aligned
 	done > $@
 
 europarl-v7.$(L1)-$(L2).uniq.paste: europarl-v7.$(L1)-$(L2).dupes.pasted
-	sort < $< | uniq | sort -R > $@
+	sort < $< | uniq | egrep -v '^<' | egrep -v '^[[:space:]]*$$' | sort -R > $@
 
 %.$(L1)-$(L2).$(L1).text: %.$(L1)-$(L2).uniq.paste
 	cut -f 1 < $< > $@
