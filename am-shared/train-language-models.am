@@ -119,7 +119,7 @@
 
 %.$(L2).morfessed-1.0: %.morfclean.$(L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
-		-e 's/&lt;/</g' -e 's/&quot;/"/g'  |\
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' < $< |\
 		$(MORFESSOR_TRAIN)  $< -S $@
 
 %.flatcat: %.morfessed-1.0
