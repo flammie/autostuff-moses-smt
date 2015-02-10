@@ -40,7 +40,7 @@
 
 %.hierarchical.tm.$(L1)-$(L2): %.clean.$(L1) %.clean.$(L2) %.blm.$(L2)
 	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) -corpus $*.clean -f $(L1) -e $(L2) \
-		-alignment grow-diag-final-and -reordering hier-mslr-bidirectional-fe \
+		-alignment grow-diag-final-and \
 		-hierarchical -glue-grammar -max-phrase-length 5 \
 		-lm 0:3:`pwd`/$*.blm.$(L2):8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
@@ -50,7 +50,7 @@
 
 %.hierarchical.tm.$(L2)-$(L1): %.clean.$(L1) %.clean.$(L2) %.blm.$(L1)
 	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1) -corpus $*.clean -f $(L2) -e $(L1) \
-		-alignment grow-diag-final-and -reordering hier-mslr-bidirectional-fe \
+		-alignment grow-diag-final-and \
 		-hierarchical -glue-grammar -max-phrase-length 5 \
 		-lm 0:3:`pwd`/$*.blm.$(L1):8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
