@@ -3,7 +3,7 @@
 # FST's segments
 %.hfst.1best-comp.tok.$(L2): %.tok.$(L2) $(HFST_L2_COMPOUNDS)
 	$(IRSTLM_ADD_START_END) < $< | tr ' ' '\n' |\
-		$(HFST_LOOKUP) -P -q $(HFST_L2_COMPOUNDS) | $(SED) -e 's/^$$//' | tr '\n' '@' |\
+		$(HFST_LOOKUP) -q $(HFST_L2_COMPOUNDS) | $(SED) -e 's/^$$//' | tr '\n' '@' |\
 		tr  '\n' |\
 		cut -f 2 | tr '\n' ' ' | $(SED) -e 's/+?//g' -e 's:</s>:\0\n:g' |\
 		head -n -1 |\
@@ -11,7 +11,7 @@
 
 %.hfst.1best-morphs.tok.$(L2): %.tok.$(L2) $(HFST_L2_MORPHS)
 	$(IRSTLM_ADD_START_END) < $< | tr ' ' '\n' |\
-		$(HFST_LOOKUP) -P -q $(HFST_L2_MORPHS) | $(SED) -e 's/^$$//' | tr '\n' '@' |\
+		$(HFST_LOOKUP) -q $(HFST_L2_MORPHS) | $(SED) -e 's/^$$//' | tr '\n' '@' |\
 		tr  '\n' |\
 		cut -f 2 | tr '\n' ' ' | $(SED) -e 's/+?//g' -e 's:</s>:\0\n:g' |\
 		head -n -1 |\
