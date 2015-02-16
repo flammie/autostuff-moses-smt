@@ -68,11 +68,17 @@
 
 # Cleaning
 # XXX: bit of hacks to keep timestamps in order
-%.clean.$(L2): %.true.$(L2) %.true.$(L1)
+%.clean.$(L2).$(L2): %.true.$(L2) %.true.$(L1)
 	$(MOSES_CLEAN_CORPUS_N) $*.true $(L2) $(L1) $*.clean 1 80
 
-%.clean.$(L1): %.true.$(L2) %.true.$(L1)
+%.clean.$(L1).$(L1): %.true.$(L2) %.true.$(L1)
 	$(MOSES_CLEAN_CORPUS_N) $*.true $(L1) $(L2) $*.clean 1 80
+
+%.clean.$(L2): %.clean.$(L2).$(L2)
+	cp -v $< $@
+
+%.clean.$(L1): %.clean.$(L1).$(L1)
+	cp -v $< $@
 
 # Sentence boundaries
 # extra deps unused to act as BARRIER for parallel build
