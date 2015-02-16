@@ -115,7 +115,7 @@
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 %.$(HFST_MORPHS_INFIX).$(NISTBLEU_L1_L2): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 # markers
 %.$(HFSTCOMP_NOMARKERS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
