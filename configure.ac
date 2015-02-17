@@ -51,8 +51,14 @@ AC_ARG_ENABLE([parallel],
                               [use parallel processing @<:@default=no@:>@])],
               [enable_parallel=$enableval],
               [enable_parallel=no])
+AC_ARG_WITH([cores],
+	    [AS_HELP_STRING([--with-cores],
+	    		    [number of cores or threads per make job if parallel @<:@default=8@:>@])],
+	    [with_cores=$withval],
+	    [with_cores=8])
 AS_IF([test x$enable_parallel != xno], 
-      [AC_SUBST([PARALLEL_FLAGS], ["-parallel -cores 8 -sort-parallel 8"])])
+      [AC_SUBST([PARALLEL_FLAGS], ["-parallel -cores $with_cores -sort-parallel $with_cores"])
+       AC_SUBST([PROCESS_PHRASE_TABLE_FLAGS], ["-threads $with_cores"])])
 AC_ARG_ENABLE([secondary],
               [AS_HELP_STRING([--enable-secondary],
                               [use SECONDARY directive in Makefile (retain intermediate results) @<:@default=no@:>@])],
