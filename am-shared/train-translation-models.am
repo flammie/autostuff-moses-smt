@@ -72,7 +72,7 @@
 	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
 		-in $*.$(L1)-$(L2)/model/phrase-table.gz \
 		-nscores 4 -out $*.binarised.$(L1)-$(L2)/phrase-table
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN)$(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
 		 -in $*.$(L1)-$(L2)/model/reordering-table.wbe-msd-bidirectional-fe.gz -out $*.binarised.$(L1)-$(L2)/reordering-table
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryBinary/' \
 		-e "s:$*.$(L1)-$(L2)/model/phrase-table.gz:$*.binarised.$(L1)-$(L2)/phrase-table:"\
@@ -90,7 +90,7 @@
 		-nscores 4 -out $*.binarised.$(L2)-$(L1)/phrase-table
 	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
 		-in $*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz -out $*.binarised.$(L2)-$(L1)/reordering-table
-	$(SED) -i -e 's/PhraseDictionaryMemory/PhraseDictionaryBinary/' \
+	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryBinary/' \
 		-e "s:$*.$(L2)-$(L1)/model/phrase-table.gz:$*.binarised.$(L2)-$(L1)/phrase-table:"\
 		-e "s:$*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.binarised.$(L2)-$(L1)/reordering-table:"\
 		< $*.$(L2)-$(L1)/model/moses.ini  > $*.binarised.$(L2)-$(L1)/model/moses.ini
