@@ -44,7 +44,7 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
-%.hierarchical.tm.$(L1)-$(L2): %.clean.$(L1) %.clean.$(L2) %.blm.$(L2)
+%.hiertm.$(L1)-$(L2): %.clean.$(L1) %.clean.$(L2) %.blm.$(L2)
 	$(MOSES_TRAIN_MODEL) -root-dir $*.hierarchical.$(L1)-$(L2) -corpus $*.clean -f $(L1) -e $(L2) \
 		-alignment grow-diag-final-and \
 		-hierarchical -glue-grammar -max-phrase-length 5 \
@@ -54,7 +54,7 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
-%.hierarchical.tm.$(L2)-$(L1): %.clean.$(L1) %.clean.$(L2) %.blm.$(L1)
+%.hiertm.$(L2)-$(L1): %.clean.$(L1) %.clean.$(L2) %.blm.$(L1)
 	$(MOSES_TRAIN_MODEL) -root-dir $*.hierarchical.$(L2)-$(L1) -corpus $*.clean -f $(L2) -e $(L1) \
 		-alignment grow-diag-final-and \
 		-hierarchical -glue-grammar -max-phrase-length 5 \
