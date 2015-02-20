@@ -23,6 +23,7 @@ BASELINE_TEST_PREFIX=europarl-v7.$(L1)-$(L2).test
 MTMATRIX_TEST_PREFIX=realtest2000
 UNDHR_TEST_PREFIX=undhr
 APERTIUM_TEST_PREFIX=story
+WMT15_TEST_PREFIX=newsdev2015-split-test
 
 # Moses baseline as with the wiki page but without europarl
 MOSES_BASELINE_PREFIX=$(BASELINE_CORPUS).train
