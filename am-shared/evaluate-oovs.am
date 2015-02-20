@@ -15,7 +15,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# MOSES_BASELINE_PREFIX is the filename part for moses baseline pre-processing
+# MOSES_BASELINE_TRAIN is the filename part for moses baseline pre-processing
 # MORFESSORS_BASELINE_PREFIX is the same for morfessor
 # MOSES_BASELINE_INFIX is the filename part for moses baseline translations
 # MORFESSOR_BASELINE_INFIX is the same for morfessor baseline
@@ -28,8 +28,8 @@
 
 # OOVs 
 # {{{MOSES
-%.$(MOSES_BASELINE_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_BASELINE_PREFIX).tok.$(L1)
-	$(MOSES_OOV) $< < $(MOSES_BASELINE_PREFIX).tok.$(L1) > $@
+%.$(MOSES_BASELINE_INFIX).$(OOV_L1_L2): %.tok.$(L1) $(MOSES_BASELINE_TRAIN).tok.$(L1)
+	$(MOSES_OOV) $< < $(MOSES_BASELINE_TRAIN).tok.$(L1) > $@
 
 %.$(MOSES_TUNED_INFIX).$(OOV_L1_L2): %.$(MOSES_BASELINE_INFIX).$(OOV_L1_L2)
 	cp -v $< $@
@@ -122,8 +122,8 @@
 # }}}
 #
 # {{{MOSES L2-L1
-%.$(MOSES_BASELINE_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_BASELINE_PREFIX).tok.$(L2)
-	$(MOSES_OOV) $< < $(MOSES_BASELINE_PREFIX).tok.$(L2) > $@
+%.$(MOSES_BASELINE_INFIX).$(OOV_L2_L1): %.tok.$(L2) $(MOSES_BASELINE_TRAIN).tok.$(L2)
+	$(MOSES_OOV) $< < $(MOSES_BASELINE_TRAIN).tok.$(L2) > $@
 
 %.$(MOSES_TUNED_INFIX).$(OOV_L2_L1): %.$(MOSES_BASELINE_INFIX).$(OOV_L2_L1)
 	cp -v $< $@

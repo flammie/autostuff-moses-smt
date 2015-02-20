@@ -26,7 +26,8 @@ APERTIUM_TEST_PREFIX=story
 WMT15_TEST_PREFIX=newsdev2015-split-test
 
 # Moses baseline as with the wiki page but without europarl
-MOSES_BASELINE_PREFIX=$(BASELINE_CORPUS).train
+MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).train
+MOSES_BASELINE_TUNE=$(BASELINE_CORPUS).dev
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-hfst-baseline.am
@@ -176,7 +177,7 @@ fi: $(LANGUAGE_MODELS_FI)
 en: $(LANGUAGE_MODELS_EN)
 
 include $(top_srcdir)/am-shared/train-language-models.am
-include $(top_srcdir)/am-shared/train-translation-models.am
+include $(top_srcdir)/am-shared/train-moses-baseline.am
 include $(top_srcdir)/am-shared/train-hfst.am
 
 
