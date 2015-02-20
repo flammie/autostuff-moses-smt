@@ -38,6 +38,7 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
+# hierarchical
 %.hierarchical.tm.$(L1)-$(L2): %.clean.$(L1) %.clean.$(L2) %.blm.$(L2)
 	$(MOSES_TRAIN_MODEL) -root-dir $*.hierarchical.$(L1)-$(L2) -corpus $*.clean -f $(L1) -e $(L2) \
 		-alignment grow-diag-final-and \
@@ -56,6 +57,29 @@
 		$(PARALLEL_FLAGS) \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG)
+	touch $@
+
+# Tuning
+%.tuned.tm.$(L1)-$(L2): %.tune.clean.$(L1) %.tune.clean.$(L2) %.tm.$(L1)-$(L2) %.blm.$(L2)
+	if test ! -d $*.tuned.$(L1)-$(L2) ; then \
+		$(MKDIR_P) $*.tuned.$(L1)-$(L2)/model ;\
+	fi
+	cp $*.$(L1)-$(L2)/model/moses.ini $*.tuned.$(L1)-$(L2)/model
+	$(MERT_MOSES) --working-dir $*.tuned.$(L1)-$(L2) \
+		$*.tune.clean.$(L1) $*.tune.clean.$(L2) \
+		$(MOSES) $*.tuned.$(L1)-$(L2)/model/moses.ini \
+		--mertdir `dirname $(MOSES)`
+	touch $@
+
+%.tuned.tm.$(L2)-$(L1): %.tune.clean.$(L1) %.tune.clean.$(L2) %.tm.$(L2)-$(L1) %.blm.$(L1)
+	if test ! -d $*.tuned.$(L2)-$(L1) ; then \
+		$(MKDIR_P) $*.tuned.$(L2)-$(L1)/model ;\
+	fi
+	cp $*.$(L2)-$(L1)/model/moses.ini $*.tuned.$(L2)-$(L1)/model
+	$(MERT_MOSES) --working-dir $*.tuned.$(L2)-$(L1) \
+		$*.tune.clean.$(L2) $*.tune.clean.$(L1) \
+		$(MOSES) $*.tuned.$(L2)-$(L1)/model/moses.ini \
+		--mertdir `dirname $(MOSES)`
 	touch $@
 
 # Binarising
