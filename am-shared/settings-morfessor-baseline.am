@@ -1,6 +1,6 @@
 ## Include to automake project to create baseline settings based on corpus name.
 
-# MOSES_BASELINE_PREFIX is the prefix for the corpus filename 
+# MOSES_BASELINE_TRAIN is the prefix for the corpus filename 
 
 .PHONY: morfessor-baseline flatcat-baseline \
 	morfessor-$(L1) morfessor-$(L2) morfessor-$(L1)-$(L2) morfessor-$(L1)-$(L2)\
@@ -11,7 +11,7 @@
 # Settings for baseline language models
 
 if CAN_MORFESS
-MOSES_MORFESSOR1BEST_PREFIX=$(MOSES_BASELINE_PREFIX).morfessor.1best
+MOSES_MORFESSOR1BEST_PREFIX=$(MOSES_BASELINE_TRAIN).morfessor.1best
 
 # L1 to L2
 MOSES_MORFESSOR1BEST_L2=$(MOSES_MORFESSOR1BEST_PREFIX).blm.$(L1)
@@ -26,7 +26,7 @@ MOSES_MORFESSOR1BEST_L2_L1_DIR=$(MOSES_MORFESSOR1BEST_PREFIX).$(L2)-$(L1)
 endif
 
 if CAN_FLATCAT
-MOSES_FLATCAT1BEST_PREFIX=$(MOSES_BASELINE_PREFIX).flatcat.1best
+MOSES_FLATCAT1BEST_PREFIX=$(MOSES_BASELINE_TRAIN).flatcat.1best
 # from L1 to L2
 MOSES_FLATCAT1BEST_L2=$(MOSES_FLATCAT1BEST_PREFIX).blm.$(L2)
 MOSES_FLATCAT1BEST_L1_L2=$(MOSES_FLATCAT1BEST_PREFIX).btm.$(L1)-$(L2)

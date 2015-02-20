@@ -1,6 +1,7 @@
 ## Include to automake project to create baseline settings based on corpus name.
 
-# MOSES_BASELINE_PREFIX is the prefix for the corpus filename 
+# MOSES_BASELINE_TRAIN is the prefix for the corpus filename 
+# MOSES_BASELINE_TUNE is the prefix for devset filename
 
 .PHONY: moses-baseline \
 	moses-$(L1) moses-$(L2) moses-$(L1)-$(L2) moses-$(L2)-$(L1) \
@@ -8,25 +9,28 @@
 
 # always secondary
 if !WANT_SECONDARY
-.SECONDARY: $(MOSES_BASELINE_PREFIX).$(L1).text \
-	$(MOSES_BASELINE_PREFIX).$(L2).text
+.SECONDARY: $(MOSES_BASELINE_TRAIN).$(L1).text \
+	$(MOSES_BASELINE_TRAIN).$(L2).text \
+	$(MOSES_BASELINE_TUNE).$(L1).text \
+	$(MOSES_BASELINE_TUNE).$(L2).text
 endif
 
 # Settings for baseline language models
 # L1 to L2
-MOSES_BASELINE_L2=$(MOSES_BASELINE_PREFIX).blm.$(L2)
-MOSES_BASELINE_L1_L2=$(MOSES_BASELINE_PREFIX).btm.$(L1)-$(L2)
-MOSES_BASELINE_L1_L2_DIR=$(MOSES_BASELINE_PREFIX).binarised.$(L1)-$(L2)
+MOSES_BASELINE_L2=$(MOSES_BASELINE_TRAIN).blm.$(L2)
+MOSES_BASELINE_L1_L2=$(MOSES_BASELINE_TRAIN).btm.$(L1)-$(L2)
+MOSES_BASELINE_L1_L2_DIR=$(MOSES_BASELINE_TRAIN).binarised.$(L1)-$(L2)
 
 # L2 to L1
-MOSES_BASELINE_L1=$(MOSES_BASELINE_PREFIX).blm.$(L1)
-MOSES_BASELINE_L2_L1=$(MOSES_BASELINE_PREFIX).btm.$(L2)-$(L1)
-MOSES_BASELINE_L2_L1_DIR=$(MOSES_BASELINE_PREFIX).binarised.$(L2)-$(L1)
+MOSES_BASELINE_L1=$(MOSES_BASELINE_TRAIN).blm.$(L1)
+MOSES_BASELINE_L2_L1=$(MOSES_BASELINE_TRAIN).btm.$(L2)-$(L1)
+MOSES_BASELINE_L2_L1_DIR=$(MOSES_BASELINE_TRAIN).binarised.$(L2)-$(L1)
 
 
 # Settings for baseline truecasing
 TRUECASE_BASELINE_L2=$(BASELINE_CORPUS).truecaser.$(L2)
 TRUECASE_BASELINE_L1=$(BASELINE_CORPUS).truecaser.$(L1)
+
 
 # Convenience variables for models
 TRUECASE_MODELS=$(TRUECASE_BASELINE_L2) $(TRUECASE_BASELINE_L1)
@@ -51,7 +55,6 @@ TRANSLATION_L1_SEGMENTED_L2=$(L1)-$(L2).translated-segments.$(L2)
 MOSES_BASELINE_INFIX=baseline-moses
 TRANSLATIONS_L1_L2=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2)
 TRANSLATIONS_L2_L1=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1)
-MOSES_TUNED_INFIX=baseline-moses-tuned
 
 TRANSLATIONS=$(TRANSLATIONS_L1_L2) $(TRANSLATIONS_L2_L1)
 
@@ -103,5 +106,11 @@ endif # Ter
 moses-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L1)-$(L2).rows
 moses-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L2)-$(L1).rows
 
+
+$(MOSES_BASELINE_TRAIN).tune.$(L1).text: $(MOSES_BASELINE_TUNE).$(L1).text
+	cp -v $< $@
+
+$(MOSES_BASELINE_TRAIN).tune.$(L2).text: $(MOSES_BASELINE_TUNE).$(L2).text
+	cp -v $< $@
 
 # vim: set ft=automake:
