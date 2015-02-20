@@ -101,7 +101,7 @@
 	touch $@
 
 
-%.binarised.tm.$(L2)-$(L1): %.tuned.tm.$(L2)-$(L1) %.untuned.tm.$(L1)-$(L2)
+%.binarised.tm.$(L2)-$(L1): %.tuned.tm.$(L2)-$(L1) %.untuned.tm.$(L2)-$(L1)
 	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
 		-in $*.$(L2)-$(L1)/model/phrase-table.gz \
 		-nscores 4 -out $*.$(L2)-$(L1)/phrase-table
