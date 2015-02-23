@@ -30,8 +30,8 @@ COMM_L2_L1=$(L2)-$(L1).comm.$(L2)
 %.sort.$(L2): %.tok.$(L2)
 	sort < $< > $@
 
-%.$(MOSES_BASELINE_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_BASELINE_PREFIX).sort.$(L1)
-	$(COMM) -12 $< < $(MOSES_BASELINE_PREFIX).sort.$(L1) > $@
+%.$(MOSES_BASELINE_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_BASELINE_TRAIN).sort.$(L1)
+	$(COMM) -12 $< < $(MOSES_BASELINE_TRAIN).sort.$(L1) > $@
 
 %.$(MOSES_TUNED_INFIX).$(COMM_L1_L2): %.$(MOSES_BASELINE_INFIX).$(COMM_L1_L2)
 	cp -v $< $@
@@ -118,8 +118,8 @@ COMM_L2_L1=$(L2)-$(L1).comm.$(L2)
 %.$(HFSTMORPH_SUFFIX_INFIX).$(COMM_L1_L2): %.sort.$(L1) $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).sort.$(L1)
 	$(COMM) -12 $< < $(MOSES_HFST1BESTMORPH_SUFFIX_PREFIX).sort.$(L1) > $@
 
-%.$(MOSES_BASELINE_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_BASELINE_PREFIX).sort.$(L2)
-	$(COMM) -12 $< < $(MOSES_BASELINE_PREFIX).sort.$(L2) > $@
+%.$(MOSES_BASELINE_INFIX).$(COMM_L2_L1): %.sort.$(L2) $(MOSES_BASELINE_TRAIN).sort.$(L2)
+	$(COMM) -12 $< < $(MOSES_BASELINE_TRAIN).sort.$(L2) > $@
 
 %.$(MOSES_TUNED_INFIX).$(COMM_L2_L1): %.$(MOSES_BASELINE_INFIX).$(COMM_L2_L1)
 	cp -v $< $@

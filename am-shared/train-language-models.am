@@ -69,10 +69,10 @@
 # Cleaning
 # XXX: bit of hacks to keep timestamps in order
 %.clean.$(L2).$(L2): %.true.$(L2) %.true.$(L1)
-	$(MOSES_CLEAN_CORPUS_N) $*.true $(L2) $(L1) $*.clean 1 80
+	$(MOSES_CLEAN_CORPUS_N) $*.true $(L2) $(L1) $*.clean.$(L2) 1 80
 
 %.clean.$(L1).$(L1): %.true.$(L2) %.true.$(L1)
-	$(MOSES_CLEAN_CORPUS_N) $*.true $(L1) $(L2) $*.clean 1 80
+	$(MOSES_CLEAN_CORPUS_N) $*.true $(L1) $(L2) $*.clean.$(L1) 1 80
 
 %.clean.$(L2): %.clean.$(L2).$(L2)
 	cp -v $< $@
