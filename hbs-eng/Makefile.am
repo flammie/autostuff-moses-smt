@@ -152,7 +152,7 @@ include $(top_srcdir)/am-shared/preprocess-split.am
 # }}}
 
 include $(top_srcdir)/am-shared/train-language-models.am
-include $(top_srcdir)/am-shared/train-translation-models.am
+include $(top_srcdir)/am-shared/train-moses-baseline.am
 
 include $(top_srcdir)/am-shared/translate-moses-baseline.am
 include $(top_srcdir)/am-shared/translate-apertium-baseline.am

@@ -23,7 +23,7 @@ BASELINE_TEST_PREFIX=europarl-v7.$(L1)-$(L2).test
 MTMATRIX_TEST_PREFIX=realtest2000
 UNDHR_TEST_PREFIX=undhr
 APERTIUM_TEST_PREFIX=story
-WMT15_TEST_PREFIX=newsdev2015-split-test
+WMT_TEST_PREFIX=newsdev2015-$(L1)$(L2)
 
 # Moses baseline as with the wiki page but without europarl
 MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).train
@@ -154,11 +154,16 @@ corpora:
 include $(top_srcdir)/am-shared/preprocess-europarl.am
 include $(top_srcdir)/am-shared/preprocess-split.am
 
+# Shared task 2005
 realtest2000.fi.gz:
 	$(WGET) http://www.statmt.org/wpt05/mt-shared-task/realtest2000.fi.gz
 
 realtest2000.en.gz:
 	$(WGET) http://www.statmt.org/wpt05/mt-shared-task/realtest2000.en.gz
+
+# shared task 2015
+newsdev2015.tgz:
+	$(WGET) http://statmt.org/wmt15/dev-v2.tgz -O $@
 
 # XXX: realtest is pre-tokenised but we don't want that because of apertium,
 # removing test data from training set, etc. etc.
@@ -169,6 +174,18 @@ realtest2000.fi.text: realtest2000.fi.gz
 realtest2000.en.text: realtest2000.en.gz
 	zcat $< | $(ICONV) -f latin1 -t utf8 | $(MOSES_DETOKENIZER) > $@
 
+# newsdev2015 doesn't have much problems...
+newsdev2015-$(L1)$(L2).$(L1).text: newsdev2015.tgz
+	$(TAR) zxvf $<
+	$(SED) -e 's/<[^>]*>//g' < dev/newsdev2015-enfi-src.en.sgm |\
+		tr -s '\n' |\
+		tail -n +2 > $@
+
+newsdev2015-$(L1)$(L2).$(L2).text: newsdev2015.tgz
+	$(TAR) zxvf $<
+	$(SED) -e 's/<[^>]*>//g' < dev/newsdev2015-fien-src.fi.sgm |\
+		tr -s '\n' |\
+		tail -n +2 > $@
 # }}}
 #
 # {{{ MODELS
@@ -230,8 +247,18 @@ include $(top_srcdir)/am-shared/evaluate-meteor.am
 include $(top_srcdir)/am-shared/paper-evals.am
 # }}}
 #
-naacl-2015-pretests: markers-fi-en-evals markers-en-fi-evals
-naacl-2015-models:
-naacl-2015-evals:
+eamt-2015-pretests:
+eamt-2015-models:
+eamt-2015-evals:
+
+wmt-2015-evals: $(WMT2015_TEST_PREFIX).baseline-moses.$(L1)-$(L2).rows \
+	$(WMT2015_TEST_PREFIX).baseline-moses.$(L2)-$(L1).rows \
+	$(WMT2015_TEST_PREFIX).morfessor.$(L1)-$(L2).rows \
+	$(WMT2015_TEST_PREFIX).morfessor.$(L2)-$(L1).rows \
+	$(WMT2015_TEST_PREFIX).hfst-morphs.$(L1)-$(L2).rows \
+	$(WMT2015_TEST_PREFIX).hfst-morphs.$(L2)-$(L1).rows \
+	$(WMT2015_TEST_PREFIX).hfst-compounds.$(L1)-$(L2).rows \
+	$(WMT2015_TEST_PREFIX).hfst-compounds.$(L2)-$(L1).rows \
+
 
 # vim: set foldmethod=marker:
