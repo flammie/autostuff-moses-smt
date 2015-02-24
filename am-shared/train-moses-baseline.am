@@ -68,7 +68,7 @@
 # Tuning
 %.tuned.tm.$(L1)-$(L2): %.tune.clean.$(L1) %.tune.clean.$(L2) %.untuned.tm.$(L1)-$(L2) %.blm.$(L2)
 	cp -v $*.$(L1)-$(L2)/model/moses.ini $*.$(L1)-$(L2)/model/moses-untuned.ini
-	$(MOSES_MERT) --working-dir $*.$(L1)-$(L2) \
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2) \
 		$*.tune.clean.$(L1) $*.tune.clean.$(L2) \
 		$(MOSES) $*.$(L1)-$(L2)/model/moses.ini \
 		--mertdir `dirname $(MOSES)`
@@ -79,7 +79,7 @@
 		$(MKDIR_P) $*.$(L2)-$(L1)/model ;\
 	fi
 	cp -v $*.$(L2)-$(L1)/model/moses.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
-	$(MOSES_MERT) --working-dir $*.$(L2)-$(L1) \
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1) \
 		$*.tune.clean.$(L2) $*.tune.clean.$(L1) \
 		$(MOSES) $*.$(L2)-$(L1)/model/moses.ini \
 		--mertdir `dirname $(MOSES)`
