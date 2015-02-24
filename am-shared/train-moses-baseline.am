@@ -81,7 +81,7 @@
 	cp -v $*.$(L2)-$(L1)/model/moses.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
 	$(MOSES_MERT) --working-dir $*.$(L2)-$(L1) \
 		$*.tune.clean.$(L2) $*.tune.clean.$(L1) \
-		$(MOSES) $*.tuned.$(L2)-$(L1)/model/moses.ini \
+		$(MOSES) $*.$(L2)-$(L1)/model/moses.ini \
 		--mertdir `dirname $(MOSES)`
 	touch $@
 
