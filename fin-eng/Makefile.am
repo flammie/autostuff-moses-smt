@@ -18,7 +18,7 @@ endif
 
 # {{{ SETTINGS
 # common prefixes
-BASELINE_CORPUS=europarl-v7.$(L1)-$(L2)
+BASELINE_CORPUS=europarl-v8.$(L1)-$(L2)
 BASELINE_TEST_PREFIX=europarl-v7.$(L1)-$(L2).test
 MTMATRIX_TEST_PREFIX=realtest2000
 UNDHR_TEST_PREFIX=undhr
@@ -153,6 +153,23 @@ corpora:
 
 include $(top_srcdir)/am-shared/preprocess-europarl.am
 include $(top_srcdir)/am-shared/preprocess-split.am
+
+europarl-v8.fi-en.tgz:
+	$(WGET) http://statmt.org/wmt15/europarl-v8.fi-en.tgz
+
+europarl-v8.fi-en.fi.text: europarl-v8.fi-en.tgz
+	tar zxvf $< europarl-v8.fi-en.fi
+	mv -v europarl-v8.fi-en.fi $@
+
+europarl-v8.fi-en.en.text: europarl-v8.fi-en.tgz
+	tar zxvf $< europarl-v8.fi-en.en
+	mv -v europarl-v8.fi-en.en $@
+
+europarl-v8.fi-en.tune.fi.text: newsdev2015-$(L1)$(L2).$(L2).text
+	ln -sf $< $@
+
+europarl-v8.fi-en.tune.en.text: newsdev2015-$(L1)$(L2).$(L1).text
+	ln -sf $< $@
 
 # Shared task 2005
 realtest2000.fi.gz:
