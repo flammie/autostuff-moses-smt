@@ -246,8 +246,18 @@ include $(top_srcdir)/am-shared/evaluate-meteor.am
 include $(top_srcdir)/am-shared/paper-evals.am
 # }}}
 #
-naacl-2015-pretests: markers-fi-en-evals markers-en-fi-evals
-naacl-2015-models:
-naacl-2015-evals:
+eamt-2015-pretests:
+eamt-2015-models:
+eamt-2015-evals:
+
+wmt-2015-evals: $(WMT2015_TEST_PREFIX).baseline-moses.$(L1)-$(L2).rows \
+	$(WMT2015_TEST_PREFIX).baseline-moses.$(L2)-$(L1).rows \
+	$(WMT2015_TEST_PREFIX).morfessor.$(L1)-$(L2).rows \
+	$(WMT2015_TEST_PREFIX).morfessor.$(L2)-$(L1).rows \
+	$(WMT2015_TEST_PREFIX).hfst-morphs.$(L1)-$(L2).rows \
+	$(WMT2015_TEST_PREFIX).hfst-morphs.$(L2)-$(L1).rows \
+	$(WMT2015_TEST_PREFIX).hfst-compounds.$(L1)-$(L2).rows \
+	$(WMT2015_TEST_PREFIX).hfst-compounds.$(L2)-$(L1).rows \
+
 
 # vim: set foldmethod=marker:
