@@ -11,8 +11,10 @@ METEOR_L1_FLAGS=-l en
 METEOR_L2_FLAGS=
 
 # all secondary
+if WANT_SECONDARY
 .SECONDARY:
 
+endif
 # common prefixes
 BASELINE_CORPUS=europarl-v7.$(L1)-$(L2)
 UNDHR_TEST_PREFIX=undhr
@@ -135,7 +137,7 @@ include $(top_srcdir)/am-shared/preprocess-europarl.am
 include $(top_srcdir)/am-shared/preprocess-split.am
 
 include $(top_srcdir)/am-shared/train-language-models.am
-include $(top_srcdir)/am-shared/train-translation-models.am
+include $(top_srcdir)/am-shared/train-moses-baseline.am
 
 
 # }}}
