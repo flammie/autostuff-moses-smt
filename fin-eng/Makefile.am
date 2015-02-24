@@ -18,7 +18,7 @@ endif
 
 # {{{ SETTINGS
 # common prefixes
-BASELINE_CORPUS=europarl-v8.$(L1)-$(L2)
+BASELINE_CORPUS=europarl-v8.$(L2)-$(L1)
 BASELINE_TEST_PREFIX=europarl-v7.$(L1)-$(L2).test
 MTMATRIX_TEST_PREFIX=realtest2000
 UNDHR_TEST_PREFIX=undhr
