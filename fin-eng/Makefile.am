@@ -33,9 +33,10 @@ include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-hfst-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 #include $(top_srcdir)/am-shared/settings-moses-baseline-scaling.am
-include $(top_srcdir)/am-shared/settings-segment-markers.am
+#include $(top_srcdir)/am-shared/settings-segment-markers.am
 
-include $(top_srcdir)/am-shared/settings-quick-sampling.am
+#include $(top_srcdir)/am-shared/settings-quick-sampling.am
+include $(top_srcdir)/am-shared/check-oovs.am
 
 HFST_L2_MORPHS_UNWEIGHTED=omorfi-morphs.hfst
 HFST_L2_COMPOUNDS_UNWEIGHTED=omorfi-compounds.hfst
