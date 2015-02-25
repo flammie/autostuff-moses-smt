@@ -208,5 +208,18 @@ OOVLIST_L2_L1=$(L2)-$(L1).oovlist.$(L2)
 
 
 # }}}
-#
+
+%.hfst-morph-oovs.$(L2): %.oovlist.$(L2)
+	hfst-optimized-lookup omorfi-morphs.hfst -n 1 < $< | cut -f 2 |\
+		tr ' ' '\n' | sort > $@
+
+%.hfst-comp-oovs.$(L2): %.oovlist.$(L2)
+	hfst-optimized-lookup omorfi-compounds.hfst -n 1 < $< | cut -f 2 |\
+		tr ' ' '\n' | sort  > $@
+
+%.morfessor-oovs.$(L2): %.oovlist.$(L2)
+	morfessor -l europarl-v7.en-fi.fi.morfessor \
+		--output-format-separator '>>> <<<' -T $< | sed -e 's/>>>/→/g' \
+		-e 's/<<</←/g' > $@
+
 # vim: set ft=automake foldmethod=marker:
