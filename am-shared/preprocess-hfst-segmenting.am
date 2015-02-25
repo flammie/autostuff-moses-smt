@@ -73,5 +73,19 @@
 %.hfst.1best-morphs.suffixmarkered.tok.$(L1): %.tok.$(L1)
 	cp -v $< $@
 
+# tuning set namings
+# tuning set naming
+%.hfst.1best-morphs.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.hfst.1best-morphs.tune.tok.$(L2): %.tune.hfst.1best-morphs.tok.$(L2)
+	cp -v $< $@
+
+%.hfst.1best-comp.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.hfst.1best-comp.tune.tok.$(L2): %.tune.hfst.1best-comp.tok.$(L2)
+	cp -v $< $@
+
 
 # vim: set ft=automake:
