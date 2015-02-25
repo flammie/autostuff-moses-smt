@@ -111,7 +111,7 @@
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryBinary/' \
 		-e "s:$*.$(L2)-$(L1)/model/phrase-table.gz:$*.binarised.$(L2)-$(L1)/phrase-table:"\
 		-e "s:$*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table:"\
-		< $*.tuned.$(L2)-$(L1)/model/moses.ini  > $*.$(L2)-$(L1)/model/moses-binarised.ini
+		< $*.$(L2)-$(L1)/model/moses.ini  > $*.$(L2)-$(L1)/model/moses-binarised.ini
 	touch $@
 
 # vim: set ft=automake:
