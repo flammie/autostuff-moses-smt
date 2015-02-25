@@ -164,7 +164,6 @@ segments: $(SEGMENTS)
 %.flatcat.1best.unsplit5.tok.$(L1): %.tok.$(L1)
 	cp -v $< $@
 
-
 # baseline desegmentation:  join matching segments, delete rest
 %.suffixmarkered.$(TRANSLATION_L1_L2): %.suffixmarkered.$(TRANSLATION_L1_SEGMENTED_L2)
 	$(SED) -e 's/ ←//g' \
@@ -179,5 +178,12 @@ segments: $(SEGMENTS)
 		-e 's/[[:space:]]*←[^[:space:].,?!()"]*//g' \
 		-e 's/[^[:space:].,?!()"]*→[[:space:]]*//g' \
 		-e 's/[→←]//g' < $< > $@
+
+# tuning set naming
+%.morfessor.1best.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.tune.morfs.$(L2): %.tune.morfessor.1best.morfs.$(L2)
+	cp -v $< $@
 
 # vim: set ft=automake:
