@@ -20,7 +20,7 @@ BASELINE_TEST_PREFIX=$(BASELINE_CORPUS).002001-004000
 WMT2013_TEST_PREFIX=newstest2013.$(L1)-$(L2)
 
 # Moses baseline as with the wiki page but without europarl
-MOSES_BASELINE_PREFIX=$(BASELINE_CORPUS).004001-205910
+MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).004001-205910
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
