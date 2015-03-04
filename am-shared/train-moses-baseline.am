@@ -111,7 +111,7 @@
 		-in $*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz \
 		-out $*.$(L2)-$(L1)/reordering-table
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryBinary/' \
-		-e "s:$*.$(L2)-$(L1)/model/phrase-table.gz:$*.binarised.$(L2)-$(L1)/phrase-table:"\
+		-e "s:$*.$(L2)-$(L1)/model/phrase-table.gz:$*.$(L2)-$(L1)/phrase-table:"\
 		-e "s:$*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table:"\
 		< $*.$(L2)-$(L1)/model/moses-tuned.ini  > $*.$(L2)-$(L1)/model/moses-binarised.ini
 	touch $@
