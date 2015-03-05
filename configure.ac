@@ -208,7 +208,7 @@ AC_PATH_PROGS_FEATURE_CHECK([SED], [gnused gsed sed],
                 && ac_cv_path_SED=$ac_path_SED ac_path_SED_found=:]],
               [AC_MSG_ERROR([could not find sed that supports new line])])
 AC_SUBST([SED], [$ac_cv_path_SED])
-
+AC_PATH_PROG([COMM], [comm])
 
 # 
 AC_CONFIG_FILES([Makefile \
