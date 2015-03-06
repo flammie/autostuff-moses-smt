@@ -23,7 +23,7 @@
 		$(SED) -e 's/Total TER: //' -e 's/(.*//' > $*.2
 	fgrep "Final score:" < $*.meteor.$(L1) |\
 		$(SED) -e 's/Final score: *//' > $*.3
-	fgrep "OOV 1-gram tok" < $*.oov.$(L2) |\
+	fgrep "OOV 1-grams tokens" < $*.oov.$(L2) |\
 		$(SED) -e 's/.*tokens[[:space:]]*[[:digit:]]*[[:space:]]*//' > $*.4
 	echo $* > $*.0
 	paste $*.0 $*.1 $*.2 $*.3 $*.4 > $@
@@ -35,7 +35,7 @@
 		$(SED) -e 's/Total TER: //' -e 's/(.*//' > $*.2
 	fgrep "Final score:" < $*.meteor.$(L2) |\
 		$(SED) -e 's/Final score: *//' > $*.3
-	fgrep "OOV 1-gram tok" < $*.oov.$(L1) |\
+	fgrep "OOV 1-grams tokens" < $*.oov.$(L1) |\
 		$(SED) -e 's/.*tokens[[:space:]]*[[:digit:]]*[[:space:]]*//' > $*.4
 	echo $* > $*.0
 	paste $*.0 $*.1 $*.2 $*.3 $*.4 > $@
