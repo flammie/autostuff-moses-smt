@@ -38,11 +38,6 @@
 
 # Complex lang needs a bit more
 # ... these are kind of hacks to fix some broken pre-proc
-%.tok.$(L2): %.morfs.$(L2)
-	$(MOSES_TOKENIZER) -l $(L2) < $< |\
-		sed -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
-		-e 's/→←/→ ←/g' > $@
-
 %.nomarkers.tok.$(L2): %.morfs.$(L2)
 	$(MOSES_TOKENIZER) -l $(L2) < $< |\
 		sed -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
