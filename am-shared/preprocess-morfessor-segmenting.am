@@ -186,4 +186,12 @@ segments: $(SEGMENTS)
 %.morfessor.1best.tune.morfs.$(L2): %.tune.morfessor.1best.morfs.$(L2)
 	cp -v $< $@
 
+# morfessed needs to run through tok/true/clean before hitting lm's...
+# hacks over hacks to make other software restricted input formats ok
+%.tok.$(L2): %.morfs.$(L2)
+	$(MOSES_TOKENIZER) -l $(L2) < $< |\
+		sed -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
+		-e 's/→←/→ ←/g' > $@
+
+
 # vim: set ft=automake:

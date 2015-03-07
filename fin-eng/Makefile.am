@@ -160,10 +160,12 @@ europarl-v8.fi-en.tgz:
 europarl-v8.fi-en.fi.text: europarl-v8.fi-en.tgz
 	tar zxvf $< europarl-v8.fi-en.fi
 	mv -v europarl-v8.fi-en.fi $@
+	touch $@
 
 europarl-v8.fi-en.en.text: europarl-v8.fi-en.tgz
 	tar zxvf $< europarl-v8.fi-en.en
 	mv -v europarl-v8.fi-en.en $@
+	touch $@
 
 europarl-v8.fi-en.tune.fi.text: newsdev2015-$(L1)$(L2).$(L2).text
 	ln -sf $< $@
