@@ -1,0 +1,136 @@
+## Include to evaluate transaltions as nist bleu.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+
+
+# WER
+
+WER_L1_L2=$(L1)-$(L2).wer.$(L2)
+WER_L2_L1=$(L2)-$(L1).wer.$(L1)
+
+# L1 - L2 
+
+# Moses Baseline
+%.$(MOSES_BASELINE_INFIX).$(WER_L1_L2): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(WER)  -r $*.ref.$(L2) -t $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2) > $@
+
+# Morfessor baseline
+%.$(MORFESSOR_BASELINE_INFIX).$(WER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(WER)  -r $*.ref.$(L2) -t $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2) > $@
+
+# Flatcat baseline
+%.$(FLATCAT_BASELINE_INFIX).$(WER_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(WER)  -r $*.ref.$(L2) -t $*.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2) > $@
+
+# Apertium baseline
+%.$(APERTIUM_BASELINE_INFIX).$(WER_L1_L2): %.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(WER)  -r $*.ref.$(L2) -t $*.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L1_L2) > $@
+
+# HFST baselines
+%.$(HFST_COMPOUNDS_INFIX).$(WER_L1_L2): %.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(WER)  -r $*.ref.$(L2) -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2) > $@
+
+%.$(HFST_MORPHS_INFIX).$(WER_L1_L2): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(WER)  -r $*.ref.$(L2) -t $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2) > $@
+
+
+# L2 to L1
+#
+# Moses baseline
+%.$(MOSES_BASELINE_INFIX).$(WER_L2_L1): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(WER)  -r $*.ref.$(L1) -t $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1) > $@
+
+
+# Morfessor baseline
+%.$(MORFESSOR_BASELINE_INFIX).$(WER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(WER)  -r $*.ref.$(L1) -t $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1) > $@
+
+# Flatcat
+%.$(FLATCAT_BASELINE_INFIX).$(WER_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(WER)  -r $*.ref.$(L1) -t $*.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1) > $@
+
+# Apertium baseline
+%.$(APERTIUM_BASELINE_INFIX).$(WER_L2_L1): %.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(WER)  -r $*.ref.$(L1) -t $*.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L2_L1) > $@
+
+# HFST baseline
+%.$(HFST_COMPOUNDS_INFIX).$(WER_L2_L1): %.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(WER)  -r $*.ref.$(L1) -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1) > $@
+
+%.$(HFST_MORPHS_INFIX).$(WER_L2_L1): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(WER)  -r $*.ref.$(L1) -t $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1) > $@
+
+# PER
+
+
+PER_L1_L2=$(L1)-$(L2).per.$(L2)
+PER_L2_L1=$(L2)-$(L1).per.$(L1)
+
+# L1 - L2 
+
+# Moses Baseline
+%.$(MOSES_BASELINE_INFIX).$(PER_L1_L2): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(PER)  -r $*.ref.$(L2) -t $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2) > $@
+
+# Morfessor baseline
+%.$(MORFESSOR_BASELINE_INFIX).$(PER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(PER)  -r $*.ref.$(L2) -t $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2) > $@
+
+# Flatcat baseline
+%.$(FLATCAT_BASELINE_INFIX).$(PER_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(PER)  -r $*.ref.$(L2) -t $*.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2) > $@
+
+# Apertium baseline
+%.$(APERTIUM_BASELINE_INFIX).$(PER_L1_L2): %.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(PER)  -r $*.ref.$(L2) -t $*.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L1_L2) > $@
+
+# HFST baselines
+%.$(HFST_COMPOUNDS_INFIX).$(PER_L1_L2): %.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(PER)  -r $*.ref.$(L2) -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2) > $@
+
+%.$(HFST_MORPHS_INFIX).$(PER_L1_L2): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2) %.ref.$(L2) %.src.$(L1)
+	$(PER)  -r $*.ref.$(L2) -t $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2) > $@
+
+
+# L2 to L1
+#
+# Moses baseline
+%.$(MOSES_BASELINE_INFIX).$(PER_L2_L1): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(PER)  -r $*.ref.$(L1) -t $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1) > $@
+
+
+# Morfessor baseline
+%.$(MORFESSOR_BASELINE_INFIX).$(PER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(PER)  -r $*.ref.$(L1) -t $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1) > $@
+
+# Flatcat
+%.$(FLATCAT_BASELINE_INFIX).$(PER_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(PER)  -r $*.ref.$(L1) -t $*.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1) > $@
+
+# Apertium baseline
+%.$(APERTIUM_BASELINE_INFIX).$(PER_L2_L1): %.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(PER)  -r $*.ref.$(L1) -t $*.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L2_L1) > $@
+
+# HFST baseline
+%.$(HFST_COMPOUNDS_INFIX).$(PER_L2_L1): %.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(PER)  -r $*.ref.$(L1) -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1) > $@
+
+%.$(HFST_MORPHS_INFIX).$(PER_L2_L1): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1) %.src.$(L2) %.ref.$(L1)
+	$(PER)  -r $*.ref.$(L1) -t $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1) > $@
+
+# vim: set ft=automake:

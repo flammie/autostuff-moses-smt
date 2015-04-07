@@ -32,10 +32,7 @@ include $(top_srcdir)/am-shared/settings-moses-baseline.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-hfst-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
-#include $(top_srcdir)/am-shared/settings-moses-baseline-scaling.am
-#include $(top_srcdir)/am-shared/settings-segment-markers.am
 
-#include $(top_srcdir)/am-shared/settings-quick-sampling.am
 include $(top_srcdir)/am-shared/check-oovs.am
 
 HFST_L2_MORPHS_UNWEIGHTED=omorfi-morphs.hfst
@@ -252,7 +249,9 @@ include $(top_srcdir)/am-shared/translate-apertium-baseline.am
 include $(top_srcdir)/am-shared/translate-morfessor-baseline.am
 include $(top_srcdir)/am-shared/translate-hfst-baseline.am
 
-
+# }}}
+#
+# {{{ EVALing
 evaluations: $(EVALUATIONS)
 fi-en: $(EVALUATIONS_FI_EN)
 en-fi: $(EVALUATIONS_EN_FI)
@@ -262,6 +261,7 @@ include $(top_srcdir)/am-shared/evaluate-oovs.am
 include $(top_srcdir)/am-shared/evaluate-nistbleu.am
 include $(top_srcdir)/am-shared/evaluate-ter.am
 include $(top_srcdir)/am-shared/evaluate-meteor.am
+include $(top_srcdir)/am-shared/evaluate-pwer.am
 
 include $(top_srcdir)/am-shared/paper-evals.am
 # }}}
