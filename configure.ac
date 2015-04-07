@@ -171,6 +171,11 @@ AC_CHECK_FILE([$with_meteor_path/meteor-1.5.jar],
               [AC_MSG_WARN([point --with-meteor-path to dir of meteor-1.5.jar for METEOR tests])])
 AM_CONDITIONAL([CAN_METEOR], [test x$METEORJAR != x])
 
+# WERPL and PERPL by ape
+AC_PATH_PROG([WER], [WER.pl], [false])
+AC_PATH_PROG([PER], [PER.pl], [false])
+
+
 # XML wrapping for eval
 AC_PATH_PROG([WRAP_XML], [wrap-xml.prompsit-version.sh], [false])
 AM_CONDITIONAL([CAN_WRAPXML], [test x$WRAP_XML != xfalse])
@@ -256,6 +261,8 @@ cat <<EOF
   * nist-bleu: $NIST_BLEU13A
   * ter: $TERJAR
   * meteor: $METEORJAR
+  * wer: $WER
+  * per: $PER
   Paper:
   * xelatex: $XELATEX
   * bibtex: $BIBTEX
