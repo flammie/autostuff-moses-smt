@@ -31,10 +31,10 @@
 
 # Tokenising
 %.tok.$(L1): %.$(L1).text
-	$(MOSES_TOKENIZER) -l $(L1) < $< > $@
+	$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L1) < $< > $@
 
 %.tok.$(L2): %.$(L2).text
-	$(MOSES_TOKENIZER) -l $(L2) < $< > $@
+	$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L2) < $< > $@
 
 # Complex lang needs a bit more
 # ... these are kind of hacks to fix some broken pre-proc

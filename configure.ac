@@ -58,7 +58,8 @@ AC_ARG_WITH([cores],
 	    [with_cores=8])
 AS_IF([test x$enable_parallel != xno], 
       [AC_SUBST([PARALLEL_FLAGS], ["-parallel -cores $with_cores -sort-parallel $with_cores"])
-       AC_SUBST([PROCESS_PHRASE_TABLE_FLAGS], ["-threads $with_cores"])])
+       AC_SUBST([PROCESS_PHRASE_TABLE_FLAGS], ["-threads $with_cores"])
+       AC_SUBST([TOKENIZER_FLAGS], ["-threads $with_cores"])])
 AC_ARG_ENABLE([secondary],
               [AS_HELP_STRING([--enable-secondary],
                               [use SECONDARY directive in Makefile (retain intermediate results) @<:@default=no@:>@])],
