@@ -17,6 +17,7 @@ METEOR_L2_FLAGS=
 # common prefixes
 BASELINE_CORPUS=setimes.$(L1)-$(L2)
 BASELINE_TEST_PREFIX=$(BASELINE_CORPUS).002001-004000
+BASELINE_TUNE_PREFIX=$(BASELINE_CORPUS).000001-002000
 WMT2013_TEST_PREFIX=newstest2013.$(L1)-$(L2)
 
 # Moses baseline as with the wiki page but without europarl
@@ -174,5 +175,6 @@ include $(top_srcdir)/am-shared/evaluate-meteor.am
 
 include $(top_srcdir)/am-shared/paper-evals.am
 
+include $(top_srcdir)/am-shared/check-oovs.am
 
 # vim: set foldmethod=marker:
