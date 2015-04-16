@@ -111,7 +111,7 @@
 	$(MOSES_BUILD_BINARY) -i $< $@
 
 # morfessor train
-%.morfclean.$(L2): %.tok.$(L2)
+%.morfclean.$(L2): %.true.$(L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
 		-e 's/&lt;/</g' -e 's/&quot;/"/g' < $< > $@
 
