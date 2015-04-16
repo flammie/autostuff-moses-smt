@@ -25,11 +25,11 @@
 segments: $(SEGMENTS)
 
 # plain segments
-%.$(L2).morfessed: %.tok.$(L2) $(MORFESSOR_L2)
+%.$(L2).morfessed: %.true.$(L2) $(MORFESSOR_L2)
 	$(MORFESSOR_SEGMENT) -l $(MORFESSOR_L2)  $<  > $@
 
 # special markers in segment boundaries
-%.morfessor.1best.morfs.$(L2): %.tok.$(L2) $(MORFESSOR_L2)
+%.morfessor.1best.morfs.$(L2): %.true.$(L2) $(MORFESSOR_L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
 		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
 		-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
@@ -40,7 +40,7 @@ segments: $(SEGMENTS)
 		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
 		-e 's/^[↩→← ]\+$$//' > $@
 
-%.flatcat.1best.morfs.$(L2): %.tok.$(L2) $(FLATCAT_L2)
+%.flatcat.1best.morfs.$(L2): %.true.$(L2) $(FLATCAT_L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
 		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
 		-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
@@ -196,7 +196,7 @@ segments: $(SEGMENTS)
 # hacks over hacks to make other software restricted input formats ok
 %.tok.$(L2): %.morfs.$(L2)
 	$(MOSES_TOKENIZER) -l $(L2) < $< |\
-		sed -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
+		$(SED) -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
 		-e 's/→←/→ ←/g' > $@
 
 
