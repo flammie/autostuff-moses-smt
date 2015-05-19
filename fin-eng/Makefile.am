@@ -225,12 +225,12 @@ morphology.segments.hfst: $(OMORFI_PREFIX)/share/hfst/fi/morphology.segments.hfs
 
 $(HFST_L2_COMPOUNDS_UNWEIGHTED): morphology.segments.hfst omorfi-segments.relabel
 	hfst-fst2fst -f openfst < $< | hfst-substitute -F omorfi-segments.relabel |\
-		hfst-minimize |\
+		hfst-minimize -E |\
 		hfst-fst2fst -f olw -o $@
 
 $(HFST_L2_MORPHS_UNWEIGHTED): morphology.segments.hfst omorfi-morphs.relabel
 	hfst-fst2fst -f openfst < $< | hfst-substitute -F omorfi-morphs.relabel |\
-		hfst-minimize |\
+		hfst-minimize -E |\
 		hfst-fst2fst -f olw -o $@
 
 
