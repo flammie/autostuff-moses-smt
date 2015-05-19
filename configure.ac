@@ -220,7 +220,8 @@ AC_PATH_PROG([COMM], [comm])
 AC_CONFIG_FILES([Makefile \
                  fin-eng/Makefile \
                  lit-eng/Makefile \
-                 hbs-eng/Makefile])
+                 hbs-eng/Makefile \
+                 spa-eus/Makefile])
                  #fin-lit/Makefile
 AC_CONFIG_FILES([build-lm-makeable.sh],
                 [chmod +x build-lm-makeable.sh])
