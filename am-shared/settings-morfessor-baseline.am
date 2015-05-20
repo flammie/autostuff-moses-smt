@@ -40,14 +40,6 @@ MOSES_FLATCAT1BEST_L2_L1_DIR=$(MOSES_FLATCAT1BEST_PREFIX).$(L2)-$(L1)
 
 endif
 
-# Settings for baseline segmenters for L2
-if CAN_MORFESS
-MORFESSOR_L2=$(BASELINE_CORPUS).$(L2).morfessor
-endif
-if CAN_FLATCAT
-FLATCAT_L2=$(BASELINE_CORPUS).$(L2).flatcat
-FLATCAT_L2_CONF=$(BASELINE_CORPUS).$(L2).flatcat.ini
-endif
 
 # Convenience variables for models
 MORFESSOR_LMS_L2=$(MOSES_MORFESSOR1BEST_L2) \
