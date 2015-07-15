@@ -65,31 +65,8 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG)
 	touch $@
 
-# Tuning
-%.tuned.tm.$(L1)-$(L2): %.tune.clean.$(L1) %.tune.clean.$(L2) %.untuned.tm.$(L1)-$(L2) %.blm.$(L2)
-	cp -v $*.$(L1)-$(L2)/model/moses.ini $*.$(L1)-$(L2)/model/moses-untuned.ini
-	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2) \
-		$*.tune.clean.$(L1) $*.tune.clean.$(L2) \
-		$(MOSES) $*.$(L1)-$(L2)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
-	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
-	touch $@
-
-%.tuned.tm.$(L2)-$(L1): %.tune.clean.$(L1) %.tune.clean.$(L2) %.untuned.tm.$(L2)-$(L1) %.blm.$(L1)
-	if test ! -d $*.$(L2)-$(L1) ; then \
-		$(MKDIR_P) $*.$(L2)-$(L1)/model ;\
-	fi
-	cp -v $*.$(L2)-$(L1)/model/moses.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
-	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1) \
-		$*.tune.clean.$(L2) $*.tune.clean.$(L1) \
-		$(MOSES) $*.$(L2)-$(L1)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
-	cp -v $*.$(L2)-$(L1)/moses.ini $*.$(L2)-$(L1)/model/moses-tuned.ini
-	touch $@
-
 # Binarising
-# N.B binarised data move up one dir cause moses' autodetect stuff!
-%.binarised.tm.$(L1)-$(L2): %.tuned.tm.$(L1)-$(L2) %.untuned.tm.$(L1)-$(L2)
+%.binarised-untuned.tm.$(L1)-$(L2): %.untuned.tm.$(L1)-$(L2)
 	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
 		-in $*.$(L1)-$(L2)/model/phrase-table.gz \
 		-nscores 4 -out $*.$(L1)-$(L2)/phrase-table
@@ -99,11 +76,11 @@
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
 		-e "s:$*.$(L1)-$(L2)/model/phrase-table.gz:$*.$(L1)-$(L2)/phrase-table:"\
 		-e "s:$*.$(L1)-$(L2)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)/reordering-table:"\
-		< $*.$(L1)-$(L2)/model/moses-tuned.ini  > $*.$(L1)-$(L2)/model/moses-binarised.ini
+		< $*.$(L1)-$(L2)/model/moses.ini  > $*.$(L1)-$(L2)/model/moses-binarised.ini
 	touch $@
 
 
-%.binarised.tm.$(L2)-$(L1): %.tuned.tm.$(L2)-$(L1) %.untuned.tm.$(L2)-$(L1)
+%.binarised-untuned.tm.$(L2)-$(L1): %.untuned.tm.$(L2)-$(L1)
 	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
 		-in $*.$(L2)-$(L1)/model/phrase-table.gz \
 		-nscores 4 -out $*.$(L2)-$(L1)/phrase-table
@@ -113,7 +90,63 @@
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
 		-e "s:$*.$(L2)-$(L1)/model/phrase-table.gz:$*.$(L2)-$(L1)/phrase-table:"\
 		-e "s:$*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table:"\
-		< $*.$(L2)-$(L1)/model/moses-tuned.ini  > $*.$(L2)-$(L1)/model/moses-binarised.ini
+		< $*.$(L2)-$(L1)/model/moses.ini  > $*.$(L2)-$(L1)/model/moses-binarised.ini
 	touch $@
+
+
+# Tuning
+# baseline
+%.baseline-tuned.tm.$(L1)-$(L2):  %.binarised-untuned.tm.$(L1)-$(L2) %.blm.$(L2) $(MOSES_BASELINE_TUNE).clean.$(L1) $(MOSES_BASELINE_TUNE).clean.$(L2)
+	cp -v $*.$(L1)-$(L2)/model/moses-binarised.ini $*.$(L1)-$(L2)/model/moses-untuned.ini
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2) \
+		$(MOSES_BASELINE_TUNE).clean.$(L1) $(MOSES_BASELINE_TUNE).tune.clean.$(L2) \
+		$(MOSES) $*.$(L1)-$(L2)/model/moses.ini \
+		--mertdir `dirname $(MOSES)`
+	cp -v $*.$(L1)-$(L2)/moses-binarised.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
+	touch $@
+
+%.baseline-tuned.tm.$(L2)-$(L1): %.binarised-untuned.tm.$(L2)-$(L1) %.blm.$(L1) $(MOSES_BASELINE_TUNE).clean.$(L1) $(MOSES_BASELINE_TUNE).clean.$(L2)
+	cp -v $*.$(L2)-$(L1)/model/moses-binarised.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1) \
+		$(MOSES_BASELINE_TUNE).clean.$(L2) $(MOSES_BASELINE_TUNE).clean.$(L1) \
+		$(MOSES) $*.$(L2)-$(L1)/model/moses.ini \
+		--mertdir `dirname $(MOSES)`
+	cp -v $*.$(L2)-$(L1)/moses-binarised.ini $*.$(L2)-$(L1)/model/moses-tuned.ini
+	touch $@
+
+# specific pre-processed
+%.tuned.tm.$(L1)-$(L2): %.tune.clean.$(L1) %.tune.clean.$(L2) %.binarised-untuned.tm.$(L1)-$(L2) %.blm.$(L2)
+	cp -v $*.$(L1)-$(L2)/model/moses-binarised.ini $*.$(L1)-$(L2)/model/moses-untuned.ini
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2) \
+		$*.tune.clean.$(L1) $*.tune.clean.$(L2) \
+		$(MOSES) $*.$(L1)-$(L2)/model/moses.ini \
+		--mertdir `dirname $(MOSES)`
+	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
+	touch $@
+
+%.tuned.tm.$(L2)-$(L1): %.tune.clean.$(L1) %.tune.clean.$(L2) %.binarised-untuned.tm.$(L2)-$(L1) %.blm.$(L1)
+	cp -v $*.$(L2)-$(L1)/model/moses-binarised.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1) \
+		$*.tune.clean.$(L2) $*.tune.clean.$(L1) \
+		$(MOSES) $*.$(L2)-$(L1)/model/moses-binarised.ini \
+		--mertdir `dirname $(MOSES)`
+	cp -v $*.$(L2)-$(L1)/moses.ini $*.$(L2)-$(L1)/model/moses-tuned.ini
+	touch $@
+
+
+%.tuned-binarised.tm.$(L1)-$(L2): %.tuned.tm.$(L1)-$(L2) %.binarised-untuned.tm.$(L1)-$(L2)
+	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
+		-e "s:$*.$(L1)-$(L2)/model/phrase-table.gz:$*.$(L1)-$(L2)/phrase-table:"\
+		-e "s:$*.$(L1)-$(L2)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)/reordering-table:"\
+		< $*.$(L1)-$(L2)/model/moses-tuned.ini  > $*.$(L1)-$(L2)/model/moses-tuned-binarised.ini
+	touch $@
+
+%.tuned-binarised.tm.$(L2)-$(L1): %.tuned.tm.$(L2)-$(L1) %.binarised-untuned.tm.$(L2)-$(L1)
+	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
+		-e "s:$*.$(L2)-$(L1)/model/phrase-table.gz:$*.$(L2)-$(L1)/phrase-table:"\
+		-e "s:$*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table:"\
+		< $*.$(L2)-$(L1)/model/moses-tuned.ini  > $*.$(L2)-$(L1)/model/moses-tuned-binarised.ini
+	touch $@
+	
 
 # vim: set ft=automake:
