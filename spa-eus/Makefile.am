@@ -32,8 +32,11 @@ include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 
 include $(top_srcdir)/am-shared/check-oovs.am
 
-APERTIUM_L1_L2=es-eu
-APERTIUM_L2_L1=eu-es
+MORFESSOR_L2=tweetmt.$(L1)-$(L2).$(L2).morfessor
+FLATCAT_L2=tweetmt.$(L1)-$(L2).$(L2).flatcat
+FLATCAT_L2_CONF=tweetmt.$(L1)-$(L2).$(L2).flatcat.ini
+APERTIUM_L1_L2=$(L1)-$(L2)
+APERTIUM_L2_L1=$(L2)-$(L1)
 
 # add none baseline tests
 
