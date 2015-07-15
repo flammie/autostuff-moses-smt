@@ -255,4 +255,10 @@
 %.$(HFSTMORPH_SUFFIX_INFIX).$(NISTBLEU_L2_L1): %.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
+
+# L2 m-bleu
+
+%.$(HFST_COMPOUNDS_INFIX).$(L1)-$(L2)-segments.bleu.$(L2): %.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).sgml %.src.$(L1).sgml %.$(HFST_COMPOUNDS_INFIX).ref.$(L2).sgml
+
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.$(HFST_COMPOUNDS_INFIX).ref.$(L1).sgml -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 # vim: set ft=automake:
