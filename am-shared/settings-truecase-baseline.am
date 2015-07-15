@@ -1,0 +1,10 @@
+# set baseline to same baseline as others
+
+# Settings for baseline truecasing
+TRUECASE_BASELINE_L2=$(BASELINE_CORPUS).truecaser.$(L2)
+TRUECASE_BASELINE_L1=$(BASELINE_CORPUS).truecaser.$(L1)
+
+# Convenience variables for models
+TRUECASE_MODELS=$(TRUECASE_BASELINE_L2) $(TRUECASE_BASELINE_L1)
+
+# vim: set ft=automake:
