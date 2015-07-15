@@ -1,4 +1,8 @@
-## Include to automake project to create baseline settings based on corpus name.
+## Include to automake project to create baseline settings based on
+## corpus name.
+##
+## Follows moses baseline frow wiki for LM's and TM's
+
 
 # MOSES_BASELINE_TRAIN is the prefix for the corpus filename 
 # MOSES_BASELINE_TUNE is the prefix for devset filename
@@ -27,13 +31,8 @@ MOSES_BASELINE_L2_L1=$(MOSES_BASELINE_TRAIN).binarised.tm.$(L2)-$(L1)
 MOSES_BASELINE_L2_L1_DIR=$(MOSES_BASELINE_TRAIN).$(L2)-$(L1)
 
 
-# Settings for baseline truecasing
-TRUECASE_BASELINE_L2=$(BASELINE_CORPUS).truecaser.$(L2)
-TRUECASE_BASELINE_L1=$(BASELINE_CORPUS).truecaser.$(L1)
 
 
-# Convenience variables for models
-TRUECASE_MODELS=$(TRUECASE_BASELINE_L2) $(TRUECASE_BASELINE_L1)
 LANGUAGE_MODELS_L2=$(MOSES_BASELINE_L2)
 LANGUAGE_MODELS_L1=$(MOSES_BASELINE_L1)
 moses-$(L1): $(MOSES_BASELINE_L1)
@@ -50,61 +49,6 @@ moses-$(L2)-$(L1): $(MOSES_BASELINE_L2_L1)
 TRANSLATION_L1_L2=$(L1)-$(L2).translated.$(L2)
 TRANSLATION_L2_L1=$(L2)-$(L1).translated.$(L1)
 TRANSLATION_L1_SEGMENTED_L2=$(L1)-$(L2).translated-segments.$(L2)
-
-# baseline
-MOSES_BASELINE_INFIX=baseline-moses
-TRANSLATIONS_L1_L2=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2)
-TRANSLATIONS_L2_L1=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1)
-
-TRANSLATIONS=$(TRANSLATIONS_L1_L2) $(TRANSLATIONS_L2_L1)
-
-# evaluations
-EVALUATIONS_L1_L2=
-EVALUATIONS_L2_L1=
-if CAN_NISTBLEU
-NISTBLEU_L1_L2=$(L1)-$(L2).nistbleu.$(L2)
-NISTBLEU_L2_L1=$(L2)-$(L1).nistbleu.$(L1)
-EVALUATIONS_L1_L2+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(NISTBLEU_L1_L2)
-EVALUATIONS_L2_L1+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(NISTBLEU_L2_L1)
-endif # NIST bleu
-
-if CAN_TER
-TER_L1_L2=$(L1)-$(L2).ter.$(L2)
-TER_L2_L1=$(L2)-$(L1).ter.$(L1)
-# baseline moses
-EVALUATIONS_L1_L2+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TER_L1_L2)
-EVALUATIONS_L2_L1+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TER_L2_L1)
-endif # TER
-
-if CAN_METEOR
-METEOR_L1_L2=$(L1)-$(L2).meteor.$(L2)
-METEOR_L2_L1=$(L2)-$(L1).meteor.$(L1)
-EVALUATIONS_L1_L2+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(METEOR_L1_L2)
-EVALUATIONS_L2_L1+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(METEOR_L2_L1)
-endif # METEOR
-
-# OOV
-# N.B. the oov is counted from the SOURCE language whereas
-# translations go to TARGET
-OOV_L1_L2=$(L1)-$(L2).oov.$(L1)
-OOV_L2_L1=$(L2)-$(L1).oov.$(L2)
-# moses baseline
-EVALUATIONS_L1_L2+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(OOV_L1_L2)
-EVALUATIONS_L2_L1+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(OOV_L2_L1)
-EVALUATIONS=$(EVALUATIONS_L2_L1) $(EVALUATIONS_L1_L2)
-
-if CAN_TER
-if CAN_METEOR
-if CAN_NISTBLEU
-EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L1)-$(L2).rows
-EVALUATIONS+=$(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L2)-$(L1).rows
-endif # Nistbleu
-endif # Meteor
-endif # Ter
-
-# convenience for evals
-moses-$(L1)-$(L2)-evals: $(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L1)-$(L2).rows
-moses-$(L2)-$(L1)-evals: $(BASELINE_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(L2)-$(L1).rows
 
 
 $(MOSES_BASELINE_TRAIN).tune.$(L1).text: $(MOSES_BASELINE_TUNE).$(L1).text

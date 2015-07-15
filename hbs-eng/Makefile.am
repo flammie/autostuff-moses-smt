@@ -18,13 +18,21 @@ METEOR_L2_FLAGS=
 BASELINE_CORPUS=setimes.$(L1)-$(L2)
 BASELINE_TEST_PREFIX=$(BASELINE_CORPUS).002001-004000
 BASELINE_TUNE_PREFIX=$(BASELINE_CORPUS).000001-002000
+
 WMT2013_TEST_PREFIX=newstest2013.$(L1)-$(L2)
+
+
 
 # Moses baseline as with the wiki page but without europarl
 MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).004001-205910
+MORFESSOR_BASELINE_TRAIN=hrenwacm3.norm.tok.true.esc.clean
+
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
+
+include $(top_srcdir)/am-shared/settings-truecase-baseline.am
+
 
 # Add WMT tests to translations
 TRANSLATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2)
