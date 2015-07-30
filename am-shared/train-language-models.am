@@ -124,6 +124,6 @@
 		$(MORFESSOR_TRAIN)  $< -S $@
 
 %.flatcat: %.morfessed-1.0
-	$(MORFESSOR_FLATCAT_TRAIN) -s $@ -S $*.flatcat.ini --category-separator ////// $<
+	$(MORFESSOR_FLATCAT_TRAIN) --perplexity-threshold 10 -s $@ -S $*.flatcat.ini --category-separator ////// $<
 
 # vim: set ft=automake:
