@@ -106,6 +106,8 @@ AM_CONDITIONAL([CAN_LATEX], [test x$XELATEX != xfalse])
 AC_PATH_PROG([MOSES], [moses], [false], [$PATH$PATH_SEPARATOR$with_moses/bin])
 AC_PATH_PROG([MOSES_TRAIN_MODEL], [train-model.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
 AC_PATH_PROG([MOSES_TOKENIZER], [tokenizer.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
+AC_PATH_PROG([MOSES_ESCAPE_SPECIAL_CHARS], [escape-special-chars.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
+AC_PATH_PROG([MOSES_REMOVE_NON_PRINTING_CHAR], [remove-non-printing-char.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
 AC_PATH_PROG([MOSES_TRAIN_TRUECASER], [train-truecaser.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/recaser/])
 AC_PATH_PROG([MOSES_TRUECASE], [truecase.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/recaser/])
 AC_PATH_PROG([MOSES_DETOKENIZER], [detokenizer.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
@@ -206,6 +208,9 @@ PKG_CHECK_MODULES([OMORFI], [omorfi],
                   AC_SUBST([OMORFI_PREFIX], [`pwd`])])
 AC_PATH_PROG([HFST_LOOKUP], [hfst-lookup], [false])
 AM_CONDITIONAL([CAN_HFST], [test x$HFST_LOOKUP != xfalse])
+
+# HUNPOS
+AC_PATH_PROG([HUNPOS_TAG], [hunpos-tag], [false])
 
 # some oses are broken
 AC_PATH_PROGS_FEATURE_CHECK([SED], [gnused gsed sed],

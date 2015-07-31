@@ -28,13 +28,16 @@
 	$(MOSES_TRAIN_TRUECASER) --model $@ --corpus $<
 
 # Baseline processing: tokenise, truecase, clean
+# added: remove-non-printing
 
 # Tokenising
 %.tok.$(L1): %.$(L1).text
-	$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L1) < $< > $@
+	$(MOSES_REMOVE_NON_PRINTING_CHAR) < $< |\
+		$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L1) > $@
 
 %.tok.$(L2): %.$(L2).text
-	$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L2) < $< > $@
+	$(MOSES_REMOVE_NON_PRINTING_CHAR) < $< |\
+		$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L2) > $@
 
 # Complex lang needs a bit more
 # ... these are kind of hacks to fix some broken pre-proc
@@ -105,10 +108,12 @@
 	mv $*.lm.$(L1).lm $@
 
 %.blm.$(L2): %.arpa.$(L2)
-	$(MOSES_BUILD_BINARY) -i $< $@
+	$(MOSES_BUILD_BINARY) -i $< $@.bin
+	touch $@
 
 %.blm.$(L1): %.arpa.$(L1)
-	$(MOSES_BUILD_BINARY) -i $< $@
+	$(MOSES_BUILD_BINARY) -i $< $@.bin
+	touch $@
 
 # morfessor train
 %.morfclean.$(L2): %.true.$(L2)
@@ -117,6 +122,13 @@
 
 %.$(L2).morfessor: %.morfclean.$(L2)
 	$(MORFESSOR_TRAIN)  $< -s $@
+
+%.$(L2).damplog.morfessor: %.morfclean.$(L2)
+	$(MORFESSOR_TRAIN)  -d log $< -s $@
+
+%.$(L2).dampones.morfessor: %.morfclean.$(L2)
+	$(MORFESSOR_TRAIN)  -d ones $< -s $@
+
 
 %.$(L2).morfessed-1.0: %.morfclean.$(L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \

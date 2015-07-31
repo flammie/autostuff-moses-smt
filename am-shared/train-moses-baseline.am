@@ -26,7 +26,7 @@
 	fi
 	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) -corpus $*.clean -f $(L1) -e $(L2) \
 		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
-		-lm 0:3:`pwd`/$*.blm.$(L2):8  $(MGIZA_FLAGS) \
+		-lm 0:3:`pwd`/$*.blm.$(L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
@@ -38,7 +38,7 @@
 	fi
 	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1) -corpus $*.clean -f $(L2) -e $(L1) \
 		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
-		-lm 0:3:`pwd`/$*.blm.$(L1):8  $(MGIZA_FLAGS) \
+		-lm 0:3:`pwd`/$*.blm.$(L1).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
@@ -49,7 +49,7 @@
 	$(MOSES_TRAIN_MODEL) -root-dir $*.hierarchical.$(L1)-$(L2) -corpus $*.clean -f $(L1) -e $(L2) \
 		-alignment grow-diag-final-and \
 		-hierarchical -glue-grammar -max-phrase-length 5 \
-		-lm 0:3:`pwd`/$*.blm.$(L2):8  $(MGIZA_FLAGS) \
+		-lm 0:3:`pwd`/$*.blm.$(L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
@@ -59,7 +59,7 @@
 	$(MOSES_TRAIN_MODEL) -root-dir $*.hierarchical.$(L2)-$(L1) -corpus $*.clean -f $(L2) -e $(L1) \
 		-alignment grow-diag-final-and \
 		-hierarchical -glue-grammar -max-phrase-length 5 \
-		-lm 0:3:`pwd`/$*.blm.$(L1):8  $(MGIZA_FLAGS) \
+		-lm 0:3:`pwd`/$*.blm.$(L1).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG)
