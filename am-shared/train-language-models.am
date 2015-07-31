@@ -31,18 +31,13 @@
 
 # Tokenising
 %.tok.$(L1): %.$(L1).text
-	$(MOSES_TOKENIZER) -l $(L1) < $< > $@
+	$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L1) < $< > $@
 
 %.tok.$(L2): %.$(L2).text
-	$(MOSES_TOKENIZER) -l $(L2) < $< > $@
+	$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L2) < $< > $@
 
 # Complex lang needs a bit more
 # ... these are kind of hacks to fix some broken pre-proc
-%.tok.$(L2): %.morfs.$(L2)
-	$(MOSES_TOKENIZER) -l $(L2) < $< |\
-		sed -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
-		-e 's/→←/→ ←/g' > $@
-
 %.nomarkers.tok.$(L2): %.morfs.$(L2)
 	$(MOSES_TOKENIZER) -l $(L2) < $< |\
 		sed -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
@@ -68,11 +63,17 @@
 
 # Cleaning
 # XXX: bit of hacks to keep timestamps in order
-%.clean.$(L2): %.true.$(L2) %.true.$(L1)
-	$(MOSES_CLEAN_CORPUS_N) $*.true $(L2) $(L1) $*.clean 1 80
+%.clean.$(L2).$(L2): %.true.$(L2) %.true.$(L1)
+	$(MOSES_CLEAN_CORPUS_N) $*.true $(L2) $(L1) $*.clean.$(L2) 1 80
 
-%.clean.$(L1): %.true.$(L2) %.true.$(L1)
-	$(MOSES_CLEAN_CORPUS_N) $*.true $(L1) $(L2) $*.clean 1 80
+%.clean.$(L1).$(L1): %.true.$(L2) %.true.$(L1)
+	$(MOSES_CLEAN_CORPUS_N) $*.true $(L1) $(L2) $*.clean.$(L1) 1 80
+
+%.clean.$(L2): %.clean.$(L2).$(L2)
+	cp -v $< $@
+
+%.clean.$(L1): %.clean.$(L1).$(L1)
+	cp -v $< $@
 
 # Sentence boundaries
 # extra deps unused to act as BARRIER for parallel build
@@ -110,19 +111,19 @@
 	$(MOSES_BUILD_BINARY) -i $< $@
 
 # morfessor train
-%.$(L2).morfessor: %.tok.$(L2)
+%.morfclean.$(L2): %.true.$(L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
-		-e 's/&lt;/</g' -e 's/&quot;/"/g' |\
-		$(MORFESSOR_TRAIN)  $< -s $@
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' < $< > $@
 
-%.$(L2).morfessed-1.0: %.tok.$(L2)
+%.$(L2).morfessor: %.morfclean.$(L2)
+	$(MORFESSOR_TRAIN)  $< -s $@
+
+%.$(L2).morfessed-1.0: %.morfclean.$(L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
-		-e 's/&lt;/</g' -e 's/&quot;/"/g' |\
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' < $< |\
 		$(MORFESSOR_TRAIN)  $< -S $@
 
 %.flatcat: %.morfessed-1.0
-	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
-		-e 's/&lt;/</g' -e 's/&quot;/"/g' |\
-		$(MORFESSOR_FLATCAT_TRAIN) -s $@ -S $*.flatcat.ini --category-separator ////// $<
+	$(MORFESSOR_FLATCAT_TRAIN) -s $@ -S $*.flatcat.ini --category-separator ////// $<
 
 # vim: set ft=automake:

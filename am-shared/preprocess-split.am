@@ -15,21 +15,27 @@
 ## You should have received a copy of the GNU General Public License
 ## along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+# quick sampling testes
 SAMPLE_SIZE=50000
+# devset and test set
+DEVSET_SIZE=2000
+TESTSET_SIZE=2000
+# held out must be at least devset + testset for normal operation
+TRAIN_HELDOUT=4000
 
-# split to train / dev / test in 8 / 1 / 1 
+# {{{ L1 split to TRAIN DEV TEST
+# TRAIN = ALL 
 %.train.$(L1).text: %.$(L1).text
-	split -d -l `wc -l < $< | $(SED) -e 's/$$/\/10/' | bc`  $< $*.split.$(L1).
-	cat $*.split.$(L1).00 $*.split.$(L1).01 $*.split.$(L1).02 $*.split.$(L1).03 \
-		$*.split.$(L1).04 $*.split.$(L1).05 $*.split.$(L1).06 $*.split.$(L1).07 \
-		>> $@
+	head -n -$(TRAIN_HELDOUT) < $< > $@
 
-%.dev.$(L1).text: %.train.$(L1).text
-	cp -v $*.split.$(L1).08 $@
+%.dev.$(L1).text: %.$(L1).text
+	tail -n $(TRAIN_HELDOUT) < $< | head -n $(DEVSET_SIZE) > $@
 
-%.test.$(L1).text: %.train.$(L1).text
-	cp -v $*.split.$(L1).09 $@
+%.test.$(L1).text: %.$(L1).text
+	tail -n $(TRAIN_HELDOUT) < $< | tail -n $(TESTSET_SIZE) > $@
+# }}}
 
+# {{{ L1 split for smaller tests
 # Split into 2
 %.half.$(L1).text: %.$(L1).text
 	split -d -l `wc -l < $< | $(SED) -e 's/$$/\/2/' | bc`  $< $*.halves.$(L1).
@@ -44,26 +50,26 @@ SAMPLE_SIZE=50000
 %.eighth.$(L1).text: %.$(L1).text
 	split -d -l `wc -l < $< | $(SED) -e 's/$$/\/8/' | bc`  $< $*.eighths.$(L1).
 	cp -v $*.eighths.$(L1).00 $@
+# }}}
 
-# split to sample
+# {{{ L1 split to sample
 %.sample.$(L1).text: %.$(L1).text
 	split -d -l $(SAMPLE_SIZE)  $*.samples.$(L1).
 	cp -v $*.samples.$(L1).03 $@
+# }}}
 
-# same for L2
+# {{{ TRAIN/DEV/TEST for L2
 %.train.$(L2).text: %.$(L2).text
-	split -d -l `wc -l < $< | $(SED) -e 's/$$/\/10/' | bc` $< $*.split.$(L2).
-	cat $*.split.$(L2).00 $*.split.$(L2).01 $*.split.$(L2).02 $*.split.$(L2).03 \
-		$*.split.$(L2).04 $*.split.$(L2).05 $*.split.$(L2).06 $*.split.$(L2).07 \
-		>> $@
+	head -n -$(TRAIN_HELDOUT) < $< > $@
 
-%.dev.$(L2).text: %.train.$(L2).text
-	cp -v $*.split.$(L2).08 $@
+%.dev.$(L2).text: %.$(L2).text
+	tail -n $(TRAIN_HELDOUT) < $< | head -n $(DEVSET_SIZE) > $@
 
-%.test.$(L2).text: %.train.$(L2).text
-	cp -v $*.split.$(L2).09 $@
+%.test.$(L2).text: %.$(L2).text
+	tail -n $(TRAIN_HELDOUT) < $< | tail -n $(TESTSET_SIZE) > $@
+# }}}
 
-
+# {{{ L2 split for smaller tests
 %.half.$(L2).text: %.$(L2).text
 	split -d -l `wc -l < $< | $(SED) -e 's/$$/\/2/' | bc`  $< $*.halves.$(L2).
 	cp -v $*.halves.$(L2).00 $@
@@ -76,9 +82,12 @@ SAMPLE_SIZE=50000
 	split -d -l `wc -l < $< | $(SED) -e 's/$$/\/8/' | bc`  $< $*.eighths.$(L2).
 	cp -v $*.eighths.$(L2).00 $@
 
-# split to sample
+# }}}
+
+# {{{ L2 split to sample
 %.sample.$(L1).text: %.$(L1).text
 	split -d -l $(SAMPLE_SIZE)  $*.samples.$(L1).
 	cp -v $*.samples.$(L1).03 $@
+# }}}
 
-# vim: set ft=automake:
+# vim: set ft=automake foldmethod=marker:

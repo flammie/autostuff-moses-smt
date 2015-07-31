@@ -25,14 +25,14 @@
 segments: $(SEGMENTS)
 
 # plain segments
-%.$(L2).morfessed: %.tok.$(L2) $(MORFESSOR_L2)
+%.$(L2).morfessed: %.true.$(L2) $(MORFESSOR_L2)
 	$(MORFESSOR_SEGMENT) -l $(MORFESSOR_L2)  $<  > $@
 
 # special markers in segment boundaries
-%.morfessor.1best.morfs.$(L2): %.tok.$(L2) $(MORFESSOR_L2)
+%.morfessor.1best.morfs.$(L2): %.true.$(L2) $(MORFESSOR_L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
 		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
-		-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
+		-e 's/^[[:space:]]*$$/↩/' -e 's/^#/^@HASH@ #/' < $< > $<.nosp
 	$(MORFESSOR) -l $(MORFESSOR_L2) \
 		--output-format-separator '>>> <<<' \
 		--output-newlines \
@@ -40,11 +40,11 @@ segments: $(SEGMENTS)
 		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
 		-e 's/^[↩→← ]\+$$//' > $@
 
-%.flatcat.1best.morfs.$(L2): %.tok.$(L2) $(FLATCAT_L2)
+%.flatcat.1best.morfs.$(L2): %.true.$(L2) $(FLATCAT_L2)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
 		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
 		-e 's/^[[:space:]]*$$/↩/' < $< > $<.nosp
-	$(MORFESSOR_FLATCAT_SEGMENT) $(FLATCAT_L2) -S $(FLATCAT_L2).ini \
+	$(MORFESSOR_FLATCAT_SEGMENT) -L $(FLATCAT_L2).ini $(FLATCAT_L2) \
 		--category-separator '//////' \
 		--remove-nonmorphemes \
 		--output-construction-separator '>>> <<<' \
@@ -115,6 +115,18 @@ segments: $(SEGMENTS)
 		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
 		-e 's/^[↩→← ]\+$$//'> $@
 
+# experimenting with different markers
+%.morfessor.1best.nomarkers.tok.$(L2): %.morfessor.1best.tok.$(L2)
+	sed -e 's/→ ←/ /g' < $< > $@
+
+%.morfessor.1best.spaceplusspace.tok.$(L2): %.morfessor.1best.tok.$(L2)
+	sed -e 's/→ ←/ + /g' < $< > $@
+
+%.morfessor.1best.suffixmarkered.tok.$(L2): %.morfessor.1best.tok.$(L2)
+	sed -e 's/→ ←/ ←/g' < $< > $@
+
+
+
 # To make prefix rules work, we need to create matching L1 file names by copying
 %.morfessor.1best.tok.$(L1): %.tok.$(L1)
 	cp -v $< $@
@@ -152,7 +164,6 @@ segments: $(SEGMENTS)
 %.flatcat.1best.unsplit5.tok.$(L1): %.tok.$(L1)
 	cp -v $< $@
 
-
 # baseline desegmentation:  join matching segments, delete rest
 %.suffixmarkered.$(TRANSLATION_L1_L2): %.suffixmarkered.$(TRANSLATION_L1_SEGMENTED_L2)
 	$(SED) -e 's/ ←//g' \
@@ -167,5 +178,26 @@ segments: $(SEGMENTS)
 		-e 's/[[:space:]]*←[^[:space:].,?!()"]*//g' \
 		-e 's/[^[:space:].,?!()"]*→[[:space:]]*//g' \
 		-e 's/[→←]//g' < $< > $@
+
+# tuning set naming
+%.morfessor.1best.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.tune.morfs.$(L2): %.tune.morfessor.1best.morfs.$(L2)
+	cp -v $< $@
+
+%.flatcat.1best.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.flatcat.1best.tune.morfs.$(L2): %.tune.flatcat.1best.morfs.$(L2)
+	cp -v $< $@
+
+# morfessed needs to run through tok/true/clean before hitting lm's...
+# hacks over hacks to make other software restricted input formats ok
+%.true.$(L2): %.morfs.$(L2)
+	$(MOSES_TOKENIZER) -l $(L2) < $< |\
+		$(SED) -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
+		-e 's/→←/→ ←/g' > $@
+
 
 # vim: set ft=automake:

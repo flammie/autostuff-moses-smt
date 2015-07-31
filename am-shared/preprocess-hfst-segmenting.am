@@ -15,6 +15,15 @@
 		tr  '\n' |\
 		cut -f 2 | tr '\n' ' ' | $(SED) -e 's/+?//g' -e 's:</s>:\0\n:g' |\
 		head -n -1 |\
+		$(SED) -e 's/\(→ ←\)\+/→ ←/g' -e 's/→ ← → ←/ /g' -e 's/→ ← / /g' -e 's/→ ←$$//' |\
+		$(IRSTLM_RM_START_END) > $@
+
+%.hfst.1best.morfannotations.$(L2): %.tok.$(L2) $(HFST_L2_MARKS)
+	$(IRSTLM_ADD_START_END) < $< | tr ' ' '\n' |\
+		$(HFST_LOOKUP) -q $(HFST_L2_MARKS) | $(SED) -e 's/^$$//' | tr '\n' '@' |\
+		tr  '\n' |\
+		cut -f 2 | tr '\n' ' ' | $(SED) -e 's/+?//g' -e 's:</s>:\0\n:g' |\
+		head -n -1 |\
 		$(IRSTLM_RM_START_END) > $@
 
 # experimenting with different markers
@@ -62,6 +71,26 @@
 	cp -v $< $@
 
 %.hfst.1best-morphs.suffixmarkered.tok.$(L1): %.tok.$(L1)
+	cp -v $< $@
+
+# tuning set namings
+# tuning set naming
+%.hfst.1best-morphs.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.hfst.1best-morphs.tune.tok.$(L2): %.tune.hfst.1best-morphs.tok.$(L2)
+	cp -v $< $@
+
+%.hfst.1best-comp.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.hfst.1best-comp.tune.tok.$(L2): %.tune.hfst.1best-comp.tok.$(L2)
+	cp -v $< $@
+
+%.hfst.1best-lemmashufs.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.hfst.1best-lemmashufs.tune.tok.$(L2): %.tune.hfst.1best-lemmashufs.tok.$(L2)
 	cp -v $< $@
 
 

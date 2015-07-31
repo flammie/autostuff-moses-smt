@@ -107,7 +107,23 @@ if CAN_TER
 %.$(HFST_MORPHS_INFIX).$(TER_L1_L2): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
+# markers
+%.$(HFSTCOMP_NOMARKERS_INFIX).$(TER_L1_L2): %.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
+%.$(HFSTCOMP_PLUS_INFIX).$(TER_L1_L2): %.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(HFSTCOMP_SUFFIX_INFIX).$(TER_L1_L2): %.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(HFSTMORPH_NOMARKERS_INFIX).$(TER_L1_L2): %.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+%.$(HFSTMORPH_PLUS_INFIX).$(TER_L1_L2): %.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(HFSTMORPH_SUFFIX_INFIX).$(TER_L1_L2): %.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 #  L2 to L1 {{{
 #
@@ -196,6 +212,24 @@ if CAN_TER
 %.$(HFST_MORPHS_INFIX).$(TER_L2_L1): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
+# markers
+%.$(HFSTCOMP_NOMARKERS_INFIX).$(TER_L2_L1): %.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTCOMP_PLUS_INFIX).$(TER_L2_L1): %.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTCOMP_SUFFIX_INFIX).$(TER_L2_L1): %.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTMORPH_NOMARKERS_INFIX).$(TER_L2_L1): %.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTMORPH_PLUS_INFIX).$(TER_L2_L1): %.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTMORPH_SUFFIX_INFIX).$(TER_L2_L1): %.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 endif
 
 # vim: set ft=automake:

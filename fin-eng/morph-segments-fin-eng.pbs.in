@@ -1,12 +1,12 @@
 #! /bin/sh
 
 # Common PBS variables
-#PBS -l nodes=1:ppn=12:cores12:min48GB
+#PBS -l nodes=1:ppn=10:min48GB
 #PBS -M @PBS_EMAIL@
 #PBS -m eba
-#PBS -N @PACKAGE_NAME@-fin-eng
+#PBS -N @PACKAGE_NAME@-fin-eng-48h
 #PBS -r n
-#PBS -l walltime=96:00:00
+#PBS -l walltime=48:00:00
 
 source ${HOME}/.bashrc
 
@@ -14,7 +14,7 @@ WORK="@abs_top_builddir@/fin-eng/"
 
 cd ${WORK}/
 
-make -j moses-fi-en morfessor-fi-en flatcat-fi-en \
+make -j 10 moses-fi-en morfessor-fi-en flatcat-fi-en \
     hfst-fi-en apertium-fi-en
 make -j moses-fi-en-evals morfessor-fi-en-evals flatcat-fi-en-evals \
     hfst-fi-en-evals apertium-fi-en-evals

@@ -115,8 +115,26 @@
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 %.$(HFST_MORPHS_INFIX).$(NISTBLEU_L1_L2): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
+# markers
+%.$(HFSTCOMP_NOMARKERS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(HFSTCOMP_PLUS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(HFSTCOMP_SUFFIX_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(HFSTMORPH_NOMARKERS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(HFSTMORPH_PLUS_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(HFSTMORPH_SUFFIX_INFIX).$(NISTBLEU_L1_L2): %.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 # L2 to L1
 #
@@ -218,5 +236,29 @@
 %.$(HFST_MORPHS_INFIX).$(NISTBLEU_L2_L1): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
+# Markers
+%.$(HFSTCOMP_NOMARKERS_INFIX).$(NISTBLEU_L2_L1): %.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
+%.$(HFSTCOMP_PLUS_INFIX).$(NISTBLEU_L2_L1): %.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTCOMP_SUFFIX_INFIX).$(NISTBLEU_L2_L1): %.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTMORPH_NOMARKERS_INFIX).$(NISTBLEU_L2_L1): %.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTMORPH_PLUS_INFIX).$(NISTBLEU_L2_L1): %.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(HFSTMORPH_SUFFIX_INFIX).$(NISTBLEU_L2_L1): %.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+
+# L2 m-bleu
+
+%.$(HFST_COMPOUNDS_INFIX).$(L1)-$(L2)-segments.bleu.$(L2): %.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).sgml %.src.$(L1).sgml %.$(HFST_COMPOUNDS_INFIX).ref.$(L2).sgml
+
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.$(HFST_COMPOUNDS_INFIX).ref.$(L1).sgml -t $*.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 # vim: set ft=automake:

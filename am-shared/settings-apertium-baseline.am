@@ -1,6 +1,6 @@
 ## Include to automake project to create baseline settings based on corpus name.
 
-# MOSES_BASELINE_PREFIX is the prefix for the corpus filename 
+# MOSES_BASELINE_TRAIN is the prefix for the corpus filename 
 
 .PHONY: apertium-baseline \
 	apertium-$(L1)-$(L2)-evals apertium-$(L2)-$(L1)-evals

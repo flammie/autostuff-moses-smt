@@ -4,52 +4,31 @@
 ## run make to reproduce.
 
 L1=en
-L2=fi
+L2=lt
 L1_LONG=eng
-L2_LONG=fin
+L2_LONG=lit
 METEOR_L1_FLAGS=-l en
 METEOR_L2_FLAGS=
 
-if WANT_SECONDARY
 # all secondary
+if WANT_SECONDARY
 .SECONDARY:
-endif
-.PHONY: naacl-2015-pretests naacl-2015-models naacl-2015-evals
 
-# {{{ SETTINGS
+endif
 # common prefixes
-BASELINE_CORPUS=europarl-v8.$(L2)-$(L1)
-BASELINE_TEST_PREFIX=europarl-v7.$(L1)-$(L2).test
-MTMATRIX_TEST_PREFIX=realtest2000
+BASELINE_CORPUS=europarl-v7.$(L1)-$(L2)
 UNDHR_TEST_PREFIX=undhr
 APERTIUM_TEST_PREFIX=story
-WMT_TEST_PREFIX=newsdev2015-$(L1)$(L2)
 
 # Moses baseline as with the wiki page but without europarl
-MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).train
-MOSES_BASELINE_TUNE=$(BASELINE_CORPUS).dev
+MOSES_BASELINE_PREFIX=$(BASELINE_CORPUS).train
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
-include $(top_srcdir)/am-shared/settings-hfst-baseline.am
-include $(top_srcdir)/am-shared/settings-apertium-baseline.am
-
-include $(top_srcdir)/am-shared/check-oovs.am
-
-# Settings for baseline segmenters for L2
-MORFESSOR_L2=$(BASELINE_CORPUS).$(L2).morfessor
-FLATCAT_L2=$(BASELINE_CORPUS).$(L2).flatcat
-FLATCAT_L2_CONF=$(BASELINE_CORPUS).$(L2).flatcat.ini
-
-HFST_L2_MORPHS_UNWEIGHTED=omorfi-morphs.hfst
-HFST_L2_COMPOUNDS_UNWEIGHTED=omorfi-compounds.hfst
-# just unweight now
-HFST_L2_MORPHS=$(HFST_L2_MORPHS_UNWEIGHTED)
-HFST_L2_COMPOUNDS=$(HFST_L2_COMPOUNDS_UNWEIGHTED)
-HFST_L2_MARKS=omorfi.segment.hfst
+#include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 
 
-APERTIUM_L1_L2=eng-fin
-APERTIUM_L2_L1=fin-eng
+#APERTIUM_L1_L2=eng-fin
+#APERTIUM_L2_L1=fin-eng
 
 # add none baseline tests
 TRANSLATIONS_L1_L2+=undhr.baseline-moses.$(TRANSLATION_L1_L2) \
@@ -153,138 +132,32 @@ CLEANFILES=$(MODELS) $(SEGMENTS) $(TRANSLATIONS) $(EVALUATIONS) \
 noinst_DATA=
 
 # {{{ CORPORA
-corpora:
 
 include $(top_srcdir)/am-shared/preprocess-europarl.am
 include $(top_srcdir)/am-shared/preprocess-split.am
 
-europarl-v8.fi-en.tgz:
-	$(WGET) http://statmt.org/wmt15/europarl-v8.fi-en.tgz
-
-europarl-v8.fi-en.fi.text: europarl-v8.fi-en.tgz
-	tar zxvf $< europarl-v8.fi-en.fi
-	mv -v europarl-v8.fi-en.fi $@
-	touch $@
-
-europarl-v8.fi-en.en.text: europarl-v8.fi-en.tgz
-	tar zxvf $< europarl-v8.fi-en.en
-	mv -v europarl-v8.fi-en.en $@
-	touch $@
-
-europarl-v8.fi-en.tune.fi.text: newsdev2015-$(L1)$(L2).$(L2).text
-	ln -sf $< $@
-
-europarl-v8.fi-en.tune.en.text: newsdev2015-$(L1)$(L2).$(L1).text
-	ln -sf $< $@
-
-# Shared task 2005
-realtest2000.fi.gz:
-	$(WGET) http://www.statmt.org/wpt05/mt-shared-task/realtest2000.fi.gz
-
-realtest2000.en.gz:
-	$(WGET) http://www.statmt.org/wpt05/mt-shared-task/realtest2000.en.gz
-
-# shared task 2015
-newsdev2015.tgz:
-	$(WGET) http://statmt.org/wmt15/dev-v2.tgz -O $@
-
-# XXX: realtest is pre-tokenised but we don't want that because of apertium,
-# removing test data from training set, etc. etc.
-# but the measures may become incomparable.
-realtest2000.fi.text: realtest2000.fi.gz
-	zcat $< | $(ICONV) -f latin1 -t utf8 | $(MOSES_DETOKENIZER) > $@
-
-realtest2000.en.text: realtest2000.en.gz
-	zcat $< | $(ICONV) -f latin1 -t utf8 | $(MOSES_DETOKENIZER) > $@
-
-# newsdev2015 doesn't have much problems...
-newsdev2015-$(L1)$(L2).$(L1).text: newsdev2015.tgz
-	$(TAR) zxvf $<
-	$(SED) -e 's/<[^>]*>//g' < dev/newsdev2015-enfi-src.en.sgm |\
-		tr -s '\n' |\
-		tail -n +2 > $@
-
-newsdev2015-$(L1)$(L2).$(L2).text: newsdev2015.tgz
-	$(TAR) zxvf $<
-	$(SED) -e 's/<[^>]*>//g' < dev/newsdev2015-fien-src.fi.sgm |\
-		tr -s '\n' |\
-		tail -n +2 > $@
-# }}}
-#
-# {{{ MODELS
-
-models: $(MODELS)
-fi: $(LANGUAGE_MODELS_FI)
-en: $(LANGUAGE_MODELS_EN)
-
 include $(top_srcdir)/am-shared/train-language-models.am
 include $(top_srcdir)/am-shared/train-moses-baseline.am
-include $(top_srcdir)/am-shared/train-hfst.am
-
-
-# from omorfi repo
-morphology.segments.hfst: $(OMORFI_PREFIX)/share/hfst/fi/morphology.segments.hfst
-	cp -v $< $@
-
-# originals with segmentation added
-
-$(HFST_L2_COMPOUNDS_UNWEIGHTED): morphology.segments.hfst omorfi-segments.relabel
-	hfst-fst2fst -f openfst < $< | hfst-substitute -F omorfi-segments.relabel |\
-		hfst-minimize -E |\
-		hfst-fst2fst -f olw -o $@
-
-$(HFST_L2_MORPHS_UNWEIGHTED): morphology.segments.hfst omorfi-morphs.relabel
-	hfst-fst2fst -f openfst < $< | hfst-substitute -F omorfi-morphs.relabel |\
-		hfst-minimize -E |\
-		hfst-fst2fst -f olw -o $@
-
 
 
 # }}}
 # {{{SEGMENTing
-segments: $(SEGMENTS)
 
 include $(top_srcdir)/am-shared/preprocess-morfessor-segmenting.am
-include $(top_srcdir)/am-shared/preprocess-hfst-segmenting.am
 
 # }}}
 # {{{TRANSLATEing
-translations:  $(TRANSLATIONS)
 
 include $(top_srcdir)/am-shared/translate-moses-baseline.am
-include $(top_srcdir)/am-shared/translate-apertium-baseline.am
+#include $(top_srcdir)/am-shared/translate-apertium-baseline.am
 include $(top_srcdir)/am-shared/translate-morfessor-baseline.am
-include $(top_srcdir)/am-shared/translate-hfst-baseline.am
-
-# }}}
-#
-# {{{ EVALing
-evaluations: $(EVALUATIONS)
-fi-en: $(EVALUATIONS_FI_EN)
-en-fi: $(EVALUATIONS_EN_FI)
 
 include $(top_srcdir)/am-shared/postprocess-sgml.am
 include $(top_srcdir)/am-shared/evaluate-oovs.am
 include $(top_srcdir)/am-shared/evaluate-nistbleu.am
 include $(top_srcdir)/am-shared/evaluate-ter.am
 include $(top_srcdir)/am-shared/evaluate-meteor.am
-include $(top_srcdir)/am-shared/evaluate-pwer.am
 
 include $(top_srcdir)/am-shared/paper-evals.am
-# }}}
-#
-eamt-2015-pretests:
-eamt-2015-models:
-eamt-2015-evals:
-
-wmt-2015-evals: $(WMT2015_TEST_PREFIX).baseline-moses.$(L1)-$(L2).rows \
-	$(WMT2015_TEST_PREFIX).baseline-moses.$(L2)-$(L1).rows \
-	$(WMT2015_TEST_PREFIX).morfessor.$(L1)-$(L2).rows \
-	$(WMT2015_TEST_PREFIX).morfessor.$(L2)-$(L1).rows \
-	$(WMT2015_TEST_PREFIX).hfst-morphs.$(L1)-$(L2).rows \
-	$(WMT2015_TEST_PREFIX).hfst-morphs.$(L2)-$(L1).rows \
-	$(WMT2015_TEST_PREFIX).hfst-compounds.$(L1)-$(L2).rows \
-	$(WMT2015_TEST_PREFIX).hfst-compounds.$(L2)-$(L1).rows
-
 
 # vim: set foldmethod=marker:

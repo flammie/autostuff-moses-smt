@@ -51,9 +51,22 @@ AC_ARG_ENABLE([parallel],
                               [use parallel processing @<:@default=no@:>@])],
               [enable_parallel=$enableval],
               [enable_parallel=no])
-
+AC_ARG_WITH([cores],
+	    [AS_HELP_STRING([--with-cores],
+	    		    [number of cores or threads per make job if parallel @<:@default=8@:>@])],
+	    [with_cores=$withval],
+	    [with_cores=8])
 AS_IF([test x$enable_parallel != xno], 
-      [AC_SUBST([PARALLEL_FLAGS], ["-parallel -cores 8 -sort-parallel 8"])])
+      [AC_SUBST([PARALLEL_FLAGS], ["-parallel -cores $with_cores -sort-parallel $with_cores"])
+       AC_SUBST([PROCESS_PHRASE_TABLE_FLAGS], ["-threads $with_cores"])
+       AC_SUBST([TOKENIZER_FLAGS], ["-threads $with_cores"])])
+AC_ARG_ENABLE([secondary],
+              [AS_HELP_STRING([--enable-secondary],
+                              [use SECONDARY directive in Makefile (retain intermediate results) @<:@default=no@:>@])],
+              [enable_secondary=$enableval],
+              [enable_secondary=no])
+AM_CONDITIONAL([WANT_SECONDARY], [test x$enable_secondary != xno])
+
 AC_ARG_WITH([pbs-mail],
             [AS_HELP_STRING([set email for pbs job @<:@default=disable pbs@:>@])],
             [with_pbs_mail=$withval],
@@ -100,8 +113,8 @@ AC_PATH_PROG([MOSES_DETRUECASE], [detruecase.perl], [false], [$PATH$PATH_SEPARAT
 AC_PATH_PROG([MOSES_CLEAN_CORPUS_N], [clean-corpus-n.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
 AC_PATH_PROG([MOSES_BUILD_BINARY], [build_binary], [false], [$PATH$PATH_SEPARATOR$with_moses/bin/])
 AC_PATH_PROG([MOSES_MERT], [mert-moses.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
-AC_PATH_PROG([MOSES_PROCESS_PHRASE_TABLE], [processPhraseTable], [false], [$PATH$PATH_SEPARATOR$with_moses/bin/])
-AC_PATH_PROG([MOSES_PROCESS_LEXICAL_TABLE], [processLexicalTable], [false], [$PATH$PATH_SEPARATOR$with_moses/bin/])
+AC_PATH_PROG([MOSES_PROCESS_PHRASE_TABLE_MIN], [processPhraseTableMin], [false], [$PATH$PATH_SEPARATOR$with_moses/bin/])
+AC_PATH_PROG([MOSES_PROCESS_LEXICAL_TABLE_MIN], [processLexicalTableMin], [false], [$PATH$PATH_SEPARATOR$with_moses/bin/])
 AC_PATH_PROG([MOSES_FILTER_MODEL_GIVEN_INPUT], [filter-model-given-input.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/training/])
 AC_PATH_PROG([MOSES_OOV], [oov.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/analysis/])
 AC_PATH_PROG([MOSES_MULTI_BLEU], [multi-bleu.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/generic/])
@@ -159,6 +172,11 @@ AC_CHECK_FILE([$with_meteor_path/meteor-1.5.jar],
               [AC_MSG_WARN([point --with-meteor-path to dir of meteor-1.5.jar for METEOR tests])])
 AM_CONDITIONAL([CAN_METEOR], [test x$METEORJAR != x])
 
+# WERPL and PERPL by ape
+AC_PATH_PROG([WER], [WER.pl], [false])
+AC_PATH_PROG([PER], [PER.pl], [false])
+
+
 # XML wrapping for eval
 AC_PATH_PROG([WRAP_XML], [wrap-xml.prompsit-version.sh], [false])
 AM_CONDITIONAL([CAN_WRAPXML], [test x$WRAP_XML != xfalse])
@@ -178,6 +196,8 @@ AC_PATH_PROG([APERTIUM_RETXT], [apertium-retxt], [cat])
 AM_CONDITIONAL([CAN_APERTIUM], [test x$APERTIUM != xfalse -a x$with_apertium != xno])
 PKG_CHECK_MODULES([APERTIUM_FIN_ENG], [apertium-fin-eng],, 
                   [AC_MSG_WARN([pkg-config did not find fin-eng make sure apertium command does])])
+PKG_CHECK_MODULES([APERTIUM_HBS_ENG], [apertium-hbs-eng],, 
+                  [AC_MSG_WARN([pkg-config did not find hbs-eng make sure apertium command does])])
 
 # HFST
 PKG_CHECK_MODULES([OMORFI], [omorfi], 
@@ -194,15 +214,22 @@ AC_PATH_PROGS_FEATURE_CHECK([SED], [gnused gsed sed],
                 && ac_cv_path_SED=$ac_path_SED ac_path_SED_found=:]],
               [AC_MSG_ERROR([could not find sed that supports new line])])
 AC_SUBST([SED], [$ac_cv_path_SED])
-
+AC_PATH_PROG([COMM], [comm])
 
 # 
-AC_CONFIG_FILES([Makefile fin-eng/Makefile \
-                 build-lm-makeable.sh],
+AC_CONFIG_FILES([Makefile \
+                 fin-eng/Makefile \
+                 lit-eng/Makefile \
+                 hbs-eng/Makefile \
+                 spa-eus/Makefile])
+                 #fin-lit/Makefile
+AC_CONFIG_FILES([build-lm-makeable.sh],
                 [chmod +x build-lm-makeable.sh])
 AS_IF([test x$with_pbs_mail != xno],
       [AC_CONFIG_FILES([morph-segments-all.pbs
+       fin-eng/morph-segments-all.pbs
        fin-eng/morph-segments-fin-eng.pbs
+       fin-eng/morph-segments-eng-fin.pbs
        ])])
 AS_IF([test x$with_slurm_mail != xno],
       [AC_CONFIG_FILES([morph-segments-all.slurm
@@ -230,11 +257,14 @@ cat <<EOF
     * fin / omorfi: $OMORFI_PREFIX
   * RBMT / apertium: $APERTIUM
     * fin-eng: $APERTIUM_FIN_ENG
+    * hbs-eng: $APERTIUM_HBS_ENG
   Eval:
   * wrap-xml: $WRAP_XML
   * nist-bleu: $NIST_BLEU13A
   * ter: $TERJAR
   * meteor: $METEORJAR
+  * wer: $WER
+  * per: $PER
   Paper:
   * xelatex: $XELATEX
   * bibtex: $BIBTEX
