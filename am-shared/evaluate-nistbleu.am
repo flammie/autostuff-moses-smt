@@ -46,6 +46,12 @@
 %.$(MORFESSOR_BASELINE_INFIX).$(NISTBLEU_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
+%.$(MORFESSOR_DAMPONES_INFIX).$(NISTBLEU_L1_L2): %.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(MORFESSOR_DAMPONES_INFIX).$(NISTBLEU_L1_L2): %.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
 # markers
 %.$(MORFESSOR_NOMARKERS_INFIX).$(NISTBLEU_L1_L2): %.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
@@ -163,6 +169,13 @@
 # Morfessor baseline
 %.$(MORFESSOR_BASELINE_INFIX).$(NISTBLEU_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(MORFESSOR_DAMPONES_INFIX).$(NISTBLEU_L2_L1): %.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(MORFESSOR_DAMPLOG_INFIX).$(NISTBLEU_L2_L1): %.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
 
 # tuned
 %.$(MORFESSOR_TUNED_INFIX).$(NISTBLEU_L2_L1): %.$(MORFESSOR_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml

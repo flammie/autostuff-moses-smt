@@ -187,6 +187,12 @@ segments: $(SEGMENTS)
 %.flatcat.1best.unsplit5.true.$(L1): %.true.$(L1)
 	cp -v $< $@
 
+%.morfessor.1best.damplog.true.$(L1): %.true.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.dampones.true.$(L1): %.true.$(L1)
+	cp -v $< $@
+
 # baseline desegmentation:  join matching segments, delete rest
 %.suffixmarkered.$(TRANSLATION_L1_L2): %.suffixmarkered.$(TRANSLATION_L1_SEGMENTED_L2)
 	$(SED) -e 's/ ←//g' \
@@ -207,6 +213,18 @@ segments: $(SEGMENTS)
 	cp -v $< $@
 
 %.morfessor.1best.tune.morfs.$(L2): %.tune.morfessor.1best.morfs.$(L2)
+	cp -v $< $@
+
+%.morfessor.1best.dampones.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.dampones.tune.morfs.$(L2): %.tune.morfessor.1best.dampones.morfs.$(L2)
+	cp -v $< $@
+
+%.morfessor.1best.damplog.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.morfessor.1best.damplog.tune.morfs.$(L2): %.tune.morfessor.1best.damplog.morfs.$(L2)
 	cp -v $< $@
 
 %.flatcat.1best.tune.tok.$(L1): %.tune.tok.$(L1)

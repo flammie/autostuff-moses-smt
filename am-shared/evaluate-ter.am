@@ -45,6 +45,12 @@ if CAN_TER
 %.$(MORFESSOR_BASELINE_INFIX).$(TER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
+%.$(MORFESSOR_DAMPONES_INFIX).$(TER_L1_L2): %.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(MORFESSOR_DAMPLOG_INFIX).$(TER_L1_L2): %.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
 # markers
 %.$(MORFESSOR_NOMARKERS_INFIX).$(TER_L1_L2): %.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
@@ -151,6 +157,12 @@ if CAN_TER
 # Morfessor Baseline {{{
 %.$(MORFESSOR_BASELINE_INFIX).$(TER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(MORFESSOR_DAMPONES_INFIX).$(TER_L2_L1): %.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(MORFESSOR_DAMPLOG_INFIX).$(TER_L2_L1): %.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
 # marekrs
 %.$(MORFESSOR_NOMARKERS_INFIX).$(TER_L2_L1): %.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
