@@ -30,13 +30,13 @@
 
 # From simple to complex
 %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_L1_L2)
-	$(MOSES) -f $(MOSES_BASELINE_L1_L2_DIR)/model/moses-binarised.ini < $< |\
+	$(MOSES) -f $(MOSES_BASELINE_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
 		$(MOSES_DETRUECASE) |\
 		$(MOSES_DETOKENIZER) > $@
 
 # From complex to simple
 %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_L2_L1)
-	$(MOSES) -f $(MOSES_BASELINE_L2_L1_DIR)/model/moses-binarised.ini < $< |\
+	$(MOSES) -f $(MOSES_BASELINE_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
 		$(MOSES_DETRUECASE) |\
 		$(MOSES_DETOKENIZER) > $@
 
