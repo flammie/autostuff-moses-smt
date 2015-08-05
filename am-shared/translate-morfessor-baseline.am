@@ -37,6 +37,12 @@
 %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_MORFESSOR1BEST_L1_L2)
 	$(MOSES) -f $(MOSES_MORFESSOR1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
+# damp
+%.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_MORFESSOR1BEST_DAMPONES_L1_L2)
+	$(MOSES) -f $(MOSES_MORFESSOR1BEST_DAMPONES_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+%.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_MORFESSOR1BEST_DAMPLOG_L1_L2)
+	$(MOSES) -f $(MOSES_MORFESSOR1BEST_DAMPLOG_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
 
 # markers
@@ -73,6 +79,14 @@
 # untranslated words
 %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).raw: %.morfessor.1best.true.$(L2) $(MOSES_MORFESSOR1BEST_L2_L1)
 	$(MOSES) -f $(MOSES_MORFESSOR1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+# damp
+%.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L2_L1).raw: %.morfessor.1best.dampones.true.$(L2) $(MOSES_MORFESSOR1BEST_DAMPONES_L2_L1)
+	$(MOSES) -f $(MOSES_MORFESSOR1BEST_DAMPONES_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+%.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).raw: %.morfessor.1best.damplog.true.$(L2) $(MOSES_MORFESSOR1BEST_DAMPLOG_L2_L1)
+	$(MOSES) -f $(MOSES_MORFESSOR1BEST_DAMPLOG_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
 
 # Tuned
 %.$(MORFESSOR_TUNED_INFIX).$(TRANSLATION_L2_L1): %.true.$(L2) $(MORFESSOR_TUNED_L2_L1)
