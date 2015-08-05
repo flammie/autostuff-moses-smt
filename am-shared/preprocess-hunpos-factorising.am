@@ -1,0 +1,18 @@
+## Include to automake project to use HFST segments for translations.
+
+# Hunpos's tags
+
+%.hunpos.factors.$(L2): %.true.$(L2) $(HUNPOS_L2)
+	$(IRSTLM_ADD_START_END) < $< | tr ' ' '\n' |\
+		$(SED) -e 's:</\?s>::' |\
+		$(HUNPOS_TAG) $(HUNPOS_L2) | $(SED) -e 's/^$$//' | tr '\n' '@' |\
+		tr  '\n' |\
+		tr '\t' '|' |\
+		$(SED) -e 's:</s>:\0\n:g' |\
+		$(SED) -e 's/|@/ /g' -e 's/^@//' |\
+		tr -s '\n' |\
+		$(IRSTLM_RM_START_END) > $@
+
+
+
+# vim: set ft=automake:
