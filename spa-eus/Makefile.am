@@ -25,16 +25,17 @@ BASELINE_TEST_PREFIX=tweetmt.$(L1)-$(L2).test
 MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS)
 MOSES_BASELINE_TUNE=tweetmt.dev.$(L2)$(L1).norm.tok
 
+MORFESSOR_BASELINE_TRAIN=tweets_eu.gz.norm.tok.split.eu.gz
+
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
+include $(top_srcdir)/am-shared/settings-baseline-evals.am
+include $(top_srcdir)/am-shared/settings-truecase-baseline.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-hfst-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 
 include $(top_srcdir)/am-shared/check-oovs.am
 
-MORFESSOR_L2=tweets_eu.gz.norm.tok.split.eu.gz.eu.morfessor
-FLATCAT_L2=tweets_eu.gz.norm.tok.split.eu.gz.eu.flatcat
-FLATCAT_L2_INI=tweets_eu.gz.norm.tok.split.eu.gz.eu.flatcat.ini
 
 APERTIUM_L1_L2=es-eu
 APERTIUM_L2_L1=eu-es

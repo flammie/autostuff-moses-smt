@@ -29,6 +29,7 @@ WMT_TEST_PREFIX=newsdev2015-$(L1)$(L2)
 MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).train
 MOSES_BASELINE_TUNE=$(BASELINE_CORPUS).dev
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
+include $(top_srcdir)/am-shared/settings-baseline-evals.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-hfst-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
@@ -36,8 +37,8 @@ include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 include $(top_srcdir)/am-shared/check-oovs.am
 
 # Settings for baseline segmenters for L2
-MORFESSOR_L2=$(BASELINE_CORPUS).$(L2).morfessor
-FLATCAT_L2=$(BASELINE_CORPUS).$(L2).flatcat
+#MORFESSOR_L2=$(BASELINE_CORPUS).$(L2).morfessor
+#FLATCAT_L2=$(BASELINE_CORPUS).$(L2).flatcat
 FLATCAT_L2_CONF=$(BASELINE_CORPUS).$(L2).flatcat.ini
 
 HFST_L2_MORPHS_UNWEIGHTED=omorfi-morphs.hfst

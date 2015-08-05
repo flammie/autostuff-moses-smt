@@ -15,24 +15,34 @@ METEOR_L2_FLAGS=
 
 
 # common prefixes
-BASELINE_CORPUS=setimes.$(L1)-$(L2)
-BASELINE_TEST_PREFIX=$(BASELINE_CORPUS).002001-004000
-BASELINE_TUNE_PREFIX=$(BASELINE_CORPUS).000001-002000
+BASELINE_CORPUS=hrenwacm3.norm.tok.true.esc.clean
+BASELINE_TEST_PREFIX=$(BASELINE_CORPUS)
+BASELINE_TUNE_PREFIX=newstest2012_first1011
 
 WMT2013_TEST_PREFIX=newstest2013.$(L1)-$(L2)
 
 
 
 # Moses baseline as with the wiki page but without europarl
-MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).004001-205910
+MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS)
+MOSES_BASELINE_TUNE=$(BASELINE_TUNE_PREFIX)
+
 MORFESSOR_BASELINE_TRAIN=hrenwacm3.norm.tok.true.esc.clean
+FLATCAT_BASELINE_TRAIN=hrenwacm3.norm.tok.true.esc.clean
 
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
+include $(top_srcdir)/am-shared/settings-baseline-evals.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 
-include $(top_srcdir)/am-shared/settings-truecase-baseline.am
+#include $(top_srcdir)/am-shared/settings-truecase-baseline.am
 
+TRUECASE_BASELINE_L1=setimes.en-hr.truecaser.en
+TRUECASE_BASELINE_L2=setimes.en-hr.truecaser.hr
+
+HUNPOS_L2=model.hunpos.mte5.defnpout
+
+include $(top_srcdir)/am-shared/preprocess-hunpos-factorising.am
 
 # Add WMT tests to translations
 TRANSLATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2)
