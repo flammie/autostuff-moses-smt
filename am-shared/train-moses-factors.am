@@ -22,41 +22,42 @@
 
 # up to 5 factors can be turned into separate lm's
 %.factor-0.clean.$(L1): %.factors.$(L1)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=0 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
 
 %.factor-1.clean.$(L1): %.factors.$(L1)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=2 < $< > $@
 
 %.factor-2.clean.$(L1): %.factors.$(L1)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=2 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=3 < $< > $@
 
 %.factor-3.clean.$(L1): %.factors.$(L1)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=3 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=4 < $< > $@
 
 %.factor-4.clean.$(L1): %.factors.$(L1)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=4 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=5 < $< > $@
 
 %.factor-0.clean.$(L2): %.factors.$(L2)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=0 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
 
 %.factor-1.clean.$(L2): %.factors.$(L2)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=2 < $< > $@
 
 %.factor-2.clean.$(L2): %.factors.$(L2)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=2 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=3 < $< > $@
 
 %.factor-3.clean.$(L2): %.factors.$(L2)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=3 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=4 < $< > $@
 
 %.factor-4.clean.$(L2): %.factors.$(L2)
-	$(AWK) -F ${topsrcdir}/split-factors.awk --assign FACTOR=4 < $< > $@
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=5 < $< > $@
 
 # Translation model training
 %.factors-0-0_1.tm.untuned.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) %.factor-0.blm.$(L2) %.factor-1.blm.$(L2)
-	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) -corpus $*.clean -f $(L1) -e $(L2) \
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) -corpus $*.factors -f $(L1) -e $(L2) \
 		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
 		-lm 0:3:`pwd`/$*.factor-0.blm.$(L2).bin:8  \
 		-lm 1:3:`pwd`/$*.factor-1.blm.$(L2).bin:8  \
+		-translation-factors 0-0,1 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		-input-factor-max 5 \
@@ -65,10 +66,11 @@
 	touch $@
 
 %.factors-0-0_4.tm.untuned.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) %.factor-0.blm.$(L2) %.factor-4.blm.$(L2)
-	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) -corpus $*.clean -f $(L1) -e $(L2) \
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) -corpus $*.factors -f $(L1) -e $(L2) \
 		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
 		-lm 0:3:`pwd`/$*.factor-0.blm.$(L2).bin:8  \
 		-lm 4:3:`pwd`/$*.factor-4.blm.$(L2).bin:8  \
+		-translation-factors 0-0,1 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		-input-factor-max 5 \
