@@ -78,6 +78,29 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
+%.factors-0_1-0.tm.untuned.$(L2)-$(L1): %.factors.$(L2) %.factors.$(L1) %.factor-0.blm.$(L1)
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) -corpus $*.factors -f $(L2) -e $(L1) \
+		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$*.factor-0.blm.$(L1).bin:8  \
+		-translation-factors 0,1-0 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-input-factor-max 5 \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.factors-0_4-0.tm.untuned.$(L2)-$(L1): %.factors.$(L2) %.factors.$(L1) %.factor-0.blm.$(L1)
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1) -corpus $*.factors -f $(L2) -e $(L1) \
+		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$*.factor-0.blm.$(L2).bin:8  \
+		-translation-factors 0,4-0 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-input-factor-max 5 \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
 
 # vim: set ft=automake:
 
