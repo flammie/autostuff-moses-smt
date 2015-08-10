@@ -131,7 +131,7 @@ segments: $(SEGMENTS)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
 		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
 		-e 's/^[[:space:]]*$$/↩/' -e 's/^#/^@HASH@ #/' < $< > $<.nosp
-	$(MORFESSOR) -l $(MORFESSOR_L2) \
+	$(MORFESSOR) -l $(MORFESSOR_DAMPLOG_L2) \
 		--output-format-separator '>>> <<<' \
 		--output-newlines \
 		--output-format '{analysis} ' -T $<.nosp |\
@@ -142,10 +142,36 @@ segments: $(SEGMENTS)
 	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
 		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
 		-e 's/^[[:space:]]*$$/↩/' -e 's/^#/^@HASH@ #/' < $< > $<.nosp
-	$(MORFESSOR) -l $(MORFESSOR_L2) \
+	$(MORFESSOR) -l $(MORFESSOR_DAMPONES_L2) \
 		--output-format-separator '>>> <<<' \
 		--output-newlines \
 		--output-format '{analysis} ' -T $<.nosp |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
+		-e 's/^[↩→← ]\+$$//' > $@
+
+%.flatcat.1best.damplog.morfs.$(L2): %.true.$(L2) $(FLATCAT_DAMPLOG_L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
+		-e 's/^[[:space:]]*$$/↩/' -e 's/^#/^@HASH@ #/' < $< > $<.nosp
+	$(MORFESSOR_FLATCAT_SEGMENT) -L $(FLATCAT_DAMPLOG_L2).ini $(FLATCAT_DAMPLOG_L2) \
+		--category-separator '//////' \
+		--remove-nonmorphemes \
+		--output-construction-separator '>>> <<<' \
+		--output-newlines \
+		--output-format '{analysis} ' $<.nosp -o - |\
+		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
+		-e 's/^[↩→← ]\+$$//' > $@
+
+%.flatcat.1best.dampones.morfs.$(L2): %.true.$(L2) $(FLATCAT_DAMPONES_L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' \
+		-e 's/^[[:space:]]*$$/↩/' -e 's/^#/^@HASH@ #/' < $< > $<.nosp
+	$(MORFESSOR_FLATCAT_SEGMENT) -L $(FLATCAT_DAMPONES_L2).ini $(FLATCAT_DAMPONES_L2) \
+		--category-separator '//////' \
+		--remove-nonmorphemes \
+		--output-construction-separator '>>> <<<' \
+		--output-newlines \
+		--output-format '{analysis} ' $<.nosp -o - |\
 		$(SED) -e 's/>>>/→/g' -e 's/<<</←/g' \
 		-e 's/^[↩→← ]\+$$//' > $@
 
@@ -193,6 +219,12 @@ segments: $(SEGMENTS)
 %.morfessor.1best.dampones.true.$(L1): %.true.$(L1)
 	cp -v $< $@
 
+%.flatcat.1best.damplog.true.$(L1): %.true.$(L1)
+	cp -v $< $@
+
+%.flatcat.1best.dampones.true.$(L1): %.true.$(L1)
+	cp -v $< $@
+
 # baseline desegmentation:  join matching segments, delete rest
 %.suffixmarkered.$(TRANSLATION_L1_L2): %.suffixmarkered.$(TRANSLATION_L1_SEGMENTED_L2)
 	$(SED) -e 's/ ←//g' \
@@ -231,6 +263,18 @@ segments: $(SEGMENTS)
 	cp -v $< $@
 
 %.flatcat.1best.tune.morfs.$(L2): %.tune.flatcat.1best.morfs.$(L2)
+	cp -v $< $@
+
+%.flatcat.1best.dampones.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.flatcat.1best.dampones.tune.morfs.$(L2): %.tune.morfessor.1best.dampones.morfs.$(L2)
+	cp -v $< $@
+
+%.flatcat.1best.damplog.tune.tok.$(L1): %.tune.tok.$(L1)
+	cp -v $< $@
+
+%.flatcat.1best.damplog.tune.morfs.$(L2): %.tune.morfessor.1best.damplog.morfs.$(L2)
 	cp -v $< $@
 
 # morfessed needs to run through tok/true/clean before hitting lm's...

@@ -135,7 +135,21 @@
 		-e 's/&lt;/</g' -e 's/&quot;/"/g' < $< |\
 		$(MORFESSOR_TRAIN)  $< -S $@
 
+%.$(L2).dampones.morfessed-1.0: %.morfclean.$(L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' < $< |\
+		$(MORFESSOR_TRAIN) -d ones $< -S $@
+
+%.$(L2).damplog.morfessed-1.0: %.morfclean.$(L2)
+	$(SED) -e 's/&amp;/\&/g' -e "s/&apos;/'/g" -e 's/&gt;/>/g' \
+		-e 's/&lt;/</g' -e 's/&quot;/"/g' < $< |\
+		$(MORFESSOR_TRAIN) -d log $< -S $@
+
 %.flatcat: %.morfessed-1.0
 	$(MORFESSOR_FLATCAT_TRAIN) --perplexity-threshold 10 -s $@ -S $*.flatcat.ini --category-separator ////// $<
+
+%.ppt-100.flatcat: %.morfessed-1.0
+	$(MORFESSOR_FLATCAT_TRAIN) --perplexity-threshold 100 -s $@ -S $*.ppt-100.flatcat.ini --category-separator ////// $<
+
 
 # vim: set ft=automake:

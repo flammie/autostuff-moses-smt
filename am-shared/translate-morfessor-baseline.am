@@ -64,15 +64,16 @@
 
 
 # Fllatcat
-%.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_FLATCAT1BEST_L1_L2)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
+%.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-%.$(FLATCAT_TUNED_INFIX).$(TRANSLATION_L1_L2): %.true.$(L1) $(FLATCAT_TUNED_L1_L2)
-	$(MOSES) -f $(FLATCAT_TUNED_L1_L2_DIR)/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
+# damp
+%.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPONES_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+%.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPONES_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
 
 # From complex to simple
 # N.B. oov segments may become untranslated segments which are worse than
@@ -114,16 +115,15 @@
 		$(SED) -e 's/[→←↝↜]//g' > $@
 
 # fatlact
-%.$(FLATCAT_TUNED_INFIX).$(TRANSLATION_L2_L1): %.true.$(L2) $(FLATCAT_TUNED_L2_L1)
-	$(MOSES) -f $(FLATCAT_TUNED_L2_L1_DIR)/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
+%.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.true.$(L2) $(MOSES_FLATCAT1BEST_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-%.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.flatcat.1best.true.$(L2) $(MOSES_FLATCAT1BEST_L2_L1)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) |\
-		$(SED) -e 's/[→←↝↜]//g'> $@
+%.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.dampones.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPONES_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+%.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.damplog.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPLOG_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
 
 # Scaling segmenting data
 %.half$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_HALFMORFESSOR1BEST_L1_L2)
