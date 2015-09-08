@@ -49,7 +49,7 @@
 %.$(MORFESSOR_DAMPONES_INFIX).$(NISTBLEU_L1_L2): %.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-%.$(MORFESSOR_DAMPONES_INFIX).$(NISTBLEU_L1_L2): %.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+%.$(MORFESSOR_DAMPLOG_INFIX).$(NISTBLEU_L1_L2): %.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 # markers
@@ -101,6 +101,21 @@
 # Flatcat baseline
 %.$(FLATCAT_BASELINE_INFIX).$(NISTBLEU_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(FLATCAT_DAMPONES_INFIX).$(NISTBLEU_L1_L2): %.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(FLATCAT_DAMPLOG_INFIX).$(NISTBLEU_L1_L2): %.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(FLATCAT_BASELINE_PPT100_INFIX).$(NISTBLEU_L1_L2): %.$(FLATCAT_BASELINE_PPT100_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(FLATCAT_BASELINE_PPT100_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(FLATCAT_DAMPONES_PPT100_INFIX).$(NISTBLEU_L1_L2): %.$(FLATCAT_DAMPONES_PPT100_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(FLATCAT_DAMPONES_PPT100_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(NISTBLEU_L1_L2): %.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 # Only uncommons segmented
 %.$(FLATCAT_5RARE_INFIX).$(NISTBLEU_L1_L2): %.$(FLATCAT_5RARE_INFIX).$(TRANSLATION_L1_L2).sgml %.src.$(L1).sgml %.ref.$(L2).sgml
@@ -228,8 +243,21 @@
 %.$(FLATCAT_BASELINE_INFIX).$(NISTBLEU_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-%.$(FLATCAT_TUNED_INFIX).$(NISTBLEU_L2_L1): %.$(FLATCAT_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
-	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(FLATCAT_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+%.$(FLATCAT_DAMPONES_INFIX).$(NISTBLEU_L2_L1): %.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(FLATCAT_DAMPLOG_INFIX).$(NISTBLEU_L2_L1): %.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(FLATCAT_BASELINE_PPT100_INFIX).$(NISTBLEU_L2_L1): %.$(FLATCAT_BASELINE_PPT100_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(FLATCAT_BASELINE_PPT100_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(FLATCAT_DAMPONES_PPT100_INFIX).$(NISTBLEU_L2_L1): %.$(FLATCAT_DAMPONES_PPT100_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(FLATCAT_DAMPONES_PPT100_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(NISTBLEU_L2_L1): %.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
 
 # Only uncommons segmented
 %.$(FLATCAT_5RARE_INFIX).$(NISTBLEU_L2_L1): %.$(FLATCAT_5RARE_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml

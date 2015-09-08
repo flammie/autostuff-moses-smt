@@ -71,9 +71,19 @@
 %.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPONES_L1_L2)
 	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-%.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPONES_L1_L2)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
+%.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPLOG_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
+# ppt
+%.$(FLATCAT_BASELINE_PPT100_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_PPT100_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_PPT100_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+# damp
+%.$(FLATCAT_DAMPONES_PPT100_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPONES_PPT100_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_PPT100_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+%.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPLOG_PPT100_L1_L2)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_PPT100_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
 # From complex to simple
 # N.B. oov segments may become untranslated segments which are worse than
@@ -122,7 +132,16 @@
 	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
 %.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.damplog.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPLOG_L2_L1)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+%.$(FLATCAT_BASELINE_PPT100_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.ppt-100.true.$(L2) $(MOSES_FLATCAT1BEST_PPT100_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_PPT100_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+%.$(FLATCAT_DAMPONES_PPT100_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.dampones.ppt-100.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPONES_PPT100_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_PPT100_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
+
+%.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.damplog.ppt-100.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPLOG_PPT100_L2_L1)
+	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_PPT100_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
 
 # Scaling segmenting data
