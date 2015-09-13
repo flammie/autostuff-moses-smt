@@ -1,0 +1,80 @@
+## Include this file to automake project for language model training
+## from text-files
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 should be set to short language code of simpler language, e.g. 'en'
+# L2 should be set to short language code of morphological language, .e.g. 'fi'
+
+
+
+# Baseline processing: normalise, tokenise, truecase, escape, clean
+
+# Normalise
+%.norm.$(L1): %.$(L1).text
+	$(MOSES_REMOVE_NON_PRINTING_CHAR) < $< |\
+		$(MOSES_NORMALIZE_PUNCTUATION) > $@
+
+%.norm.$(L2): %.$(L2).text
+	$(MOSES_REMOVE_NON_PRINTING_CHAR) < $< |\
+		$(MOSES_NORMALIZE_PUNCTUATION) > $@
+
+# Tokenising
+%.norm.tok.$(L1): %.norm.$(L1)
+	$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L1) < $< > $@
+
+%.norm.tok.$(L2): %.norm.$(L2)
+	$(MOSES_TOKENIZER) $(TOKENIZER_FLAGS) -l $(L2) < $< > $@
+
+# Cleaning
+# XXX: bit of hacks to keep timestamps in order
+%.norm.tok.clean.$(L2).$(L2): %.norm.tok.$(L2) %.norm.tok.$(L1)
+	$(MOSES_CLEAN_CORPUS_N) $*.norm.tok $(L2) $(L1) $*.norm.tok.clean.$(L2) 1 80
+
+%.norm.tok.clean.$(L1).$(L1): %.norm.tok.$(L2) %.norm.tok.$(L1)
+	$(MOSES_CLEAN_CORPUS_N) $*.norm.tok $(L1) $(L2) $*.norm.tok.clean.$(L1) 1 80
+
+%.clean.$(L2): %.clean.$(L2).$(L2)
+	cp -v $< $@
+
+%.clean.$(L1): %.clean.$(L1).$(L1)
+	cp -v $< $@
+
+# Truecasing
+%.norm.tok.clean.true.$(L1): %.norm.tok.clean.$(L1) $(TRUECASER_L1)
+	$(MOSES_TRUECASE) --model $(TRUECASER_L1) < $< > $@
+
+%.norm.tok.clean.true.$(L2): %.norm.tok.clean.$(L2) $(TRUECASER_L2)
+	$(MOSES_TRUECASE) --model $(TRUECASER_L2) < $< > $@
+
+# Escaping
+%.norm.tok.clean.true.esc.$(L1): %.norm.tok.clean.true.$(L1)
+	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< > $@
+
+%.norm.tok.clean.true.esc.$(L2): %.norm.tok.clean.true.$(L2)
+	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< > $@
+
+
+
+# Sentence boundaries
+%.norm.tok.clean.true.esc.sb.$(L2): %.norm.tok.clean.true.esc.$(L2) 
+	$(IRSTLM_ADD_START_END) < $< > $@
+
+%.norm.tok.clean.true.esc.sb.$(L1): %.norm.tok.clean.true.esc.$(L1) 
+	$(IRSTLM_ADD_START_END) < $< > $@
+
+
+# vim: set ft=automake:

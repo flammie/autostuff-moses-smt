@@ -1,5 +1,5 @@
-## Include this file to automake project for language model training
-## from text-files
+## Include this file to automake project for KenLM training
+## true-cased to binary
 
 ## Copyright (c) 2014 Dublin City University / CNGL
 
@@ -19,26 +19,14 @@
 # L1 should be set to short language code of simpler language, e.g. 'en'
 # L2 should be set to short language code of morphological language, .e.g. 'fi'
 
+
+
 # Language models and binarising
-%.irstlm.$(L2).gz: %.sb.$(L2)
-	if test -f $@ ; then \
-		rm -rf $@ ;\
-	fi
-	@abs_top_builddir@/$(IRSTLM_BUILD_LM_FIXED) -i $*.sb.$(L2) -p -s improved-kneser-ney -o $@
+%.arpa.$(L2): %.true.$(L2)
+	$(LMPLZ) -o 5 -T /tmp/ < $< > $@
 
-%.irstlm.$(L1).gz: %.sb.$(L1)
-	if test -f $@ ; then \
-		rm -rf $@ ;\
-	fi
-	@abs_top_builddir@/$(IRSTLM_BUILD_LM_FIXED) -i $*.sb.$(L1) -p -s improved-kneser-ney -o $@
-
-%.arpa.$(L2): %.irstlm.$(L2).gz
-	$(IRSTLM_COMPILE_LM) --text=yes $<
-	mv $*.lm.$(L2).lm $@
-
-%.arpa.$(L1): %.irstlm.$(L1).gz
-	$(IRSTLM_COMPILE_LM) --text=yes $<
-	mv $*.lm.$(L1).lm $@
+%.arpa.$(L1): %.true.$(L1)
+	$(LMPLZ) -o 5 -T /tmp/< $< > $@
 
 
 # vim: set ft=automake:
