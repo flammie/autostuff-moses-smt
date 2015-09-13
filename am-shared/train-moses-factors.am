@@ -21,34 +21,34 @@
 
 
 # up to 5 factors can be turned into separate lm's
-%.factor-0.clean.$(L1): %.factors.$(L1)
+%.factor-0.true.$(L1): %.factors.$(L1)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
 
-%.factor-1.clean.$(L1): %.factors.$(L1)
+%.factor-1.true.$(L1): %.factors.$(L1)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=2 < $< > $@
 
-%.factor-2.clean.$(L1): %.factors.$(L1)
+%.factor-2.true.$(L1): %.factors.$(L1)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=3 < $< > $@
 
-%.factor-3.clean.$(L1): %.factors.$(L1)
+%.factor-3.true.$(L1): %.factors.$(L1)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=4 < $< > $@
 
-%.factor-4.clean.$(L1): %.factors.$(L1)
+%.factor-4.true.$(L1): %.factors.$(L1)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=5 < $< > $@
 
-%.factor-0.clean.$(L2): %.factors.$(L2)
+%.factor-0.true.$(L2): %.factors.$(L2)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
 
-%.factor-1.clean.$(L2): %.factors.$(L2)
+%.factor-1.true.$(L2): %.factors.$(L2)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=2 < $< > $@
 
-%.factor-2.clean.$(L2): %.factors.$(L2)
+%.factor-2.true.$(L2): %.factors.$(L2)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=3 < $< > $@
 
-%.factor-3.clean.$(L2): %.factors.$(L2)
+%.factor-3.true.$(L2): %.factors.$(L2)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=4 < $< > $@
 
-%.factor-4.clean.$(L2): %.factors.$(L2)
+%.factor-4.true.$(L2): %.factors.$(L2)
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=5 < $< > $@
 
 # Translation model training

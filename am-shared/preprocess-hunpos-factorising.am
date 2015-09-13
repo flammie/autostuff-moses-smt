@@ -24,6 +24,25 @@
 		tr -s '\n' |\
 		$(IRSTLM_RM_START_END) > $@
 
+%.crf.factors.$(L1): %.true.$(L1) $(CRF_L1)
+	$(SED) -e 's/$$/\n/' $< | tr ' ' '\n' > $*.crf.tokens.$(L1)
+	./extract_features.py < $*.crftokens.hr > $*.crf.feats.$(L1)
+	./crfsuite tag -m $(CRF_L1) < $*.crf.feats.$(L1) \
+		> $*.crf.tags.$(L1)
+	paste $*.crf.tokens.$(L1) $*.crf.tags.$(L1) $*.crf.feats.$(L1) \
+		> $*.crf.alls.$(L1)
+	gawk 'NF==0 {printf("\n");} NF>3 {printf("%s|%s ", $$1, $$2);}' \
+		< $*.crf.alls.$(L1)  > $@
+
+%.crf.factors.$(L2): %.true.$(L2) $(CRF_L2)
+	$(SED) -e 's/$$/\n/' $< | tr ' ' '\n' > $*.crf.tokens.$(L2)
+	./extract_features.py < $*.crf.tokens.hr > $*.crf.feats.$(L2)
+	./crfsuite tag -m $(CRF_L2) < $*.crf.feats.$(L2) \
+		> $*.crf.tags.$(L2)
+	paste $*.crf.tokens.$(L2) $*.crf.tags.$(L2) $*.crf.feats.$(L2) \
+		> $*.crf.alls.$(L2)
+	gawk 'NF==0 {printf("\n");} NF>3 {printf("%s|%s ", $$1, $$2);}' \
+		< $*.crf.alls.$(L2)  > $@
 
 
 # vim: set ft=automake:
