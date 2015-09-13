@@ -66,7 +66,7 @@ models: $(MODELS)
 fi: $(LANGUAGE_MODELS_FI)
 en: $(LANGUAGE_MODELS_EN)
 
-include $(top_srcdir)/am-shared/train-language-models.am
+#include $(top_srcdir)/am-shared/train-language-models.am
 include $(top_srcdir)/am-shared/train-moses-baseline.am
 
 

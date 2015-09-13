@@ -143,7 +143,7 @@ include $(top_srcdir)/am-shared/preprocess-europarl.am
 include $(top_srcdir)/am-shared/preprocess-split.am
 
 
-include $(top_srcdir)/am-shared/train-language-models.am
+#include $(top_srcdir)/am-shared/train-language-models.am
 include $(top_srcdir)/am-shared/train-moses-baseline.am
 include $(top_srcdir)/am-shared/train-hfst.am
 

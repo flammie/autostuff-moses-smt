@@ -106,7 +106,9 @@ AM_CONDITIONAL([CAN_LATEX], [test x$XELATEX != xfalse])
 AC_PATH_PROG([MOSES], [moses], [false], [$PATH$PATH_SEPARATOR$with_moses/bin])
 AC_PATH_PROG([MOSES_TRAIN_MODEL], [train-model.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
 AC_PATH_PROG([MOSES_TOKENIZER], [tokenizer.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
+AC_PATH_PROG([MOSES_NORMALIZE_PUNCTUATION], [normalize-punctuation.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
 AC_PATH_PROG([MOSES_ESCAPE_SPECIAL_CHARS], [escape-special-chars.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
+AC_PATH_PROG([MOSES_DEESCAPE_SPECIAL_CHARS], [deescape-special-chars.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
 AC_PATH_PROG([MOSES_REMOVE_NON_PRINTING_CHAR], [remove-non-printing-char.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
 AC_PATH_PROG([MOSES_TRAIN_TRUECASER], [train-truecaser.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/recaser/])
 AC_PATH_PROG([MOSES_TRUECASE], [truecase.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/recaser/])
@@ -135,6 +137,10 @@ AC_PATH_PROG([IRSTLM_COMPILE_LM], [compile-lm], [false], [$PATH$PATH_SEPARATOR$w
 
 AS_IF([test x$IRSTLM_COMPILE_LM = xfalse], [AC_MSG_ERROR([irstlm not found im $PATH$PATH_SEPARATOR$with_irstlm, try --with-irstlm=IRSTLM_PATH with path irstlm tells it installs to at the end of configure])])
 AC_SUBST([IRSTLM_DIR], [$with_irstlm])
+
+# KenLM
+AC_PATH_PROG([LMPLZ], [lmplz], [false])
+
 
 # Argh giza tools
 AC_PATH_PROG([MGIZA], [mgiza], [false], [$PATH$PATH_SEPARATOR$with_giza_tools/])

@@ -25,16 +25,27 @@ UNDHR_TEST_PREFIX=undhr
 APERTIUM_TEST_PREFIX=story
 WMT_TEST_PREFIX=newsdev2015-$(L1)$(L2)
 
+
 # Moses baseline as with the wiki page but without europarl
 MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).train
 MOSES_BASELINE_TUNE=$(BASELINE_CORPUS).dev
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
+
+# XXX: there's a dep between baseline evals and morfessor...
 include $(top_srcdir)/am-shared/settings-baseline-evals.am
+
+# Morfessor baseline from full europarl 
+MORFESSOR_BASELINE_TRAIN=$(BASELINE_CORPUS)
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
+
 include $(top_srcdir)/am-shared/settings-hfst-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 
 include $(top_srcdir)/am-shared/check-oovs.am
+
+# truecaser
+TRUECASER_L1=$(BASELINE_CORPUS).truecaser.$(L1)
+TRUECASER_L2=$(BASELINE_CORPUS).truecaser.$(L2)
 
 # Settings for baseline segmenters for L2
 #MORFESSOR_L2=$(BASELINE_CORPUS).$(L2).morfessor
@@ -156,6 +167,9 @@ noinst_DATA=
 # {{{ CORPORA
 corpora:
 
+include $(top_srcdir)/am-shared/preprocess-basics.am
+
+
 include $(top_srcdir)/am-shared/preprocess-europarl.am
 include $(top_srcdir)/am-shared/preprocess-split.am
 
@@ -218,7 +232,10 @@ models: $(MODELS)
 fi: $(LANGUAGE_MODELS_FI)
 en: $(LANGUAGE_MODELS_EN)
 
-include $(top_srcdir)/am-shared/train-language-models.am
+include $(top_srcdir)/am-shared/train-kenlm.am
+include $(top_srcdir)/am-shared/train-moses-lm.am
+include $(top_srcdir)/am-shared/train-morfessor.am
+include $(top_srcdir)/am-shared/train-truecaser.am
 include $(top_srcdir)/am-shared/train-moses-baseline.am
 include $(top_srcdir)/am-shared/train-hfst.am
 

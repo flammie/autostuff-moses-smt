@@ -37,10 +37,14 @@ include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 
 #include $(top_srcdir)/am-shared/settings-truecase-baseline.am
 
-TRUECASE_BASELINE_L1=setimes.en-hr.truecaser.en
-TRUECASE_BASELINE_L2=setimes.en-hr.truecaser.hr
+TRUECASER_L1=setimes.en-hr.truecaser.en
+TRUECASER_L2=setimes.en-hr.truecaser.hr
 
 HUNPOS_L2=model.hunpos.mte5.defnpout
+CRF_L2=train.conll.lexicon.model
+
+BASELINE_LM_L1=hrenwacm3.norm.tok.true.esc.clean.blm.$(L1)
+BASELINE_LM_L2=hrenwacm3.norm.tok.true.esc.clean.blm.$(L2)
 
 include $(top_srcdir)/am-shared/preprocess-hunpos-factorising.am
 
@@ -165,13 +169,17 @@ endif
 
 # no automatic fetching
 
+include $(top_srcdir)/am-shared/preprocess-basics.am
+
 include $(top_srcdir)/am-shared/preprocess-morfessor-segmenting.am
 include $(top_srcdir)/am-shared/preprocess-split.am
 
 # }}}
 
-include $(top_srcdir)/am-shared/train-language-models.am
-include $(top_srcdir)/am-shared/train-moses-baseline.am
+include $(top_srcdir)/am-shared/train-kenlm.am
+include $(top_srcdir)/am-shared/train-moses-lm.am
+include $(top_srcdir)/am-shared/train-morfessor.am
+include $(top_srcdir)/am-shared/train-truecaser.am
 include $(top_srcdir)/am-shared/train-moses-factors.am
 
 include $(top_srcdir)/am-shared/translate-moses-baseline.am
