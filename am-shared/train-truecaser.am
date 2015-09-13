@@ -1,0 +1,31 @@
+## Include this file to automake project for language model training
+## from text-files
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 should be set to short language code of simpler language, e.g. 'en'
+# L2 should be set to short language code of morphological language, .e.g. 'fi'
+
+
+# Train truecaser from tokenised text
+%.truecaser.$(L1): %.tok.$(L1)
+	$(MOSES_TRAIN_TRUECASER) --model $@ --corpus $<
+
+%.truecaser.$(L2): %.tok.$(L2)
+	$(MOSES_TRAIN_TRUECASER) --model $@ --corpus $<
+
+
+# vim: set ft=automake:
