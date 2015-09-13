@@ -7,6 +7,7 @@ BEGIN {
 { 
   for (i = 1; i <= NF; i++) {
     split($i, factors, /\|/);
-    print(factors[FACTOR]);
+    printf("%s ", factors[FACTOR]);
   }
+  printf("\n");
 }
