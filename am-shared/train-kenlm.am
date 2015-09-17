@@ -22,10 +22,10 @@
 
 
 # Language models and binarising
-%.arpa.$(L2): %.true.$(L2)
+%.arpa.$(L2): %.norm.tok.clean.true.esc.$(L2)
 	$(LMPLZ) -o 5 -T /tmp/ < $< > $@
 
-%.arpa.$(L1): %.true.$(L1)
+%.arpa.$(L1): %.norm.tok.clean.true.esc.$(L1)
 	$(LMPLZ) -o 5 -T /tmp/< $< > $@
 
 
