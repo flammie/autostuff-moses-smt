@@ -1,0 +1,91 @@
+## Include this file to automake project to get baseline translation for
+## moses language models
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# MOSES_BASELINE_INFIX is result file name part to identify moses-baseline
+#       translation
+# L1 is language code for morphologically simple language
+# L2 is language code for morphologically complex langugage
+# TRANSLATION_L1_L2 is result file name part to identify translation from L1 to 
+#       L2
+# MOSES_BASELINE_L1_L2 is filename that carries time stamp of translation model
+# MOSES_BASELINE_L1_L2_DIR is directory containing moses baseline model
+# *_L2_L1 with same prefixes is same files from L2 to L1
+
+# Baseline model translation is same both ways
+
+MOSES_FACTORED_INFIX=moses-factored
+TRANSLATION_L1_FACTORS_0_1_L2=$(L1)-$(L2).translated-factors.0-1.$(L2)
+
+
+# From simple to complex
+%.$(MOSES_FACTORED_INFIX).$(TRANSLATION_L1_FACTORS_0_1_L2): %.true.$(L1) $(MOSES_FACTORED_L1_0_1_L2)
+	$(MOSES) -f $(MOSES_FACTORED_L1_0_1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+# From complex to simple
+%.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_L2_L1)
+	$(MOSES) -f $(MOSES_BASELINE_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+# With scaled data
+# Simple to complexz
+%.$(MOSES_BASELINE_INFIX)-half.$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_HALF_L1_L2)
+	$(MOSES) -f $(MOSES_BASELINE_HALF_L1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(MOSES_BASELINE_INFIX)-quarter.$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_QUARTER_L1_L2)
+	$(MOSES) -f $(MOSES_BASELINE_QUARTER_L1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(MOSES_BASELINE_INFIX)-eighth.$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_EIGHTH_L1_L2)
+	$(MOSES) -f $(MOSES_BASELINE_EIGHTH_L1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(MOSES_BASELINE_INFIX)-sample.$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_SAMPLE_L1_L2)
+	$(MOSES) -f $(MOSES_BASELINE_SAMPLE_L1_L2_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+# Complex to simple
+%.$(MOSES_BASELINE_INFIX)-half.$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_HALF_L2_L1)
+	$(MOSES) -f $(MOSES_BASELINE_HALF_L2_L1_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(MOSES_BASELINE_INFIX)-quarter.$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_QUARTER_L2_L1)
+	$(MOSES) -f $(MOSES_BASELINE_QUARTER_L2_L1_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(MOSES_BASELINE_INFIX)-eighth.$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_EIGHTH_L2_L1)
+	$(MOSES) -f $(MOSES_BASELINE_EIGHTH_L2_L1_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+%.$(MOSES_BASELINE_INFIX)-sample.$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_SAMPLE_L2_L1)
+	$(MOSES) -f $(MOSES_BASELINE_SAMPLE_L2_L1_DIR)/model/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+
+# vim: set ft=automake:

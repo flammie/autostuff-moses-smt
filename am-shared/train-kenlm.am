@@ -23,10 +23,10 @@
 
 # Language models and binarising
 %.arpa.$(L2): %.norm.tok.clean.true.esc.$(L2)
-	$(LMPLZ) -o 5 -T /tmp/ < $< > $@
+	$(LMPLZ) -o 5 -T /tmp/ --discount_fallback < $< > $@
 
 %.arpa.$(L1): %.norm.tok.clean.true.esc.$(L1)
-	$(LMPLZ) -o 5 -T /tmp/< $< > $@
+	$(LMPLZ) -o 5 -T /tmp/ --discount_fallback < $< > $@
 
 
 # vim: set ft=automake:
