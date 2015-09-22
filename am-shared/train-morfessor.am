@@ -24,7 +24,7 @@
 
 # morfessor train
 %.$(L2).morfessor: %.morfclean.$(L2)
-	$(MORFESSOR_TRAIN)  $< -s $@
+	$(MORFESSOR_TRAIN)  $(MORFESSOR_FLAGS_L2) $< -s $@
 
 %.$(L2).damplog.morfessor: %.morfclean.$(L2)
 	$(MORFESSOR_TRAIN)  -d log $< -s $@
@@ -34,7 +34,7 @@
 
 # morfessor-1.0 formatting
 %.$(L2).morfessed-1.0: %.morfclean.$(L2)
-	$(MORFESSOR_TRAIN)  $< -S $@
+	$(MORFESSOR_TRAIN)  $(MORFESSOR_FLAGS_L2) $< -S $@
 
 %.$(L2).dampones.morfessed-1.0: %.morfclean.$(L2)
 	$(MORFESSOR_TRAIN) -d ones $< -S $@
@@ -44,7 +44,7 @@
 
 # flatcat train
 %.flatcat: %.morfessed-1.0
-	$(MORFESSOR_FLATCAT_TRAIN) --perplexity-threshold 10 -s $@ -S $*.flatcat.ini --category-separator ////// $<
+	$(MORFESSOR_FLATCAT_TRAIN) $(FLATCAT_FLAGS_L2) -s $@ -S $*.flatcat.ini --category-separator ////// $<
 
 %.ppt-50.flatcat: %.morfessed-1.0
 	$(MORFESSOR_FLATCAT_TRAIN) --perplexity-threshold 50 -s $@ -S $*.ppt-50.flatcat.ini --category-separator ////// $<
