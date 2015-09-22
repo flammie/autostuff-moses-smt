@@ -52,7 +52,7 @@
 	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=5 < $< > $@
 
 # Translation model training
-%.factors-0-0_1.tm.untuned.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) %.factor-0.blm.$(L2) %.factor-1.blm.$(L2)
+%.factors-0-0_1.untuned.tm.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) %.factor-0.blm.$(L2) %.factor-1.blm.$(L2)
 	if test -d $*.$(L1)-$(L2)-factors-0-0_1 ; then \
 		rm -rf $*.$(L1)-$(L2)-factors-0-0_1 ;\
 	fi
@@ -69,7 +69,7 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
-%.factors-0-0_4.tm.untuned.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) %.factor-0.blm.$(L2) %.factor-4.blm.$(L2)
+%.factors-0-0_4.untuned.tm.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) %.factor-0.blm.$(L2) %.factor-4.blm.$(L2)
 	if test -d $*.$(L1)-$(L2)-factors-0-0_4 ; then \
 		rm -rf $*.$(L1)-$(L2)-factors-0-0_4 ;\
 	fi
@@ -85,7 +85,7 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
-%.factors-0_1-0.tm.untuned.$(L2)-$(L1): %.factors.$(L2) %.factors.$(L1) %.factor-0.blm.$(L1)
+%.factors-0_1-0.untuned.tm.$(L2)-$(L1): %.factors.$(L2) %.factors.$(L1) %.factor-0.blm.$(L1)
 	if test -d $*.$(L2)-$(L1)-factors-0_1-0 ; then \
 		rm -rf $*.$(L2)-$(L1)-factors-0_1-0 ;\
 	fi
@@ -100,7 +100,7 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
-%.factors-0_4-0.tm.untuned.$(L2)-$(L1): %.factors.$(L2) %.factors.$(L1) %.factor-0.blm.$(L1)
+%.factors-0_4-0.untuned.tm.$(L2)-$(L1): %.factors.$(L2) %.factors.$(L1) %.factor-0.blm.$(L1)
 	if test -d $*.$(L2)-$(L1)-factors-0_4-0 ; then \
 		rm -rf $*.$(L2)-$(L1)-factors-0_4-0 ;\
 	fi
@@ -113,6 +113,24 @@
 		-input-factor-max 5 \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+# tuning
+%.factors-0-0_1.tuned.tm.$(L1)-$(L2): %.factors-0-0_1.untuned.tm.$(L1)-$(L2) \
+	%.factor-0.blm.$(L2) %.factor-1.blm.$(L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_FACTORS_0_TO_0_1_TUNE)
+	cp -v $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
+		$*.$(L1)-$(L2)-factors-0-0_1/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-factors-0-0_1/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-factors-0-0_1/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-factors-0-0_1 \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_FACTORS_0_TO_0_1_TUNE) \
+		$(MOSES) $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
+		--mertdir `dirname $(MOSES)`
+	cp -v $*.$(L1)-$(L2)-factors-0-0_1/moses.ini $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini
 	touch $@
 
 # vim: set ft=automake:
