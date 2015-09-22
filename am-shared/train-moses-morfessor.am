@@ -26,7 +26,8 @@
 	fi
 	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) \
 		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
-		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
 		-lm 0:3:`pwd`/$(MORFESSOR_LM_L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		-sort-batch-size 253 -sort-compress gzip \
@@ -39,7 +40,8 @@
 	fi
 	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) \
 		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
-		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
 		-lm 0:3:`pwd`/$(FLATCAT_LM_L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		-sort-batch-size 253 -sort-compress gzip \
