@@ -34,6 +34,20 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
+%.apertium-untuned.tm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L1)
+	if test -d $*.$(L2)-$(L1) ; then \
+		rm -rf $*.$(L2)-$(L1) ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1) \
+		-corpus $*.norm.tok.clean.true.esc -f $(L2) -e $(L1) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L1).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
 
 # Tuning
 # baseline
@@ -53,7 +67,7 @@
 	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
 	touch $@
 
-%.apertium-tuned.tm.$(L2)-$(L1): %.untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1) \
+%.apertium-tuned.tm.$(L2)-$(L1): %.apertium-untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1) \
 	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 	$(APERTIUM_TUNE).norm.tok.clean.true.esc.$(L2)
 	cp -v $*.$(L2)-$(L1)/model/moses.ini \
@@ -78,10 +92,18 @@
 		-nscores 4 -out $*.$(L1)-$(L2)/phrase-table
 	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
 		 -in $*.$(L1)-$(L2)/model/reordering-table.wbe-msd-bidirectional-fe.gz \
-		 -out $*.$(L1)-$(L2)/reordering-table
+		 -out $*.$(L1)-$(L2)/reordering-table.wbe-msd-bidirectional-fe
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+		 -in $*.$(L1)-$(L2)/model/reordering-table.phrase-msd-bidirectional-fe.gz \
+		 -out $*.$(L1)-$(L2)/reordering-table.phrase-msd-bidirectional-fe
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+		 -in $*.$(L1)-$(L2)/model/reordering-table.hier-mslr-bidirectional-fe.gz \
+		 -out $*.$(L1)-$(L2)/reordering-table.hier-mslr-bidirectional-fe
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
 		-e "s:$*.$(L1)-$(L2)/model/phrase-table.gz:$*.$(L1)-$(L2)/phrase-table:"\
-		-e "s:$*.$(L1)-$(L2)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)/reordering-table:"\
+		-e "s:$*.$(L1)-$(L2)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)/reordering-table.wbe-msd-bidirectional-fe:"\
+		-e "s:$*.$(L1)-$(L2)/model/reordering-table.phrase-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)/reordering-table.phrase-msd-bidirectional-fe:"\
+		-e "s:$*.$(L1)-$(L2)/model/reordering-table.hier-mslr-bidirectional-fe.gz:$*.$(L1)-$(L2)/reordering-table.hier-mslr-bidirectional-fe:"\
 		< $*.$(L1)-$(L2)/model/moses-tuned.ini  > $*.$(L1)-$(L2)/model/moses-tuned-binarised.ini
 	touch $@
 
@@ -91,14 +113,20 @@
 		-in $*.$(L2)-$(L1)/model/phrase-table.gz \
 		-nscores 4 -out $*.$(L2)-$(L1)/phrase-table
 	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
-		-in $*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz \
-		-out $*.$(L2)-$(L1)/reordering-table
+		 -in $*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz \
+		 -out $*.$(L2)-$(L1)/reordering-table.wbe-msd-bidirectional-fe
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+		 -in $*.$(L2)-$(L1)/model/reordering-table.phrase-msd-bidirectional-fe.gz \
+		 -out $*.$(L2)-$(L1)/reordering-table.phrase-msd-bidirectional-fe
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+		 -in $*.$(L2)-$(L1)/model/reordering-table.hier-mslr-bidirectional-fe.gz \
+		 -out $*.$(L2)-$(L1)/reordering-table.hier-mslr-bidirectional-fe
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
 		-e "s:$*.$(L2)-$(L1)/model/phrase-table.gz:$*.$(L2)-$(L1)/phrase-table:"\
 		-e "s:$*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table:"\
+		-e "s:$*.$(L2)-$(L1)/model/reordering-table.phrase-msd-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table.phrase-msd-bidirectional-fe:"\
+		-e "s:$*.$(L2)-$(L1)/model/reordering-table.hier-mslr-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table.hier-mslr-bidirectional-fe:"\
 		< $*.$(L2)-$(L1)/model/moses-tuned.ini  > $*.$(L2)-$(L1)/model/moses-tuned-binarised.ini
 	touch $@
-
-
 
 # vim: set ft=automake:
