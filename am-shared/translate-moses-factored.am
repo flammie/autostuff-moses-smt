@@ -29,62 +29,27 @@
 # Baseline model translation is same both ways
 
 MOSES_FACTORED_INFIX=moses-factored
-TRANSLATION_L1_FACTORS_0_1_L2=$(L1)-$(L2).translated-factors.0-1.$(L2)
+MOSES_HUNPOSED_INFIX=moses-hunposed
+MOSES_CRFED_INFIX=moses-crfed
+TRANSLATION_L1_FACTORS_0_1_L2=$(L1)-$(L2).translated-factors.0-1.$(L2).raw
 
 
 # From simple to complex
 %.$(MOSES_FACTORED_INFIX).$(TRANSLATION_L1_FACTORS_0_1_L2): %.true.$(L1) $(MOSES_FACTORED_L1_0_1_L2)
-	$(MOSES) -f $(MOSES_FACTORED_L1_0_1_L2_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
+	$(MOSES) -f $(MOSES_FACTORED_L1_0_1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-# From complex to simple
-%.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_L2_L1)
-	$(MOSES) -f $(MOSES_BASELINE_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
+%.$(MOSES_HUNPOSED_INFIX).$(TRANSLATION_L1_FACTORS_0_1_L2): %.true.$(L1) $(MOSES_HUNPOSED_L1_0_1_L2)
+	$(MOSES) -f $(MOSES_HUNPOSED_L1_0_1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-# With scaled data
-# Simple to complexz
-%.$(MOSES_BASELINE_INFIX)-half.$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_HALF_L1_L2)
-	$(MOSES) -f $(MOSES_BASELINE_HALF_L1_L2_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
+%.$(MOSES_CRFED_INFIX).$(TRANSLATION_L1_FACTORS_0_1_L2): %.true.$(L1) $(MOSES_CRFED_L1_0_1_L2)
+	$(MOSES) -f $(MOSES_CRFED_L1_0_1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-%.$(MOSES_BASELINE_INFIX)-quarter.$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_QUARTER_L1_L2)
-	$(MOSES) -f $(MOSES_BASELINE_QUARTER_L1_L2_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
+# unfactor
+%.$(TRANSLATION_L1_L2).raw: %.$(TRANSLATION_L1_FACTORS_0_1_L2)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
 
-%.$(MOSES_BASELINE_INFIX)-eighth.$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_EIGHTH_L1_L2)
-	$(MOSES) -f $(MOSES_BASELINE_EIGHTH_L1_L2_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MOSES_BASELINE_INFIX)-sample.$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_BASELINE_SAMPLE_L1_L2)
-	$(MOSES) -f $(MOSES_BASELINE_SAMPLE_L1_L2_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-# Complex to simple
-%.$(MOSES_BASELINE_INFIX)-half.$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_HALF_L2_L1)
-	$(MOSES) -f $(MOSES_BASELINE_HALF_L2_L1_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MOSES_BASELINE_INFIX)-quarter.$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_QUARTER_L2_L1)
-	$(MOSES) -f $(MOSES_BASELINE_QUARTER_L2_L1_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MOSES_BASELINE_INFIX)-eighth.$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_EIGHTH_L2_L1)
-	$(MOSES) -f $(MOSES_BASELINE_EIGHTH_L2_L1_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MOSES_BASELINE_INFIX)-sample.$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_BASELINE_SAMPLE_L2_L1)
-	$(MOSES) -f $(MOSES_BASELINE_SAMPLE_L2_L1_DIR)/model/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
+%.$(TRANSLATION_L1_L2): %.$(TRANSLATION_L1_L2).raw
+	$(MOSES_DETRUECASE) < $< |\
 		$(MOSES_DETOKENIZER) > $@
 
 

@@ -1,0 +1,103 @@
+## Include this file to train different re-ordering models separately
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is language code for morphologically simpler language
+# L2 is language code for morphologically complex language
+
+# Translation model training
+%.wbe.rm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L2)
+	if test -d $*.$(L1)-$(L2)-wbe ; then \
+		rm -rf $*.$(L1)-$(L2)-wbe ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-wbe \
+		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.wbe.rm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L1)
+	if test -d $*.$(L2)-$(L1)-wbe ; then \
+		rm -rf $*.$(L2)-$(L1)-wbe ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1)-wbe \
+		-corpus $*.norm.tok.clean.true.esc -f $(L2) -e $(L1) \
+		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L1).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.phrase.rm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L2)
+	if test -d $*.$(L1)-$(L2)-phrase ; then \
+		rm -rf $*.$(L1)-$(L2)-phrase ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-phrase \
+		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and -reordering phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.phrase.rm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L1)
+	if test -d $*.$(L2)-$(L1)-phrase ; then \
+		rm -rf $*.$(L2)-$(L1)-phrase ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1)-phrase \
+		-corpus $*.norm.tok.clean.true.esc -f $(L2) -e $(L1) \
+		-alignment grow-diag-final-and -reordering phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L1).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+# hierarchical
+%.hier.rm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L2)
+	if test -d $*.$(L1)-$(L2)-hier ; then \
+		rm -rf $*.$(L1)-$(L2)-hier ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-hier \
+		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and -reordering hier \
+		-hierarchical -glue-grammar -max-phrase-length 5 \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.hier.rm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L1)
+	if test -d $*.$(L2)-$(L1)-hier ; then \
+		rm -rf $*.$(L2)-$(L1)-hier ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1)-hier \
+		-corpus $*.clean -f $(L2) -e $(L1) \
+		-alignment grow-diag-final-and -reordering hier \
+		-hierarchical -glue-grammar -max-phrase-length 5 \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L1).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG)
+	touch $@
+
+
