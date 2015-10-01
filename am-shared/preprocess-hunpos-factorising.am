@@ -2,7 +2,7 @@
 
 # Hunpos's tags
 
-%.hunpos.factors.$(L1): %.true.$(L1) $(HUNPOS_L1)
+%.hunpos.factors.$(L1): %.norm.tok.clean.true.esc.$(L1) $(HUNPOS_L1)
 	$(IRSTLM_ADD_START_END) < $< | tr ' ' '\n' |\
 		$(SED) -e 's:</\?s>::' |\
 		$(HUNPOS_TAG) $(HUNPOS_L1) | $(SED) -e 's/^$$//' | tr '\n' '@' |\
@@ -13,7 +13,7 @@
 		tr -s '\n' |\
 		$(IRSTLM_RM_START_END) > $@
 
-%.hunpos.factors.$(L2): %.true.$(L2) $(HUNPOS_L2)
+%.hunpos.factors.$(L2): %.norm.tok.clean.true.esc.$(L2) $(HUNPOS_L2)
 	$(IRSTLM_ADD_START_END) < $< | tr ' ' '\n' |\
 		$(SED) -e 's:</\?s>::' |\
 		$(HUNPOS_TAG) $(HUNPOS_L2) | $(SED) -e 's/^$$//' | tr '\n' '@' |\
@@ -24,7 +24,7 @@
 		tr -s '\n' |\
 		$(IRSTLM_RM_START_END) > $@
 
-%.crf.factors.$(L1): %.true.$(L1) $(CRF_L1)
+%.crf.factors.$(L1): %.norm.tok.clean.true.esc.$(L1) $(CRF_L1)
 	$(SED) -e 's/$$/\n/' $< | tr ' ' '\n' > $*.crf.tokens.$(L1)
 	./extract_features.py < $*.crftokens.hr > $*.crf.feats.$(L1)
 	./crfsuite tag -m $(CRF_L1) < $*.crf.feats.$(L1) \
@@ -34,7 +34,7 @@
 	gawk 'NF==0 {printf("\n");} NF>3 {printf("%s|%s ", $$1, $$2);}' \
 		< $*.crf.alls.$(L1)  > $@
 
-%.crf.factors.$(L2): %.true.$(L2) $(CRF_L2)
+%.crf.factors.$(L2): %.norm.tok.clean.true.esc.$(L2) $(CRF_L2)
 	$(SED) -e 's/$$/\n/' $< | tr ' ' '\n' > $*.crf.tokens.$(L2)
 	./extract_features.py < $*.crf.tokens.hr > $*.crf.feats.$(L2)
 	./crfsuite tag -m $(CRF_L2) < $*.crf.feats.$(L2) \
