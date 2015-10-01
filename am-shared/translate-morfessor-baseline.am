@@ -33,207 +33,28 @@
 
 # Morfessor and flatcat segments in translation
 
+TRANSLATION_L1_SEGMENTED_L2=$(L1)-$(L2).translated-segments.$(L2).raw
 # From simple to complex
-%.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_MORFESSOR1BEST_L1_L2)
+%.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.norm.tok.clean.true.esc.$(L1) $(MOSES_MORFESSOR1BEST_L1_L2)
 	$(MOSES) -f $(MOSES_MORFESSOR1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-# damp
-%.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_MORFESSOR1BEST_DAMPONES_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_DAMPONES_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-%.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_MORFESSOR1BEST_DAMPLOG_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_DAMPLOG_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-
-# markers
-%.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_MORFESSOR1BEST_NOMARKERS_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_NOMARKERS_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MORFESSOR_PLUS_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_MORFESSOR1BEST_PLUS_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_PLUS_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MORFESSOR_SUFFIX_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_MORFESSOR1BEST_SUFFIX_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_SUFFIX_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
 
 
 # Fllatcat
-%.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_L1_L2)
+%.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.norm.tok.clean.true.esc.$(L1) $(MOSES_FLATCAT1BEST_L1_L2)
 	$(MOSES) -f $(MOSES_FLATCAT1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-# damp
-%.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPONES_L1_L2)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-%.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPLOG_L1_L2)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-# ppt
-%.$(FLATCAT_BASELINE_PPT100_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_PPT100_L1_L2)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_PPT100_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-# damp
-%.$(FLATCAT_DAMPONES_PPT100_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPONES_PPT100_L1_L2)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_PPT100_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-%.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(TRANSLATION_L1_SEGMENTED_L2).raw: %.true.$(L1) $(MOSES_FLATCAT1BEST_DAMPLOG_PPT100_L1_L2)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_PPT100_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
 # From complex to simple
 # N.B. oov segments may become untranslated segments which are worse than
 # untranslated words
-%.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).raw: %.morfessor.1best.true.$(L2) $(MOSES_MORFESSOR1BEST_L2_L1)
+%.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).raw: %.morfessor.1best.norm.tok.clean.true.esc.$(L2) $(MOSES_MORFESSOR1BEST_L2_L1)
 	$(MOSES) -f $(MOSES_MORFESSOR1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-# damp
-%.$(MORFESSOR_DAMPONES_INFIX).$(TRANSLATION_L2_L1).raw: %.morfessor.1best.dampones.true.$(L2) $(MOSES_MORFESSOR1BEST_DAMPONES_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_DAMPONES_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-%.$(MORFESSOR_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).raw: %.morfessor.1best.damplog.true.$(L2) $(MOSES_MORFESSOR1BEST_DAMPLOG_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_DAMPLOG_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-
-# Tuned
-%.$(MORFESSOR_TUNED_INFIX).$(TRANSLATION_L2_L1): %.true.$(L2) $(MORFESSOR_TUNED_L2_L1)
-	$(MOSES) -f $(MORFESSOR_TUNED_L2_L1_DIR)/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-# markers
-%.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L2_L1): %.morfessor.1best.nomarkers.true.$(L2) $(MOSES_MORFESSOR1BEST_NOMARKERS_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_NOMARKERS_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) |\
-		$(SED) -e 's/[→←↝↜]//g' > $@
-
-%.$(MORFESSOR_PLUS_INFIX).$(TRANSLATION_L2_L1): %.morfessor.1best.spaceplusspace.true.$(L2) $(MOSES_MORFESSOR1BEST_PLUS_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_PLUS_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) |\
-		$(SED) -e 's/[→←↝↜]//g' > $@
-
-%.$(MORFESSOR_SUFFIX_INFIX).$(TRANSLATION_L2_L1): %.morfessor.1best.suffixmarkered.true.$(L2) $(MOSES_MORFESSOR1BEST_SUFFIX_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_SUFFIX_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) |\
-		$(SED) -e 's/[→←↝↜]//g' > $@
-
 # fatlact
-%.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.true.$(L2) $(MOSES_FLATCAT1BEST_L2_L1)
+%.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.norm.tok.clean.true.esc.$(L2) $(MOSES_FLATCAT1BEST_L2_L1)
 	$(MOSES) -f $(MOSES_FLATCAT1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
 
-%.$(FLATCAT_DAMPONES_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.dampones.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPONES_L2_L1)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-%.$(FLATCAT_DAMPLOG_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.damplog.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPLOG_L2_L1)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-%.$(FLATCAT_BASELINE_PPT100_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.ppt-100.true.$(L2) $(MOSES_FLATCAT1BEST_PPT100_L2_L1)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_PPT100_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-%.$(FLATCAT_DAMPONES_PPT100_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.dampones.ppt-100.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPONES_PPT100_L2_L1)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPONES_PPT100_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-%.$(FLATCAT_DAMPLOG_PPT100_INFIX).$(TRANSLATION_L2_L1).raw: %.flatcat.1best.damplog.ppt-100.true.$(L2) $(MOSES_FLATCAT1BEST_DAMPLOG_PPT100_L2_L1)
-	$(MOSES) -f $(MOSES_FLATCAT1BEST_DAMPLOG_PPT100_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< > $@
-
-
-# Scaling segmenting data
-%.half$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_HALFMORFESSOR1BEST_L1_L2)
-	$(MOSES) -f $(MOSES_HALFMORFESSOR1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.quarter$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_QUARTERMORFESSOR1BEST_L1_L2)
-	$(MOSES) -f $(MOSES_QUARTERMORFESSOR1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.eighth$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_EIGHTHMORFESSOR1BEST_L1_L2)
-	$(MOSES) -f $(MOSES_EIGHTHMORFESSOR1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.sample$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_SAMPLEMORFESSOR1BEST_L1_L2)
-	$(MOSES) -f $(MOSES_SAMPLEMORFESSOR1BEST_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-# scaling tm data
-%.$(MORFESSOR_BASELINE_INFIX)-half.$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_MORFESSOR1BEST_HALF_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_HALF_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-quarter.$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_MORFESSOR1BEST_QUARTER_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_QUARTER_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-eighth.$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_MORFESSOR1BEST_EIGHTH_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_EIGHTH_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-sample.$(TRANSLATION_L1_SEGMENTED_L2): %.true.$(L1) $(MOSES_MORFESSOR1BEST_SAMPLE_L1_L2)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_SAMPLE_L1_L2_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-# other dir
-# scaling segmenting data
-%.half$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.half$(MORFESSOR_BASELINE_INFIX).1best.true.$(L2) $(MOSES_HALFMORFESSOR1BEST_L2_L1)
-	$(MOSES) -f $(MOSES_HALFMORFESSOR1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.quarter$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.quarter$(MORFESSOR_BASELINE_INFIX).1best.true.$(L2) $(MOSES_QUARTERMORFESSOR1BEST_L2_L1)
-	$(MOSES) -f $(MOSES_QUARTERMORFESSOR1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.eighth$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.eighth$(MORFESSOR_BASELINE_INFIX).1best.true.$(L2) $(MOSES_EIGHTHMORFESSOR1BEST_L2_L1)
-	$(MOSES) -f $(MOSES_EIGHTHMORFESSOR1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.sample$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1): %.sample$(MORFESSOR_BASELINE_INFIX).1best.true.$(L2) $(MOSES_SAMPLEMORFESSOR1BEST_L2_L1)
-	$(MOSES) -f $(MOSES_SAMPLEMORFESSOR1BEST_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-# scaling tm data
-%.$(MORFESSOR_BASELINE_INFIX)-half.$(TRANSLATION_L2_L1): %.morfessor.1best.true.$(L2) $(MOSES_MORFESSOR1BEST_HALF_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_HALF_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-quarter.$(TRANSLATION_L2_L1): %.morfessor.1best.true.$(L2) $(MOSES_MORFESSOR1BEST_QUARTER_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_QUARTER_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-eighth.$(TRANSLATION_L2_L1): %.morfessor.1best.true.$(L2) $(MOSES_MORFESSOR1BEST_EIGHTH_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_EIGHTH_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
-
-%.$(MORFESSOR_BASELINE_INFIX)-sample.$(TRANSLATION_L2_L1): %.morfessor.1best.true.$(L2) $(MOSES_MORFESSOR1BEST_SAMPLE_L2_L1)
-	$(MOSES) -f $(MOSES_MORFESSOR1BEST_SAMPLE_L2_L1_DIR)/model/moses-tuned-binarised.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
-
 # cleaning
-%.$(TRANSLATION_L1_SEGMENTED_L2): %.$(TRANSLATION_L1_SEGMENTED_L2).raw
-	$(MOSES_DETRUECASE) < $< |\
-		$(MOSES_DETOKENIZER) > $@
-
 %.$(TRANSLATION_L2_L1): %.$(TRANSLATION_L2_L1).raw
 	$(MOSES_DETRUECASE) < $< |\
 		$(MOSES_DETOKENIZER) |\

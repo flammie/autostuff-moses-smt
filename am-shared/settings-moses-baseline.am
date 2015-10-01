@@ -48,7 +48,6 @@ moses-$(L2)-$(L1): $(MOSES_BASELINE_L2_L1)
 # Settings for baseline translations
 TRANSLATION_L1_L2=$(L1)-$(L2).translated.$(L2)
 TRANSLATION_L2_L1=$(L2)-$(L1).translated.$(L1)
-TRANSLATION_L1_SEGMENTED_L2=$(L1)-$(L2).translated-segments.$(L2)
 
 
 $(MOSES_BASELINE_TRAIN).tune.$(L1).text: $(MOSES_BASELINE_TUNE).$(L1).text

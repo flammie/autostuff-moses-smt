@@ -277,7 +277,7 @@ segments: $(SEGMENTS)
 	$(SED) -e 's/ + //g' \
 		-e 's/[→←]//g' < $< > $@
 
-%.$(TRANSLATION_L1_L2): %.$(TRANSLATION_L1_SEGMENTED_L2)
+%.$(TRANSLATION_L1_L2).raw: %.$(TRANSLATION_L1_SEGMENTED_L2)
 	$(SED) -e 's/→ ←//g' \
 		-e 's/[[:space:]]*←[^[:space:].,?!()"]*//g' \
 		-e 's/[^[:space:].,?!()"]*→[[:space:]]*//g' \
