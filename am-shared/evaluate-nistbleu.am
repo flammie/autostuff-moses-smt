@@ -25,6 +25,9 @@
 %.$(MOSES_BASELINE_INFIX).$(NISTBLEU_L1_L2): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
+%.$(MOSES_HIERARCHICAL_INFIX).$(NISTBLEU_L1_L2): %.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
 # Morfessor baseline
 %.$(MORFESSOR_BASELINE_INFIX).$(NISTBLEU_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L1).sgml -r $*.ref.$(L2).sgml -t $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
@@ -62,6 +65,9 @@
 %.$(MOSES_BASELINE_INFIX).$(NISTBLEU_L2_L1): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
+%.$(MOSES_HIERARCHICAL_INFIX).$(NISTBLEU_L2_L1): %.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
+	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
 # Morfessor baseline
 %.$(MORFESSOR_BASELINE_INFIX).$(NISTBLEU_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
@@ -84,7 +90,7 @@
 %.$(MOSES_FACTORED_INFIX).$(NISTBLEU_L2_L1): %.$(MOSES_FACTORED_INFIX).$(TRANSLATION_L2_L1).sgml %.src.$(L2).sgml %.ref.$(L1).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(MOSES_FACTORED_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-%.$(APERTIUM_SEG_INFIX).$(NISTBLEU_L2_L1): %.$(APERTIUM_SEG_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L2).sgml %.src.$(L1).sgml
+%.$(APERTIUM_SEG_INFIX).$(NISTBLEU_L2_L1): %.$(APERTIUM_SEG_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml %.src.$(L2).sgml
 	$(NIST_BLEU13A) -s $*.src.$(L2).sgml -r $*.ref.$(L1).sgml -t $*.$(APERTIUM_SEG_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
 
