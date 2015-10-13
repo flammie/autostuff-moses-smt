@@ -1,0 +1,79 @@
+## Include this file to train translation models from text corpora and language
+## models
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is language code for morphologically simpler language
+# L2 is language code for morphologically complex language
+
+# Translation model training
+%.targetsyntax-untuned.tm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.moses.xml.$(L2) $(BASELINE_LM_L2)
+	if test -d $*.$(L1)-$(L2)-targetsyntax ; then \
+		rm -rf $*.$(L1)-$(L2)-targetsyntax ;\
+	fi
+	-ln -sf $*.norm.tok.clean.true.esc.$(L1) $*.moses.xml.$(L1)
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-targetsyntax \
+		-corpus $*.moses.xml -f $(L1) -e $(L2) \
+		-target-syntax \
+		-max-phrase-length 5 \
+		-alignment grow-diag-final-and  \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.sourcesyntax-untuned.tm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.moses.xml.$(L2) $(BASELINE_LM_L1)
+	if test -d $*.$(L2)-$(L1)-sourcesyntax ; then \
+		rm -rf $*.$(L2)-$(L1)-sourcesyntax ;\
+	fi
+	-ln -sf $*.norm.tok.clean.true.esc.$(L1) $*.moses.xml.$(L1)
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1)-sourcesyntax \
+		-corpus $*.moses.xml -f $(L2) -e $(L1) \
+		-source-syntax \
+		-max-phrase-length 5 \
+		-alignment grow-diag-final-and  \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+# Tuning
+# baseline
+%.targetsyntax-tuned.tm.$(L1)-$(L2):  %.targetsyntax-untuned.tm.$(L1)-$(L2) $(BASELINE_LM_L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_BASELINE_TUNE).mosesparses.xml.$(L2)
+	cp -v $*.$(L1)-$(L2)-targetsyntax/model/moses.ini \
+		$*.$(L1)-$(L2)-targetsyntax/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-targetsyntax/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-targetsyntax/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-targetsyntax \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_BASELINE_TUNE).mosesparses.xml.$(L2) \
+		$(MOSES_CHART) $*.$(L1)-$(L2)-targetsyntax/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		--no-filter-phrase-table \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L1)-$(L2)-targetsyntax/moses.ini $*.$(L1)-$(L2)-targetsyntax/model/moses-tuned.ini
+	touch $@
+
+
+
+# vim: set ft=automake:
