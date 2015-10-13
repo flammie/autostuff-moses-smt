@@ -1,0 +1,123 @@
+## Include this file to train translation models from text corpora and language
+## models
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is language code for morphologically simpler language
+# L2 is language code for morphologically complex language
+
+# Translation model training
+%.hierarchical-untuned.tm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L2)
+	if test -d $*.$(L1)-$(L2) ; then \
+		rm -rf $*.$(L1)-$(L2) ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-hierarchical \
+		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
+		-hierarchical -glue-grammar \
+		-max-phrase-length 5 \
+		-alignment grow-diag-final-and  \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.hierarchical-untuned.tm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L1)
+	if test -d $*.$(L2)-$(L1) ; then \
+		rm -rf $*.$(L2)-$(L1) ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1)-hierarchical \
+		-corpus $*.norm.tok.clean.true.esc -f $(L2) -e $(L1) \
+		-hierarchical -glue-grammar \
+		-max-phrase-length 5 \
+		-alignment grow-diag-final-and  \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L1).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+# Tuning
+# baseline
+%.hierarchical-tuned.tm.$(L1)-$(L2):  %.hierarchical-untuned.tm.$(L1)-$(L2) $(BASELINE_LM_L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
+	cp -v $*.$(L1)-$(L2)-hierarchical/model/moses.ini \
+		$*.$(L1)-$(L2)-hierarchical/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-hierarchical/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-hierarchical/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-hierarchical \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES_CHART) $*.$(L1)-$(L2)-hierarchical/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		-filtercmd="$(MOSES_FILTER_MODEL_GIVEN_INPUT_HIER)" \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L1)-$(L2)-hierarchical/moses.ini $*.$(L1)-$(L2)-hierarchical/model/moses-tuned.ini
+	touch $@
+
+%.hierarchical-tuned.tm.$(L2)-$(L1): %.hierarchical-untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
+	cp -v $*.$(L2)-$(L1)-hierarchical/model/moses.ini\
+	   	$*.$(L2)-$(L1)-hierarchical/model/moses-untuned.ini
+	if test -d $*.$(L2)-$(L1)-hierarchical/filtered/ ; then \
+		rm -vrf $*.$(L2)-$(L1)-hierarchical/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1)-hierarchical \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_CHART) $*.$(L2)-$(L1)-hierarchical/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		-filtercmd="$(MOSES_FILTER_MODEL_GIVEN_INPUT_HIER)" \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L2)-$(L1)-hierarchical/moses.ini $*.$(L2)-$(L1)-hierarchical/model/moses-tuned.ini
+	touch $@
+
+
+# binarise 
+%.hierarchical-tuned-binarised.tm.$(L1)-$(L2): %.hierarchical-tuned.tm.$(L1)-$(L2)
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
+		-in $*.$(L1)-$(L2)-hierarchical/model/phrase-table.gz \
+		-nscores 4 -out $*.$(L1)-$(L2)-hierarchical/phrase-table
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
+		 -in $*.$(L1)-$(L2)-hierarchical/model/reordering-table.wbe-msd-bidirectional-fe.gz \
+		 -out $*.$(L1)-$(L2)-hierarchical/reordering-table
+	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
+		-e "s:$*.$(L1)-$(L2)-hierarchical/model/phrase-table.gz:$*.$(L1)-$(L2)-hierarchical/phrase-table:"\
+		-e "s:$*.$(L1)-$(L2)-hierarchical/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)-hierarchical/reordering-table:"\
+		< $*.$(L1)-$(L2)-hierarchical/model/moses-tuned.ini  > $*.$(L1)-$(L2)-hierarchical/model/moses-binarised.ini
+	touch $@
+
+
+%.hierarchical-tuned-binarised.tm.$(L2)-$(L1): %.hierarchical-tuned.tm.$(L2)-$(L1)
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
+		-in $*.$(L2)-$(L1)-hierarchical/model/phrase-table.gz \
+		-nscores 4 -out $*.$(L2)-$(L1)-hierarchical/phrase-table
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS__FLAGS) \
+		-in $*.$(L2)-$(L1)-hierarchical/model/reordering-table.wbe-msd-bidirectional-fe.gz \
+		-out $*.$(L2)-$(L1)-hierarchical/reordering-table
+	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
+		-e "s:$*.$(L2)-$(L1)-hierarchical/model/phrase-table.gz:$*.$(L2)-$(L1)-hierarchical/phrase-table:"\
+		-e "s:$*.$(L2)-$(L1)-hierarchical/model/reordering-table.wbe-msd-bidirectional-fe.gz:$*.$(L2)-$(L1)-hierarchical/reordering-table:"\
+		< $*.$(L2)-$(L1)-hierarchical/model/moses-tuned.ini  > $*.$(L2)-$(L1)-hierarchical/model/moses-binarised.ini
+	touch $@
+
+
+# vim: set ft=automake:

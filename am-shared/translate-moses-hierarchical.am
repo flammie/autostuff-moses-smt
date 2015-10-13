@@ -1,0 +1,52 @@
+## Include this file to automake project to get baseline translation for
+## moses language models
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# MOSES_HIERARCHICAL_INFIX is result file name part to identify moses-baseline
+#       translation
+# L1 is language code for morphologically simple language
+# L2 is language code for morphologically complex langugage
+# TRANSLATION_L1_L2 is result file name part to identify translation from L1 to 
+#       L2
+# MOSES_HIERARCHICAL_L1_L2 is filename that carries time stamp of translation model
+# MOSES_HIERARCHICAL_L1_L2_DIR is directory containing moses baseline model
+# *_L2_L1 with same prefixes is same files from L2 to L1
+
+# Baseline model translation is same both ways
+
+
+MOSES_HIERARCHICAL_INFIX=moses-hierarchical
+
+# From simple to complex
+%.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_HIERARCHICAL_L1_L2)
+	$(MOSES_FILTER_MODEL_GIVEN_INPUT) $(MOSES_HIERARCHICAL_L1_L2_DIR)/filtered-$* \
+		$(MOSES_HIERARCHICAL_L1_L2_DIR)/model/moses-tuned.ini $< -Hierarchical
+	$(MOSES_CHART) -f $(MOSES_HIERARCHICAL_L1_L2_DIR)/filtered-$*/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+# From complex to simple
+%.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_HIERARCHICAL_L2_L1)
+	$(MOSES_FILTER_MODEL_GIVEN_INPUT) $(MOSES_HIERARCHICAL_L2_L1_DIR)/filtered-$* \
+		$(MOSES_HIERARCHICAL_L2_L1_DIR)/model/moses-tuned.ini $< -Hierarchical
+	$(MOSES_CHART) -f $(MOSES_HIERARCHICAL_L2_L1_DIR)/filtered-$*/moses.ini < $< |\
+		$(MOSES_DETRUECASE) |\
+		$(MOSES_DETOKENIZER) > $@
+
+
+
+# vim: set ft=automake:
