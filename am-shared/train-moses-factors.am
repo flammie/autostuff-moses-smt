@@ -65,8 +65,10 @@
 		-translation-factors 0-0,1 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		$(THREADS_FLAGS) \
 		-input-factor-max 1 \
-		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
@@ -83,8 +85,10 @@
 		-translation-factors 0-0,1 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		$(THREADS_FLAGS) \
 		-input-factor-max 1 \
-		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
@@ -101,6 +105,9 @@
 		-translation-factors 0-0,1 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		$(THREADS_FLAGS) \
 		-input-factor-max 1 \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
@@ -118,8 +125,10 @@
 		-translation-factors 0-0,1 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
-		-input-factor-max 5 \
-		-sort-batch-size 253 -sort-compress gzip \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		$(THREADS_FLAGS) \
+		-input-factor-max 1 \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
@@ -134,8 +143,10 @@
 		-translation-factors 0,1-0 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
-		-input-factor-max 5 \
-		-sort-batch-size 253 -sort-compress gzip \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		$(THREADS_FLAGS) \
+		-input-factor-max 1 \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
@@ -150,6 +161,9 @@
 		-translation-factors 0,4-0 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		$(THREADS_FLAGS) \
 		-input-factor-max 5 \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
@@ -169,7 +183,8 @@
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
 		$(MOSES) $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
 	cp -v $*.$(L1)-$(L2)-factors-0-0_1/moses.ini $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini
 	touch $@
 
@@ -186,7 +201,8 @@
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
 		$(MOSES) $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
 	cp -v $*.$(L1)-$(L2)-factors-0-0_1/moses.ini $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini
 	touch $@
 
@@ -203,16 +219,17 @@
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
 		$(MOSES) $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
 	cp -v $*.$(L1)-$(L2)-factors-0-0_1/moses.ini $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini
 	touch $@
 
 # binarising
 %.factors-0-0_1.tuned-binarised.tm.$(L1)-$(L2): %.factors-0-0_1.tuned.tm.$(L1)-$(L2)
-	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz \
 		-nscores 4 -out $*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
@@ -222,10 +239,10 @@
 	touch $@
 
 %.hunpos-factors-0-0_1.tuned-binarised.tm.$(L1)-$(L2): %.hunpos-factors-0-0_1.tuned.tm.$(L1)-$(L2)
-	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz \
 		-nscores 4 -out $*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
@@ -235,10 +252,10 @@
 	touch $@
 
 %.crf-factors-0-0_1.tuned-binarised.tm.$(L1)-$(L2): %.crf-factors-0-0_1.tuned.tm.$(L1)-$(L2)
-	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz \
 		-nscores 4 -out $*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \

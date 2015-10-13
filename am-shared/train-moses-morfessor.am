@@ -30,7 +30,9 @@
 		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
 		-lm 0:3:`pwd`/$(MORFESSOR_LM_L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
-		-sort-batch-size 253 -sort-compress gzip \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		$(THREADS_FLAGS)
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
@@ -44,7 +46,9 @@
 		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
 		-lm 0:3:`pwd`/$(FLATCAT_LM_L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
-		-sort-batch-size 253 -sort-compress gzip \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		$(THREADS_FLAGS)
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
@@ -62,7 +66,8 @@
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 		$(MORFESSOR_TUNE).norm.tok.clean.true.esc.$(L2) \
 		$(MOSES) $*.$(L1)-$(L2)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
 	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
 	touch $@
 
@@ -77,7 +82,8 @@
 		$(MORFESSOR_TUNE).norm.tok.clean.true.esc.$(L2) \
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 		$(MOSES) $*.$(L2)-$(L1)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
 	cp -v $*.$(L2)-$(L1)/moses.ini $*.$(L2)-$(L1)/model/moses-tuned.ini
 	touch $@
 
@@ -94,7 +100,8 @@
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 		$(FLATCAT_TUNE).norm.tok.clean.true.esc.$(L2) \
 		$(MOSES) $*.$(L1)-$(L2)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
 	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
 	touch $@
 
@@ -109,23 +116,24 @@
 		$(FLATCAT_TUNE).norm.tok.clean.true.esc.$(L2) \
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 		$(MOSES) $*.$(L2)-$(L1)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
 	cp -v $*.$(L2)-$(L1)/moses.ini $*.$(L2)-$(L1)/model/moses-tuned.ini
 	touch $@
 
 
 # Binarising
 %.morfessor-tuned-binarised.tm.$(L1)-$(L2): %.morfessor-tuned.tm.$(L1)-$(L2)
-	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L1)-$(L2)/model/phrase-table.gz \
 		-nscores 4 -out $*.$(L1)-$(L2)/phrase-table
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)/model/reordering-table.wbe-msd-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)/reordering-table.wbe-msd-bidirectional-fe
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)/model/reordering-table.phrase-msd-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)/reordering-table.phrase-msd-bidirectional-fe
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)/model/reordering-table.hier-mslr-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)/reordering-table.hier-mslr-bidirectional-fe
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
@@ -137,16 +145,16 @@
 	touch $@
 
 %.morfessor-tuned-binarised.tm.$(L2)-$(L1): %.morfessor-tuned.tm.$(L2)-$(L1)
-	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L2)-$(L1)/model/phrase-table.gz \
 		-nscores 4 -out $*.$(L2)-$(L1)/phrase-table
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz \
 		-out $*.$(L2)-$(L1)/reordering-table
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L2)-$(L1)/model/reordering-table.phrase-msd-bidirectional-fe.gz \
 		 -out $*.$(L2)-$(L1)/reordering-table.phrase-msd-bidirectional-fe
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L2)-$(L1)/model/reordering-table.hier-mslr-bidirectional-fe.gz \
 		 -out $*.$(L2)-$(L1)/reordering-table.hier-mslr-bidirectional-fe
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
@@ -158,16 +166,16 @@
 	touch $@
 
 %.flatcat-tuned-binarised.tm.$(L1)-$(L2): %.flatcat-tuned.tm.$(L1)-$(L2)
-	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L1)-$(L2)/model/phrase-table.gz \
 		-nscores 4 -out $*.$(L1)-$(L2)/phrase-table
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)/model/reordering-table.wbe-msd-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)/reordering-table
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)/model/reordering-table.phrase-msd-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)/reordering-table.phrase-msd-bidirectional-fe
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L1)-$(L2)/model/reordering-table.hier-mslr-bidirectional-fe.gz \
 		 -out $*.$(L1)-$(L2)/reordering-table.hier-mslr-bidirectional-fe
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
@@ -180,16 +188,16 @@
 
 
 %.flatcat-tuned-binarised.tm.$(L2)-$(L1): %.flatcat-tuned.tm.$(L2)-$(L1)
-	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L2)-$(L1)/model/phrase-table.gz \
 		-nscores 4 -out $*.$(L2)-$(L1)/phrase-table
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		-in $*.$(L2)-$(L1)/model/reordering-table.wbe-msd-bidirectional-fe.gz \
 		-out $*.$(L2)-$(L1)/reordering-table.wbe-msd-bidirectional-fe
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L2)-$(L1)/model/reordering-table.phrase-msd-bidirectional-fe.gz \
 		 -out $*.$(L2)-$(L1)/reordering-table.phrase-msd-bidirectional-fe
-	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(PROCESS_PHRASE_TABLE_FLAGS) \
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
 		 -in $*.$(L2)-$(L1)/model/reordering-table.hier-mslr-bidirectional-fe.gz \
 		 -out $*.$(L2)-$(L1)/reordering-table.hier-mslr-bidirectional-fe
 	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
@@ -198,100 +206,6 @@
 		-e "s:$*.$(L2)-$(L1)/model/reordering-table.phrase-msd-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table.phrase-msd-bidirectional-fe:"\
 		-e "s:$*.$(L2)-$(L1)/model/reordering-table.hier-mslr-bidirectional-fe.gz:$*.$(L2)-$(L1)/reordering-table.hier-mslr-bidirectional-fe:"\
 		< $*.$(L2)-$(L1)/model/moses-tuned.ini  > $*.$(L2)-$(L1)/model/moses-tuned-binarised.ini
-	touch $@
-
-
-# vim: set ft=automake:
-
-# test params
-%.flatcat-ppt-50-untuned.tm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(FLATCAT_PPT50_LM_L2)
-	if test -d $*.$(L1)-$(L2) ; then \
-		rm -rf $*.$(L1)-$(L2) ;\
-	fi
-	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) \
-		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
-		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
-		-lm 0:3:`pwd`/$(FLATCAT_PPT50_LM_L2).bin:8  $(MGIZA_FLAGS) \
-		$(PARALLEL_FLAGS) \
-		-sort-batch-size 253 -sort-compress gzip \
-		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
-	touch $@
-
-%.flatcat-ppt-200-untuned.tm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(FLATCAT_PPT200_LM_L2)
-	if test -d $*.$(L1)-$(L2) ; then \
-		rm -rf $*.$(L1)-$(L2) ;\
-	fi
-	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) \
-		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
-		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
-		-lm 0:3:`pwd`/$(FLATCAT_PPT200_LM_L2).bin:8  $(MGIZA_FLAGS) \
-		$(PARALLEL_FLAGS) \
-		-sort-batch-size 253 -sort-compress gzip \
-		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
-	touch $@
-
-%.flatcat-ppt-50-tuned.tm.$(L1)-$(L2):  %.flatcat-ppt-50-untuned.tm.$(L1)-$(L2) $(FLATCAT_PPT50_LM_L2) \
-	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-	$(FLATCAT_PPT50_TUNE).norm.tok.clean.true.esc.$(L2)
-	cp -v $*.$(L1)-$(L2)/model/moses.ini \
-		$*.$(L1)-$(L2)/model/moses-untuned.ini
-	if test -d $*.$(L1)-$(L2)/filtered/ ; then \
-		rm -vrf $*.$(L1)-$(L2)/filtered/ ; \
-		-rm $*.$(L1)-$(L2)/mert.* $*.$(L1)-$(L2)/run* ;\
-	fi
-	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2) \
-		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-		$(FLATCAT_PPT50_TUNE).norm.tok.clean.true.esc.$(L2) \
-		$(MOSES) $*.$(L1)-$(L2)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
-	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
-	touch $@
-
-%.flatcat-ppt-50-tuned.tm.$(L2)-$(L1): %.untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1) \
-	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-	$(FLATCAT_PPT50_TUNE).norm.tok.clean.true.esc.$(L2)
-	cp -v $*.$(L2)-$(L1)/model/moses.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
-	if test -d $*.$(L2)-$(L1)/filtered/ ; then \
-		rm -vrf $*.$(L2)-$(L1)/filtered/ ; \
-	fi
-	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1) \
-		$(FLATCAT_PPT50_TUNE).norm.tok.clean.true.esc.$(L2) \
-		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-		$(MOSES) $*.$(L2)-$(L1)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
-	cp -v $*.$(L2)-$(L1)/moses.ini $*.$(L2)-$(L1)/model/moses-tuned.ini
-	touch $@
-
-%.flatcat-ppt-200-tuned.tm.$(L1)-$(L2):  %.flatcat-ppt-200-untuned.tm.$(L1)-$(L2) $(FLATCAT_PPT200_LM_L2) \
-	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-	$(FLATCAT_PPT200_TUNE).norm.tok.clean.true.esc.$(L2)
-	cp -v $*.$(L1)-$(L2)/model/moses.ini \
-		$*.$(L1)-$(L2)/model/moses-untuned.ini
-	if test -d $*.$(L1)-$(L2)/filtered/ ; then \
-		rm -vrf $*.$(L1)-$(L2)/filtered/ ; \
-		-rm $*.$(L1)-$(L2)/mert.* $*.$(L1)-$(L2)/run* ; \
-	fi
-	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2) \
-		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-		$(FLATCAT_PPT200_TUNE).norm.tok.clean.true.esc.$(L2) \
-		$(MOSES) $*.$(L1)-$(L2)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
-	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
-	touch $@
-
-%.flatcat-ppt-200-tuned.tm.$(L2)-$(L1): %.untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1) \
-	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-	$(FLATCAT_PPT200_TUNE).norm.tok.clean.true.esc.$(L2)
-	cp -v $*.$(L2)-$(L1)/model/moses.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
-	if test -d $*.$(L2)-$(L1)/filtered/ ; then \
-		rm -vrf $*.$(L2)-$(L1)/filtered/ ; \
-	fi
-	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1) \
-		$(FLATCAT_PPT200_TUNE).norm.tok.clean.true.esc.$(L2) \
-		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-		$(MOSES) $*.$(L2)-$(L1)/model/moses.ini \
-		--mertdir `dirname $(MOSES)`
-	cp -v $*.$(L2)-$(L1)/moses.ini $*.$(L2)-$(L1)/model/moses-tuned.ini
 	touch $@
 
 
