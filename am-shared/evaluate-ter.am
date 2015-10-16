@@ -24,6 +24,9 @@ if CAN_TER
 %.$(MOSES_BASELINE_INFIX).$(TER_L1_L2): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
+%.$(MOSES_HIERARCHICAL_INFIX).$(TER_L1_L2): %.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
 # Morfessor baseline
 %.$(MORFESSOR_BASELINE_INFIX).$(TER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
@@ -62,6 +65,9 @@ if CAN_TER
 #  Mose Baseline {{{
 %.$(MOSES_BASELINE_INFIX).$(TER_L2_L1): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(MOSES_HIERARCHICAL_INFIX).$(TER_L2_L1): %.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
 # Morfessor Baseline {{{
 %.$(MORFESSOR_BASELINE_INFIX).$(TER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
