@@ -84,6 +84,11 @@ AC_ARG_WITH([slurm-mail],
             [with_slurm_mail=no])
 AC_SUBST([SLURM_EMAIL], [$with_slurm_mail])
 
+AC_ARG_WITH([berkeley-path],
+            [AS_HELP_STRING([--with-berkeley-path],
+                            [path to BerkeleyParser-1.7.jar @<:@default=.@:>@])],
+            [with_berkeley_path=$withval],
+            [with_berkeley_path=.])
 AC_ARG_WITH([tercom-path],
             [AS_HELP_STRING([--with-tercom-path],
                             [path to tercom.7.25.jar @<:@default=.@:>@])],
@@ -130,6 +135,7 @@ AC_PATH_PROG([MOSES_FILTER_MODEL_GIVEN_INPUT], [filter-model-given-input.pl], [f
 AC_PATH_PROG([MOSES_FILTER_MODEL_GIVEN_INPUT_HIER], [filter-model-given-input-hier.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
 AC_PATH_PROG([MOSES_OOV], [oov.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/analysis/])
 AC_PATH_PROG([MOSES_MULTI_BLEU], [multi-bleu.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/generic/])
+AC_PATH_PROG([MOSES_BERKELEY2XML_PTB], [berkeleyparsed2mosesxml_PTB.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/wrappers/])
 
 AS_IF([test x$MOSES = xfalse], [AC_MSG_ERROR([moses not found in $PATH$PATH_SEPARATOR:$with_moses, try --with-moses=PATH_TO_MOSES with downloaded mosesdecoder git src dir])])
 
@@ -171,6 +177,12 @@ AC_PATH_PROG([MORFESSOR_FLATCAT_TRAIN], [flatcat-train], [false])
 AC_PATH_PROG([MORFESSOR_FLATCAT_SEGMENT], [flatcat-segment], [false])
 AM_CONDITIONAL([CAN_MORFESS], [test x$MORFESSOR != xfalse])
 AM_CONDITIONAL([CAN_FLATCAT], [test x$MORFESSOR_FLATCAT != xfalse])
+
+# Berkeley
+AC_CHECK_FILE([$with_berkeley_path/BerkeleyParser-1.7.jar],
+              [AC_SUBST([BERKELEYPARSERJAR], [$with_berkeley_path/BerkeleyParser-1.7.jar],
+                        [AC_MSG_WARN([point --with-berkeley-path to dir of berkeley parser for berkeley parsing])])])
+AM_CONDITIONAL([CAN_BERKELEY], [test x$BERKELEYPARSERJAR != x])
 
 # NIST eval tools
 AC_PATH_PROG([NIST_BLEU13A], [mteval-v13a.pl], [false])

@@ -1,0 +1,18 @@
+## Include to automake project to use HFST segments for translations.
+
+# Berkeley's parses
+if CAN_BERKELEY
+%.berkeleys.$(L1): %.norm.PTBtok.clean.true.esc.$(L1) $(BERKELEY_L1)
+	$(JAVA) -jar $(BERKELEYPARSERJAR) -gr $(BERKELEY_L1) -inputFile $< > $@
+
+%.berkeleys.$(L2): %.norm.PTBtok.clean.true.esc.$(L2) $(BERKELEY_L2)
+	$(JAVA) -jar $(BERKELEYPARSERJAR) -gr $(BERKELEY_L2) -inputFile $< > $@
+
+%.berkeley.moses.xml.$(L1): %.berkeleys.$(L1)
+	$(MOSES_BERKELEY2XML_PTB) < $< > $@
+
+%.berkeley.moses.xml.$(L1): %.berkeleys.$(L1)
+	$(MOSES_BERKELEY2XML_PTB) < $< > $@
+
+endif
+# vim: set ft=automake:
