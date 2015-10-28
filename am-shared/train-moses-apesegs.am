@@ -32,7 +32,6 @@
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
 		$(CORES_FLAGS) \
-		$(THREADS_FLAGS) \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
@@ -48,7 +47,6 @@
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
 		$(CORES_FLAGS) \
-		$(THREADS_FLAGS) \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
