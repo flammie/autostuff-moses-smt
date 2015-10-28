@@ -29,6 +29,7 @@
 		-corpus $*.moses.xml -f $(L1) -e $(L2) \
 		-target-syntax \
 		-max-phrase-length 5 \
+		-glue-grammar \
 		-alignment grow-diag-final-and  \
 		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
@@ -46,6 +47,7 @@
 		-corpus $*.moses.xml -f $(L2) -e $(L1) \
 		-source-syntax \
 		-max-phrase-length 5 \
+		-glue-grammar \
 		-alignment grow-diag-final-and  \
 		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
@@ -54,11 +56,49 @@
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
+# relaxed syntax test
+%.targetsyntax-rightbin-untuned.tm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.moses-rightbin.xml.$(L2) $(BASELINE_LM_L2)
+	if test -d $*.$(L1)-$(L2)-targetsyntax-rightbin ; then \
+		rm -rf $*.$(L1)-$(L2)-targetsyntax-rightbin ;\
+	fi
+	-ln -sf $*.norm.tok.clean.true.esc.$(L1) $*.moses.xml.$(L1)
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-targetsyntax-rightbin \
+		-corpus $*.moses-rightbin.xml -f $(L1) -e $(L2) \
+		-target-syntax \
+		-max-phrase-length 5 \
+		-glue-grammar \
+		-alignment grow-diag-final-and  \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.sourcesyntax-rightbin-untuned.tm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.moses-rightbin.xml.$(L2) $(BASELINE_LM_L1)
+	if test -d $*.$(L2)-$(L1)-sourcesyntax-rightbin ; then \
+		rm -rf $*.$(L2)-$(L1)-sourcesyntax-rightbin ;\
+	fi
+	-ln -sf $*.norm.tok.clean.true.esc.$(L1) $*.moses-rightbin.xml.$(L1)
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1)-sourcesyntax-rightbin \
+		-corpus $*.moses.xml -f $(L2) -e $(L1) \
+		-source-syntax \
+		-max-phrase-length 5 \
+		-glue-grammar \
+		-alignment grow-diag-final-and  \
+		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+
 # Tuning
 # baseline
 %.targetsyntax-tuned.tm.$(L1)-$(L2):  %.targetsyntax-untuned.tm.$(L1)-$(L2) $(BASELINE_LM_L2) \
 	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-	$(MOSES_BASELINE_TUNE).mosesparses.xml.$(L2)
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
 	cp -v $*.$(L1)-$(L2)-targetsyntax/model/moses.ini \
 		$*.$(L1)-$(L2)-targetsyntax/model/moses-untuned.ini
 	if test -d $*.$(L1)-$(L2)-targetsyntax/filtered/ ; then \
@@ -66,7 +106,7 @@
 	fi
 	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-targetsyntax \
 		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
-		$(MOSES_BASELINE_TUNE).mosesparses.xml.$(L2) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
 		$(MOSES_CHART) $*.$(L1)-$(L2)-targetsyntax/model/moses.ini \
 		--mertdir `dirname $(MOSES)` \
 		--no-filter-phrase-table \
@@ -74,6 +114,60 @@
 	cp -v $*.$(L1)-$(L2)-targetsyntax/moses.ini $*.$(L1)-$(L2)-targetsyntax/model/moses-tuned.ini
 	touch $@
 
+%.sourcesyntax-tuned.tm.$(L2)-$(L1):  %.sourcesyntax-untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1)
+	cp -v $*.$(L2)-$(L1)-sourcesyntax/model/moses.ini \
+		$*.$(L2)-$(L1)-sourcesyntax/model/moses-untuned.ini
+	if test -d $*.$(L2)-$(L1)-sourcesyntax/filtered/ ; then \
+		rm -vrf $*.$(L2)-$(L1)-sourcesyntax/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1)-sourcesyntax \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_CHART) $*.$(L2)-$(L1)-sourcesyntax/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		--no-filter-phrase-table \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L2)-$(L1)-sourcesyntax/moses.ini $*.$(L2)-$(L1)-sourcesyntax/model/moses-tuned.ini
+	touch $@
+
+# and setting tweak
+%.targetsyntax-rightbin-tuned.tm.$(L1)-$(L2):  %.targetsyntax-rightbin-untuned.tm.$(L1)-$(L2) $(BASELINE_LM_L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
+	cp -v $*.$(L1)-$(L2)-targetsyntax-rightbin/model/moses.ini \
+		$*.$(L1)-$(L2)-targetsyntax-rightbin/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-targetsyntax-rightbin/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-targetsyntax-rightbin/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-targetsyntax-rightbin \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES_CHART) $*.$(L1)-$(L2)-targetsyntax-rightbin/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		--no-filter-phrase-table \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L1)-$(L2)-targetsyntax-rightbin/moses.ini $*.$(L1)-$(L2)-targetsyntax-rightbin/model/moses-tuned.ini
+	touch $@
+
+%.sourcesyntax-rightbin-tuned.tm.$(L2)-$(L1):  %.sourcesyntax-rightbin-untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1)
+	cp -v $*.$(L2)-$(L1)-sourcesyntax-rightbin/model/moses.ini \
+		$*.$(L2)-$(L1)-sourcesyntax-rightbin/model/moses-untuned.ini
+	if test -d $*.$(L2)-$(L1)-sourcesyntax-rightbin/filtered/ ; then \
+		rm -vrf $*.$(L2)-$(L1)-sourcesyntax-rightbin/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L2)-$(L1)-sourcesyntax-rightbin \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_CHART) $*.$(L2)-$(L1)-sourcesyntax-rightbin/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		--no-filter-phrase-table \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L2)-$(L1)-sourcesyntax-rightbin/moses.ini $*.$(L2)-$(L1)-sourcesyntax-rightbin/model/moses-tuned.ini
+	touch $@
 
 
 # vim: set ft=automake:
