@@ -39,6 +39,7 @@
 %.norm.tok.$(L2): %.norm.$(L2)
 	$(MOSES_TOKENIZER) $(THREADS_FLAGS) -l $(L2) < $< > $@
 
+
 # Cleaning
 # XXX: bit of hacks to keep timestamps in order
 %.norm.tok.clean.$(L2).$(L2): %.norm.tok.$(L2) %.norm.tok.$(L1)
@@ -67,14 +68,50 @@
 %.norm.tok.clean.true.esc.$(L2): %.norm.tok.clean.true.$(L2)
 	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< > $@
 
+# unclean for monolinguals
+%.norm.tok.true.$(L1): %.norm.tok.$(L1) $(TRUECASER_L1)
+	$(MOSES_TRUECASE) --model $(TRUECASER_L1) < $< > $@
 
+%.norm.tok.true.$(L2): %.norm.tok.$(L2) $(TRUECASER_L2)
+	$(MOSES_TRUECASE) --model $(TRUECASER_L2) < $< > $@
 
-# Sentence boundaries
+# Escaping
+%.norm.tok.true.esc.$(L1): %.norm.tok.true.$(L1)
+	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< > $@
+
+%.norm.tok.true.esc.$(L2): %.norm.tok.true.$(L2)
+	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< > $@
+
+# Sentence boundaries (e.g., for IRST)
 %.norm.tok.clean.true.esc.sb.$(L2): %.norm.tok.clean.true.esc.$(L2) 
 	$(IRSTLM_ADD_START_END) < $< > $@
 
 %.norm.tok.clean.true.esc.sb.$(L1): %.norm.tok.clean.true.esc.$(L1) 
 	$(IRSTLM_ADD_START_END) < $< > $@
 
+# for Penn treebank variant
+%.norm.PTBtok.$(L1): %.norm.$(L1)
+	$(MOSES_TOKENIZER) -penn $(THREADS_FLAGS) -l $(L1) < $< > $@
+
+%.norm.PTBtok.$(L2): %.norm.$(L2)
+	$(MOSES_TOKENIZER) -penn $(THREADS_FLAGS) -l $(L2) < $< > $@
+
+%.norm.PTBtok.clean.$(L2).$(L2): %.norm.PTBtok.$(L2) %.norm.PTBtok.$(L1)
+	$(MOSES_CLEAN_CORPUS_N) $*.norm.PTBtok $(L2) $(L1) $*.norm.PTBtok.clean.$(L2) 1 80
+
+%.norm.PTBtok.clean.$(L1).$(L1): %.norm.PTBtok.$(L2) %.norm.PTBtok.$(L1)
+	$(MOSES_CLEAN_CORPUS_N) $*.norm.PTBtok $(L1) $(L2) $*.norm.PTBtok.clean.$(L1) 1 80
+
+%.norm.PTBtok.clean.true.$(L1): %.norm.PTBtok.clean.$(L1) $(TRUECASER_L1)
+	$(MOSES_TRUECASE) --model $(TRUECASER_L1) < $< > $@
+
+%.norm.PTBtok.clean.true.$(L2): %.norm.PTBtok.clean.$(L2) $(TRUECASER_L2)
+	$(MOSES_TRUECASE) --model $(TRUECASER_L2) < $< > $@
+
+%.norm.PTBtok.clean.true.esc.$(L1): %.norm.PTBtok.clean.true.$(L1)
+	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< > $@
+
+%.norm.PTBtok.clean.true.esc.$(L2): %.norm.PTBtok.clean.true.$(L2)
+	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< > $@
 
 # vim: set ft=automake:
