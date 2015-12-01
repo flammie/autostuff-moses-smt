@@ -19,7 +19,7 @@
 # L1 should be set to short language code of simpler language, e.g. 'en'
 # L2 should be set to short language code of morphological language, .e.g. 'fi'
 
-%.morfclean.$(L2): %.true.$(L2)
+%.morfclean.$(L2): %.norm.tok.$(L2)
 	$(MOSES_DEESCAPE_SPECIAL_CHARS) < $< > $@
 
 # morfessor train
