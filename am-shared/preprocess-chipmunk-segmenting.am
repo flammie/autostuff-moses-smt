@@ -1,0 +1,31 @@
+## Include to automake project to use HFST segments for translations.
+
+# Chipmunk segments parses
+if CAN_MARMOT
+%.norm.tok.sb.vert.$(L1): %.norm.tok.$(L1)
+	$(IRSTLM_ADD_START_END) < $< | tr ' ' '\n' | sed -e 's:^$$:<EMPTYLINE/>:' > $@
+
+%.norm.tok.sb.vert.$(L2): %.norm.tok.$(L2)
+	$(IRSTLM_ADD_START_END) < $< | tr ' ' '\n' | sed -e 's:^$$:<EMPTYLINE/>:' > $@
+
+#  java -cp /home/tpirinen/Koodit/cistern/marmot/marmot-2015-11-25.jar:/home/tpirinen/Koodit/cistern/marmot/lib/mallet.jar:/home/tpirinen/Koodit/cistern/marmot/lib/JSAP-2.1.jar chipmunk.segmenter.cmd.Segment --model-file fin.chipmunk.srl --input-file foo --output-file bar
+%.chipmunks.sb.vert.$(L1): %.norm.tok.sb.vert.$(L1) $(CHIPMUNK_L1)
+	$(JAVA) -cp $(MARMOTPATH)/marmot.jar:$(MARMOTPATH)/lib/mallet.jar:$(MARMOTPATH)/lib/JSAP-2.1.jar \
+		chipmunk.segmenter.cmd.Segment \
+		--model-file $(CHIPMUNK_L1) \
+		--input-file $< --output-file $@
+
+%.chipmunks.sb.vert.$(L2): %.norm.tok.sb.vert.$(L2) $(CHIPMUNK_L2)
+	$(JAVA) -cp $(MARMOTPATH)/marmot.jar:$(MARMOTPATH)/lib/mallet.jar:$(MARMOTPATH)/lib/JSAP-2.1.jar \
+		chipmunk.segmenter.cmd.Segment \
+		--model-file $(CHIPMUNK_L2) \
+		--input-file $< --output-file $@
+
+%.chipmunk.factored.$(L1): %.chipmunks.sb.vert.$(L1)
+	$(AWK) -f $(top_srcdir)/chipmunks2factors.awk < $< > $@
+
+%.chipmunk.factored.$(L2): %.chipmunks.sb.vert.$(L2)
+	$(AWK) -f $(top_srcdir)/chipmunks2factors.awk < $< > $@
+
+endif
+# vim: set ft=automake:

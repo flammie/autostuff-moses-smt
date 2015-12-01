@@ -1,4 +1,4 @@
-## Process this file with autoconf to produce configure scripts
+#/ Process this file with autoconf to produce configure scripts
 
 ## Copyright (c) 2014 Dublin City University / CNGL
 ## Authored by: Tommi A Pirinen <tommi.pirinen@computing.dcu.ie>
@@ -99,6 +99,11 @@ AC_ARG_WITH([meteor-path],
                             [path to meteor.1.5.jar @<:@default=.@:>@])],
             [with_meteor_path=$withval],
             [with_meteor_path=.])
+AC_ARG_WITH([marmot-path],
+            [AS_HELP_STRING([--with-marmot-path],
+                            [path to marmot.jar @<:@default=.@:>@])],
+            [with_marmot_path=$withval],
+            [with_marmot_path=.])
 
 # Programs
 AM_PATH_PYTHON([2.7])
@@ -116,6 +121,7 @@ AM_CONDITIONAL([CAN_LATEX], [test x$XELATEX != xfalse])
 # moses
 AC_PATH_PROG([MOSES], [moses], [false], [$PATH$PATH_SEPARATOR$with_moses/bin])
 AC_PATH_PROG([MOSES_CHART], [moses_chart], [false], [$PATH$PATH_SEPARATOR$with_moses/bin])
+AC_PATH_PROG([MOSES_RELAX_PARSE], [relax-parse], [false], [$PATH$PATH_SEPARATOR$with_moses/bin])
 AC_PATH_PROG([MOSES_TRAIN_MODEL], [train-model.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
 AC_PATH_PROG([MOSES_TOKENIZER], [tokenizer.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
 AC_PATH_PROG([MOSES_NORMALIZE_PUNCTUATION], [normalize-punctuation.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
@@ -183,6 +189,19 @@ AC_CHECK_FILE([$with_berkeley_path/BerkeleyParser-1.7.jar],
               [AC_SUBST([BERKELEYPARSERJAR], [$with_berkeley_path/BerkeleyParser-1.7.jar],
                         [AC_MSG_WARN([point --with-berkeley-path to dir of berkeley parser for berkeley parsing])])])
 AM_CONDITIONAL([CAN_BERKELEY], [test x$BERKELEYPARSERJAR != x])
+
+# marmot
+AC_CHECK_FILE([$with_marmot_path/marmot.jar],
+              [AC_SUBST([MARMOTPATH], [$with_marmot_path],
+                        [AC_MSG_WARN([point --with-marmot-path to dir of marmot parser and cp or ln the dated version to undated])])])
+AM_CONDITIONAL([CAN_MARMOT], [test x$MARMOTPATH != x])
+
+# java -cp /home/tpirinen/Koodit/cistern/marmot/marmot-2015-11-25.jar:/home/tpirinen/Koodit/cistern/marmot/lib/mallet.jar:/home/tpirinen/Koodit/cistern/marmot/lib/JSAP-2.1.jar chipmunk.segmenter.cmd.Segment --model-file fin.chipmunk.srl --input-file foo --output-file bar
+# MST parser
+AC_CHECK_FILE([$with_mstparser_path/lib/mstparser-0.5.1.jar],
+              [AC_SUBST([MSTPARSERJAR], [$with_mstparser_path/mstparser.jar],
+                        [AC_MSG_WARN([point --with-mstparser-path to dir of mstparser for mstparsing])])])
+AM_CONDITIONAL([CAN_MSTPARSE], [test x$MSTPARSERJAR != x])
 
 # NIST eval tools
 AC_PATH_PROG([NIST_BLEU13A], [mteval-v13a.pl], [false])
