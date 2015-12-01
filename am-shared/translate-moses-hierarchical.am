@@ -32,21 +32,27 @@
 MOSES_HIERARCHICAL_INFIX=moses-hierarchical
 
 # From simple to complex
-%.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2): %.true.$(L1) $(MOSES_HIERARCHICAL_L1_L2)
+%.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).raw: %.true.$(L1) $(MOSES_HIERARCHICAL_L1_L2)
+	if test -d $(MOSES_HIERARCHICAL_L1_L2_DIR)/filtered-$* ; then \
+		rm -rf $(MOSES_HIERARCHICAL_L1_L2_DIR)/filtered-$* ; \
+	fi
 	$(MOSES_FILTER_MODEL_GIVEN_INPUT) $(MOSES_HIERARCHICAL_L1_L2_DIR)/filtered-$* \
 		$(MOSES_HIERARCHICAL_L1_L2_DIR)/model/moses-tuned.ini $< -Hierarchical
-	$(MOSES_CHART) -f $(MOSES_HIERARCHICAL_L1_L2_DIR)/filtered-$*/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
-		$(MOSES_DETOKENIZER) > $@
+	$(MOSES_CHART) -f $(MOSES_HIERARCHICAL_L1_L2_DIR)/filtered-$*/moses.ini < $< > $@
 
 # From complex to simple
-%.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1): %.true.$(L2) $(MOSES_HIERARCHICAL_L2_L1)
+%.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1).raw: %.true.$(L2) $(MOSES_HIERARCHICAL_L2_L1)
+	if test -d $(MOSES_HIERARCHICAL_L2_L1_DIR)/filtered-$* ; then \
+		rm -rf $(MOSES_HIERARCHICAL_L2_L1_DIR)/filtered-$* ; \
+	fi
 	$(MOSES_FILTER_MODEL_GIVEN_INPUT) $(MOSES_HIERARCHICAL_L2_L1_DIR)/filtered-$* \
 		$(MOSES_HIERARCHICAL_L2_L1_DIR)/model/moses-tuned.ini $< -Hierarchical
-	$(MOSES_CHART) -f $(MOSES_HIERARCHICAL_L2_L1_DIR)/filtered-$*/moses.ini < $< |\
-		$(MOSES_DETRUECASE) |\
+	$(MOSES_CHART) -f $(MOSES_HIERARCHICAL_L2_L1_DIR)/filtered-$*/moses.ini < $< > $@
+
+
+
+%.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).: %.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).raw	
+	$(MOSES_DETRUECASE) < $< |\
 		$(MOSES_DETOKENIZER) > $@
-
-
 
 # vim: set ft=automake:
