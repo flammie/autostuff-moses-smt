@@ -66,9 +66,13 @@ FLATCAT_PPT200_LM_L2=hrenwacm3.norm.tok.true.esc.clean.flatcat.1best.ppt-200.blm
 APERTIUM_LM_L2=hrwac2.0.deduped.devert.norm.tok.true.esc.apertium.1best.blm.$(L2)
 APERTIUM_SEGMENTER_L2=hbs.autoseg.bin
 
+BERKELEY_L1=eng_sm6.gr
+
 include $(top_srcdir)/am-shared/preprocess-hunpos-factorising.am
 include $(top_srcdir)/am-shared/preprocess-morfessor-segmenting.am
 include $(top_srcdir)/am-shared/preprocess-apertium-segmenting.am
+include $(top_srcdir)/am-shared/preprocess-berkeley-parsing.am
+include $(top_srcdir)/am-shared/preprocess-syntax-binarisation.am
 
 MOSES_FACTORED_L1_0_1_L2_DIR=hrenwacm3.norm.tok.true.esc.clean.crf.en-hr-factors-0-0_1
 MOSES_FACTORED_L1_0_1_L2=hrenwacm3.norm.tok.true.esc.clean.crf.factors-0-0_1.tuned-binarised.tm.en-hr
@@ -97,6 +101,19 @@ MOSES_HIERARCHICAL_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.en-hr-h
 MOSES_HIERARCHICAL_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hierarchical-tuned.tm.en-hr
 MOSES_HIERARCHICAL_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hr-en-hierarchical
 MOSES_HIERARCHICAL_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hierarchical-tuned.tm.hr-en
+#
+MOSES_TARGETSYNTAX_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.en-hr-targetsyntax
+MOSES_TARGETSYNTAX_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.targetsyntax-tuned.tm.en-hr
+MOSES_SOURCESYNTAX_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.hr-en-sourcesyntax
+MOSES_SOURCESYNTAX_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.sourcesyntax-tuned.tm.hr-en
+MOSES_TARGETSYNTAX_RIGHTBIN_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.en-hr-targetsyntax-rightbin
+MOSES_TARGETSYNTAX_RIGHTBIN_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.targetsyntax-rightbin-tuned.tm.en-hr
+MOSES_SOURCESYNTAX_RIGHTBIN_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.hr-en-sourcesyntax-rightbin
+MOSES_SOURCESYNTAX_RIGHTBIN_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.sourcesyntax-rightbin-tuned.tm.hr-en
+MOSES_TARGETSYNTAX_RIGHTBIN_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.berkeley.hr-en-targetsyntax-rightbin
+MOSES_TARGETSYNTAX_RIGHTBIN_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.berkeley.targetsyntax-rightbin-tuned.tm.hr-en
+MOSES_SOURCESYNTAX_RIGHTBIN_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.berkeley.en-hr-sourcesyntax-rightbin
+MOSES_SOURCESYNTAX_RIGHTBIN_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.berkeley.sourcesyntax-rightbin-tuned.tm.en-hr
 # }}}
 
 
@@ -129,6 +146,7 @@ include $(top_srcdir)/am-shared/translate-morfessor-baseline.am
 include $(top_srcdir)/am-shared/translate-morfessor-uncommons.am
 include $(top_srcdir)/am-shared/translate-morfessor-lattices.am
 include $(top_srcdir)/am-shared/translate-moses-hierarchical.am
+include $(top_srcdir)/am-shared/translate-moses-syntax.am
 
 include $(top_srcdir)/am-shared/evaluate-oovs.am
 include $(top_srcdir)/am-shared/postprocess-sgml.am
