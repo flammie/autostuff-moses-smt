@@ -21,10 +21,10 @@
 
 
 # Train truecaser from tokenised text
-%.truecaser.$(L1): %.tok.$(L1)
+%.truecaser.$(L1): %.norm.tok.$(L1)
 	$(MOSES_TRAIN_TRUECASER) --model $@ --corpus $<
 
-%.truecaser.$(L2): %.tok.$(L2)
+%.truecaser.$(L2): %.norm.tok.$(L2)
 	$(MOSES_TRAIN_TRUECASER) --model $@ --corpus $<
 
 
