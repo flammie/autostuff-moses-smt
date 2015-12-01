@@ -1,0 +1,18 @@
+## include this in your project to binarise moses syntax trees
+
+# L1, L2 = language codes
+
+%.moses-rightbin.xml.$(L1): %.moses.xml.$(L1)
+	$(MOSES_RELAX_PARSE) --RightBinarize < $< > $@
+
+%.moses-rightbin.xml.$(L2): %.moses.xml.$(L2)
+	$(MOSES_RELAX_PARSE) --RightBinarize < $< > $@
+
+%.moses-leftbin.xml.$(L1): %.moses.xml.$(L1)
+	$(MOSES_RELAX_PARSE) --LeftBinarize < $< > $@
+
+%.moses-leftbin.xml.$(L2): %.moses.xml.$(L2)
+	$(MOSES_RELAX_PARSE) --LeftBinarize < $< > $@
+
+
+# vim: set ft=automake:
