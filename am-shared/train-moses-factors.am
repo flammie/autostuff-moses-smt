@@ -60,14 +60,13 @@
 		-corpus $*.factors -f $(L1) -e $(L2) \
 		-alignment grow-diag-final-and \
 		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
-		-lm 0:3:`pwd`/$*.$(FACTOR_0_LM_L2).bin:8  \
-		-lm 1:3:`pwd`/$*.$(FACTOR_1_LM_L2).bin:8  \
+		-lm 0:3:`pwd`/$(FACTOR_0_LM_L2).bin:8  \
+		-lm 1:3:`pwd`/$(FACTOR_1_LM_L2).bin:8  \
 		-translation-factors 0-0,1 \
 		$(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
 		$(CORES_FLAGS) \
-		$(THREADS_FLAGS) \
 		-input-factor-max 1 \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
@@ -87,7 +86,6 @@
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
 		$(CORES_FLAGS) \
-		$(THREADS_FLAGS) \
 		-input-factor-max 1 \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
@@ -107,7 +105,6 @@
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
 		$(CORES_FLAGS) \
-		$(THREADS_FLAGS) \
 		-input-factor-max 1 \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
@@ -127,7 +124,6 @@
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
 		$(CORES_FLAGS) \
-		$(THREADS_FLAGS) \
 		-input-factor-max 1 \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
@@ -145,7 +141,6 @@
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
 		$(CORES_FLAGS) \
-		$(THREADS_FLAGS) \
 		-input-factor-max 1 \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
@@ -163,7 +158,6 @@
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
 		$(CORES_FLAGS) \
-		$(THREADS_FLAGS) \
 		-input-factor-max 5 \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
