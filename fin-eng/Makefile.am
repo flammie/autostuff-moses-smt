@@ -36,6 +36,11 @@ include $(top_srcdir)/am-shared/settings-baseline-evals.am
 
 # Morfessor baseline from full europarl 
 MORFESSOR_BASELINE_TRAIN=$(BASELINE_CORPUS)
+MORFESSOR_LM_L2=$(MORFESSOR_BASELINE_TRAIN).morfessor.1best.blm.$(L2)
+
+FACTOR_0_LM_L2=$(BASELINE_CORPUS).blm.$(L2)
+FACTOR_1_LM_L2=$(BASELINE_CORPUS).chipmunk.factor-1.blm.$(L2)
+
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 
 include $(top_srcdir)/am-shared/settings-hfst-baseline.am
@@ -47,10 +52,6 @@ include $(top_srcdir)/am-shared/check-oovs.am
 TRUECASER_L1=$(BASELINE_CORPUS).truecaser.$(L1)
 TRUECASER_L2=$(BASELINE_CORPUS).truecaser.$(L2)
 
-# Settings for baseline segmenters for L2
-#MORFESSOR_L2=$(BASELINE_CORPUS).$(L2).morfessor
-#FLATCAT_L2=$(BASELINE_CORPUS).$(L2).flatcat
-FLATCAT_L2_CONF=$(BASELINE_CORPUS).$(L2).flatcat.ini
 
 HFST_L2_MORPHS_UNWEIGHTED=omorfi-morphs.hfst
 HFST_L2_COMPOUNDS_UNWEIGHTED=omorfi-compounds.hfst
@@ -59,6 +60,7 @@ HFST_L2_MORPHS=$(HFST_L2_MORPHS_UNWEIGHTED)
 HFST_L2_COMPOUNDS=$(HFST_L2_COMPOUNDS_UNWEIGHTED)
 HFST_L2_MARKS=omorfi.segment.hfst
 
+CHIPMUNK_L2=fin.chipmunk.srl
 
 APERTIUM_L1_L2=eng-fin
 APERTIUM_L2_L1=fin-eng
@@ -237,8 +239,11 @@ include $(top_srcdir)/am-shared/train-moses-lm.am
 include $(top_srcdir)/am-shared/train-morfessor.am
 include $(top_srcdir)/am-shared/train-truecaser.am
 include $(top_srcdir)/am-shared/train-moses-baseline.am
+include $(top_srcdir)/am-shared/train-moses-morfessor.am
+include $(top_srcdir)/am-shared/train-moses-factors.am
 include $(top_srcdir)/am-shared/train-hfst.am
 
+include $(top_srcdir)/am-shared/train-truecaser.am
 
 # from omorfi repo
 morphology.segments.hfst: $(OMORFI_PREFIX)/share/hfst/fi/morphology.segments.hfst
@@ -264,6 +269,7 @@ segments: $(SEGMENTS)
 
 include $(top_srcdir)/am-shared/preprocess-morfessor-segmenting.am
 include $(top_srcdir)/am-shared/preprocess-hfst-segmenting.am
+include $(top_srcdir)/am-shared/preprocess-chipmunk-segmenting.am
 
 # }}}
 # {{{TRANSLATEing
