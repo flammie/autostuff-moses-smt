@@ -352,10 +352,11 @@ segments: $(SEGMENTS)
 
 # morfessed needs to run through tok/true/clean before hitting lm's...
 # hacks over hacks to make other software restricted input formats ok
-%.norm.tok.clean.true.esc.$(L2): %.morfs.$(L2)
-	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< |\
-		$(SED) -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
-		-e 's/→←/→ ←/g' > $@
+%.norm.tok.clean.true.esc.$(L2): %.morfs.$(L2) %.norm.tok.clean.true.esc.$(L1)
+	mv -v $*.norm.tok.clean.true.esc.$(L1) $*.morfs.$(L1)
+	$(MOSES_CLEAN_CORPUS_N) $*.morfs $(L1) $(L2) $*.norm.tok.clean.true.esc 1 80
+	$(SED) -i -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
+		-e 's/→←/→ ←/g' $@
 
 
 # vim: set ft=automake:
