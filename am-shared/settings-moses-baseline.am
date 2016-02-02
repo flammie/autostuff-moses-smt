@@ -22,12 +22,12 @@ endif
 # Settings for baseline language models
 # L1 to L2
 MOSES_BASELINE_L2=$(MOSES_BASELINE_TRAIN).blm.$(L2)
-MOSES_BASELINE_L1_L2=$(MOSES_BASELINE_TRAIN).binarised.tm.$(L1)-$(L2)
+MOSES_BASELINE_L1_L2=$(MOSES_BASELINE_TRAIN).tuned-binarised.tm.$(L1)-$(L2)
 MOSES_BASELINE_L1_L2_DIR=$(MOSES_BASELINE_TRAIN).$(L1)-$(L2)
 
 # L2 to L1
 MOSES_BASELINE_L1=$(MOSES_BASELINE_TRAIN).blm.$(L1)
-MOSES_BASELINE_L2_L1=$(MOSES_BASELINE_TRAIN).binarised.tm.$(L2)-$(L1)
+MOSES_BASELINE_L2_L1=$(MOSES_BASELINE_TRAIN).tuned-binarised.tm.$(L2)-$(L1)
 MOSES_BASELINE_L2_L1_DIR=$(MOSES_BASELINE_TRAIN).$(L2)-$(L1)
 
 
@@ -48,7 +48,6 @@ moses-$(L2)-$(L1): $(MOSES_BASELINE_L2_L1)
 # Settings for baseline translations
 TRANSLATION_L1_L2=$(L1)-$(L2).translated.$(L2)
 TRANSLATION_L2_L1=$(L2)-$(L1).translated.$(L1)
-TRANSLATION_L1_SEGMENTED_L2=$(L1)-$(L2).translated-segments.$(L2)
 
 
 $(MOSES_BASELINE_TRAIN).tune.$(L1).text: $(MOSES_BASELINE_TUNE).$(L1).text

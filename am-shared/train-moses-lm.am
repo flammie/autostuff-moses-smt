@@ -1,0 +1,12 @@
+## Include this in automake project to binarise arpa files for moses
+
+
+%.blm.$(L2): %.arpa.$(L2)
+	$(MOSES_BUILD_BINARY) -i $< $@.bin
+	touch $@
+
+%.blm.$(L1): %.arpa.$(L1)
+	$(MOSES_BUILD_BINARY) -i $< $@.bin
+	touch $@
+
+

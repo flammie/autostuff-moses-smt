@@ -13,141 +13,107 @@ APERTIUM_L2_L1=hbs_eng
 METEOR_L1_FLAGS=-l en
 METEOR_L2_FLAGS=
 
+MORFESSOR_FLAGS_L2=
+FLATCAT_FLAGS_L2=--perplexity-threshold 100 -d log
 
 # common prefixes
-BASELINE_CORPUS=setimes.$(L1)-$(L2)
-BASELINE_TEST_PREFIX=$(BASELINE_CORPUS).002001-004000
-BASELINE_TUNE_PREFIX=$(BASELINE_CORPUS).000001-002000
+BASELINE_CORPUS=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4
+BASELINE_TEST_PREFIX=$(BASELINE_CORPUS)
+BASELINE_TUNE_PREFIX=newstest2012_first1011
 
 WMT2013_TEST_PREFIX=newstest2013.$(L1)-$(L2)
 
 
 
 # Moses baseline as with the wiki page but without europarl
-MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).004001-205910
+MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS)
+MOSES_BASELINE_TUNE=$(BASELINE_TUNE_PREFIX)
+
+MORFESSOR_TUNE=newstest2012_first1011.morfessor.1best
+FLATCAT_TUNE=newstest2012_first1011.flatcat.1best
+APERTIUM_TUNE=newstest2012_first1011.apertium.1best
+
+FLATCAT_PPT50_TUNE=newstest2012_first1011.flatcat.1best.ppt-50
+FLATCAT_PPT200_TUNE=newstest2012_first1011.flatcat.1best.ppt-200
+
+MOSES_FACTORS_0_TO_0_1_TUNE=newstest2012_first1011.crf.factors.$(L2)
+
 MORFESSOR_BASELINE_TRAIN=hrenwacm3.norm.tok.true.esc.clean
+FLATCAT_BASELINE_TRAIN=hrenwacm3.norm.tok.true.esc.clean
+APERTIUM_BASELINE_TRAIN=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4
 
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
+include $(top_srcdir)/am-shared/settings-baseline-evals.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 
-include $(top_srcdir)/am-shared/settings-truecase-baseline.am
+#include $(top_srcdir)/am-shared/settings-truecase-baseline.am
 
+TRUECASER_L1=setimes.en-hr.truecaser.en
+TRUECASER_L2=setimes.en-hr.truecaser.hr
 
-# Add WMT tests to translations
-TRANSLATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2)
-TRANSLATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1)
-if CAN_MORFESS
-TRANSLATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2)
-TRANSLATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1)
-endif
-if CAN_FLATCAT
-TRANSLATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2)
-TRANSLATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1)
-endif
-if CAN_APERTIUM
-TRANSLATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L1_L2)
+HUNPOS_L2=model.hunpos.mte5.defnpout
+CRF_L2=train.conll.lexicon.model
 
-TRANSLATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L2_L1)
-endif
+BASELINE_LM_L1=binlm.5g.trie.allwmt15.norm.tok.true.esc.blm.$(L1)
+BASELINE_LM_L2=hrwac2.0.deduped.devert.norm.tok.true.esc.blm.$(L2)
+MORFESSOR_LM_L2=hrwac2.0.deduped.devert.norm.tok.true.esc.morfessor.1best.blm.$(L2)
+FLATCAT_LM_L2=hrwac2.0.deduped.devert.norm.tok.true.esc.flatcat.1best.blm.$(L2)
 
-TRANSLATIONS+=$(TRANSLATIONS_L1_L2) $(TRANSLATIONS_L2_L1)
+FLATCAT_PPT50_LM_L2=hrenwacm3.norm.tok.true.esc.clean.flatcat.1best.ppt-50.blm.$(L2)
+FLATCAT_PPT200_LM_L2=hrenwacm3.norm.tok.true.esc.clean.flatcat.1best.ppt-200.blm.$(L2)
 
-# evaluations
-if CAN_NISTBLEU
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(NISTBLEU_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(NISTBLEU_L2_L1)
-if CAN_MORFESS
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(NISTBLEU_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(NISTBLEU_L2_L1)
-endif
-if CAN_FLATCAT
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(NISTBLEU_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(NISTBLEU_L2_L1)
-endif
-if CAN_APERTIUM
-EVALUATIONS_L1_L2+=
-EVALUATIONS_L2_L1+=
-endif
-endif # NIST bleu
+APERTIUM_LM_L2=hrwac2.0.deduped.devert.norm.tok.true.esc.apertium.1best.blm.$(L2)
+APERTIUM_SEGMENTER_L2=hbs.autoseg.bin
 
-if CAN_TER
-# baseline moses
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TER_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(TER_L2_L1)
-if CAN_MORFESS
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(TER_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(TER_L2_L1)
-endif
-if CAN_FLATCAT
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(TER_L2_L1)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(TER_L2_L1)
-endif
-if CAN_APERTIUM
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(TER_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(TER_L2_L1)
-endif
-endif # TER
+BERKELEY_L1=eng_sm6.gr
 
-if CAN_METEOR
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(METEOR_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(METEOR_L2_L1)
-if CAN_MORFESS
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(METEOR_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(METEOR_L2_L1)
-endif
-if CAN_FLATCAT
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(METEOR_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(METEOR_L2_L1)
-endif
-if CAN_APERTIUM
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(METEOR_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(METEOR_L2_L1)
-endif
-endif # METEOR
+include $(top_srcdir)/am-shared/preprocess-hunpos-factorising.am
+include $(top_srcdir)/am-shared/preprocess-morfessor-segmenting.am
+include $(top_srcdir)/am-shared/preprocess-apertium-segmenting.am
+include $(top_srcdir)/am-shared/preprocess-berkeley-parsing.am
+include $(top_srcdir)/am-shared/preprocess-syntax-binarisation.am
 
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(OOV_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).$(OOV_L2_L1)
-if CAN_MORFESS
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(OOV_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).$(OOV_L2_L1)
-endif
-if CAN_FLATCAT
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(OOV_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).$(OOV_L2_L1)
-endif
-if CAN_APERTIUM
-EVALUATIONS_L1_L2+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(OOV_L1_L2)
-EVALUATIONS_L2_L1+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).$(OOV_L2_L1)
-endif
+MOSES_FACTORED_L1_0_1_L2_DIR=hrenwacm3.norm.tok.true.esc.clean.crf.en-hr-factors-0-0_1
+MOSES_FACTORED_L1_0_1_L2=hrenwacm3.norm.tok.true.esc.clean.crf.factors-0-0_1.tuned-binarised.tm.en-hr
 
+FACTOR_0_LM_L2=$(BASELINE_LM_L2)
+FACTOR_1_LM_L2=hrwac2.0.setimes.ted.norm.tok.true.esc.mostly.crf.factor-1.blm.hr
 
-# convenience variables
-EVALUATIONS+=$(EVALUATIONS_L2_L1) $(EVALUATIONS_L1_L2)
+# out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.en-hr-factors-0-0_1/
 
-# turn stuff into things for article
-if CAN_TER
-if CAN_METEOR
-if CAN_NISTBLEU
-EVALUATIONS+=$(WMT2013_TEST_PREFIX).$(MOSES_BASELINE_INFIX).rows
-if CAN_MORFESS
-EVALUATIONS+=$(WMT2013_TEST_PREFIX).$(MORFESSOR_BASELINE_INFIX).rows
-endif
-if CAN_FLATCAT
-EVALUATIONS+=$(WMT2013_TEST_PREFIX).$(FLATCAT_BASELINE_INFIX).rows
-endif
-if CAN_APERTIUM
-EVALUATIONS+=$(WMT2013_TEST_PREFIX).$(APERTIUM_BASELINE_INFIX).rows
-endif
-endif # Nistbleu
-endif # Meteor
-endif # Ter
+MOSES_HUNPOSED_L1_0_1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.en-hr-factors-0-0_1
+MOSES_HUNPOSED_L1_0_1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.hunpos-factors-0-0_1.tuned-binarised.tm.en-hr
+HUNPOS_FACTOR_0_LM_L2=$(BASELINE_LM_L2)
+HUNPOS_FACTOR_1_LM_L2=hrwac2.0.deduped.devert.norm.tok.true.esc.hunpos.factor-1.blm.hr
 
-PAPER=
-if CAN_LATEX
-PAPER+=
-endif
+MOSES_CRFED_L1_0_1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.crf.en-hr-factors-0-0_1
+MOSES_CRFED_L1_0_1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.crf.crf-factors-0-0_1.tuned-binarised.tm.en-hr
+CRF_FACTOR_0_LM_L2=$(BASELINE_LM_L2)
+CRF_FACTOR_1_LM_L2=hrwac2.0.setimes.ted.norm.tok.true.esc.mostly.crf.factor-1.blm.hr
 
+MOSES_APERTIUM1BEST_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.apertium.1best.$(L1)-$(L2)
+MOSES_APERTIUM1BEST_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.apertium.1best.apertium-tuned-binarised.tm.$(L1)-$(L2)
+MOSES_APERTIUM1BEST_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.apertium.1best.$(L2)-$(L1)
+MOSES_APERTIUM1BEST_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.apertium.1best.apertium-tuned-binarised.tm.$(L2)-$(L1)
+#
+MOSES_HIERARCHICAL_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.en-hr-hierarchical
+MOSES_HIERARCHICAL_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hierarchical-tuned.tm.en-hr
+MOSES_HIERARCHICAL_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hr-en-hierarchical
+MOSES_HIERARCHICAL_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hierarchical-tuned.tm.hr-en
+#
+MOSES_TARGETSYNTAX_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.en-hr-targetsyntax
+MOSES_TARGETSYNTAX_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.targetsyntax-tuned.tm.en-hr
+MOSES_SOURCESYNTAX_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.hr-en-sourcesyntax
+MOSES_SOURCESYNTAX_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.sourcesyntax-tuned.tm.hr-en
+MOSES_TARGETSYNTAX_RIGHTBIN_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.en-hr-targetsyntax-rightbin
+MOSES_TARGETSYNTAX_RIGHTBIN_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.targetsyntax-rightbin-tuned.tm.en-hr
+MOSES_SOURCESYNTAX_RIGHTBIN_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.hr-en-sourcesyntax-rightbin
+MOSES_SOURCESYNTAX_RIGHTBIN_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.hunpos.sourcesyntax-rightbin-tuned.tm.hr-en
+MOSES_TARGETSYNTAX_RIGHTBIN_L2_L1_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.berkeley.hr-en-targetsyntax-rightbin
+MOSES_TARGETSYNTAX_RIGHTBIN_L2_L1=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.berkeley.targetsyntax-rightbin-tuned.tm.hr-en
+MOSES_SOURCESYNTAX_RIGHTBIN_L1_L2_DIR=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.berkeley.en-hr-sourcesyntax-rightbin
+MOSES_SOURCESYNTAX_RIGHTBIN_L1_L2=out.forms.ml.1-0.en-hr.sorted.uniq.top1div4.berkeley.sourcesyntax-rightbin-tuned.tm.en-hr
 # }}}
 
 
@@ -155,20 +121,32 @@ endif
 
 # no automatic fetching
 
-include $(top_srcdir)/am-shared/preprocess-morfessor-segmenting.am
+include $(top_srcdir)/am-shared/preprocess-basics.am
+
 include $(top_srcdir)/am-shared/preprocess-split.am
 
 # }}}
 
-include $(top_srcdir)/am-shared/train-language-models.am
+include $(top_srcdir)/am-shared/train-kenlm.am
+include $(top_srcdir)/am-shared/train-moses-lm.am
+include $(top_srcdir)/am-shared/train-morfessor.am
+include $(top_srcdir)/am-shared/train-truecaser.am
 include $(top_srcdir)/am-shared/train-moses-baseline.am
+include $(top_srcdir)/am-shared/train-moses-hierarchical.am
+include $(top_srcdir)/am-shared/train-moses-factors.am
+include $(top_srcdir)/am-shared/train-moses-target-syntax.am
+include $(top_srcdir)/am-shared/train-moses-morfessor.am
+include $(top_srcdir)/am-shared/train-moses-apesegs.am
+include $(top_srcdir)/am-shared/train-moses-reordering.am
 
 include $(top_srcdir)/am-shared/translate-moses-baseline.am
-include $(top_srcdir)/am-shared/translate-apertium-baseline.am
+include $(top_srcdir)/am-shared/translate-moses-factored.am
+include $(top_srcdir)/am-shared/translate-apertium-segmented.am
 include $(top_srcdir)/am-shared/translate-morfessor-baseline.am
 include $(top_srcdir)/am-shared/translate-morfessor-uncommons.am
 include $(top_srcdir)/am-shared/translate-morfessor-lattices.am
-
+include $(top_srcdir)/am-shared/translate-moses-hierarchical.am
+include $(top_srcdir)/am-shared/translate-moses-syntax.am
 
 include $(top_srcdir)/am-shared/evaluate-oovs.am
 include $(top_srcdir)/am-shared/postprocess-sgml.am

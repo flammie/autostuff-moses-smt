@@ -1,0 +1,37 @@
+## Include this file to automake project for KenLM training
+## true-cased to binary
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 should be set to short language code of simpler language, e.g. 'en'
+# L2 should be set to short language code of morphological language, .e.g. 'fi'
+
+
+
+# Language models and binarising
+%.arpa.$(L2): %.norm.tok.clean.true.esc.$(L2)
+	$(LMPLZ) -o 5 -T $(builddir)/kenlm -S 80% --discount_fallback < $< > $@
+
+%.arpa.$(L1): %.norm.tok.clean.true.esc.$(L1)
+	$(LMPLZ) -o 5 -T $(builddir)/kenlm -S 80% --discount_fallback < $< > $@
+
+%.7g.arpa.$(L2): %.norm.tok.clean.true.esc.$(L2)
+	$(LMPLZ) -o 7 -T $(builddir)/kenlm -S 80% --discount_fallback < $< > $@
+
+%.7g.arpa.$(L1): %.norm.tok.clean.true.esc.$(L1)
+	$(LMPLZ) -o 7 -T $(builddir)/kenlm -S 80% --discount_fallback < $< > $@
+
+# vim: set ft=automake:

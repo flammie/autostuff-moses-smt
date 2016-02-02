@@ -1,0 +1,55 @@
+## Include this to automake project to get preprocessing and post-processing
+## recipes for apertium rule-based segmentation and joining.
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is language code for morphologically simple language
+# L2 is language code for morphologically complex language
+# APERTIUM_SEGMENTER_L2 is filename for apertium binary for segmenting
+
+
+# prepare preprocessed for apertium text format
+%.apesegs-input.$(L2): %.norm.tok.clean.true.esc.$(L2)
+	$(MOSES_DEESCAPE_SPECIAL_CHARS) < $< |\
+		$(SED) -e 's/[]{}/$$\\^@[]/\\\0/g' > $@
+
+# segment and pick "1-best"
+%.apertium.1best.apesegs.$(L2): %.apesegs-input.$(L2) $(APERTIUM_SEGMENTER_L2)
+	lt-proc hbs.autoseg.bin < $< |\
+		tr '^' '\t' | tr -d '$$' |\
+		$(SED) -e 's:/\*:/:g' | sed -e 's:\t[^/]*/:\t:g' \
+			-e 's:/[^\t]*\(\t\|$$\): :g' |\
+		tr '\t' ' ' |\
+		$(SED) -e 's/→ ←→ ←/→ ←/g' |\
+		$(SED) -e 's/\& amp;q uot;/\&amp;quot;/g' \
+			-e 's/\&amp;q uot;/\&amp;quot;/g' \
+			-e 's/<guio>//g' \
+			-e 's/<sent>//g' \
+			-e 's/<lpar>//g' \
+			-e 's/<rpar>//g' \
+			-e 's/ → ←/ /'g -e 's/→ ← / /g' > $@
+
+# unfurl ape 1-best to sentence per line with moses preprocs
+%.apertium.1best.norm.tok.clean.true.esc.$(L2): %.apertium.1best.apesegs.$(L2)
+	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< |\
+		$(SED) -e 's/[[:space:]]*→/→/g' -e 's/←[[:space:]]*/←/g' \
+		-e 's/→←/→ ←/g' > $@
+
+# To make prefix rules work, we need to create matching L1 file names by copying
+%.apertium.1best.norm.tok.clean.true.esc.$(L1): %.norm.tok.clean.true.esc.$(L1)
+	cp -v $< $@
+
+# vim: set ft=automake:

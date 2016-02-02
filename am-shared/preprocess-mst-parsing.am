@@ -1,0 +1,18 @@
+## Include to automake project to use HFST segments for translations.
+
+# Berkeley's parses
+if CAN_MSTPARSE
+%.mst.conllx.$(L1): %.conllx.$(L1) $(MSTPARSER_L1)
+	$(JAVA) -jar $(with_mstparser_path)/lib/trove.jar:$(MSTPARSERJAR) mstparser.DependencyParser test model-name:$(MSTPARSER_L1) test-file:$< output-file:$@ 
+
+%.mst.conllx.$(L2): %.conllx.$(L2) $(MSTPARSER_L2)
+	$(JAVA) -jar $(with_mstparser_path)/lib/trove.jar:$(MSTPARSERJAR) mstparser.DependencyParser test model-name:$(MSTPARSER_L1) test-file:$< output-file:$@ 
+
+%.mst.moses.xml.$(L1): %.mst.conllx.$(L1)
+	$(MOSES_COLLX2XML) < $< > $@
+
+%.mst.moses.xml.$(L1): %.mst.conllx.$(L1)
+	$(MOSES_CONLLX2XML) < $< > $@
+
+endif
+# vim: set ft=automake:

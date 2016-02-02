@@ -1,0 +1,260 @@
+## Include this file to train translation models from text corpora and language
+## models
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is language code for morphologically simpler language
+# L2 is language code for morphologically complex language
+
+
+# up to 5 factors can be turned into separate lm's
+%.factor-0.norm.tok.clean.true.esc.$(L1): %.factors.$(L1)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
+
+%.factor-1.norm.tok.clean.true.esc.$(L1): %.factors.$(L1)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=2 < $< > $@
+
+%.factor-2.norm.tok.clean.true.esc.$(L1): %.factors.$(L1)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=3 < $< > $@
+
+%.factor-3.norm.tok.clean.true.esc.$(L1): %.factors.$(L1)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=4 < $< > $@
+
+%.factor-4.norm.tok.clean.true.esc.$(L1): %.factors.$(L1)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=5 < $< > $@
+
+%.factor-0.norm.tok.clean.true.esc.$(L2): %.factors.$(L2)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=1 < $< > $@
+
+%.factor-1.norm.tok.clean.true.esc.$(L2): %.factors.$(L2)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=2 < $< > $@
+
+%.factor-2.norm.tok.clean.true.esc.$(L2): %.factors.$(L2)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=3 < $< > $@
+
+%.factor-3.norm.tok.clean.true.esc.$(L2): %.factors.$(L2)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=4 < $< > $@
+
+%.factor-4.norm.tok.clean.true.esc.$(L2): %.factors.$(L2)
+	$(AWK) -f ${top_srcdir}/split-factors.awk --assign FACTOR=5 < $< > $@
+
+# Translation model training
+%.factors-0-0_1.untuned.tm.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) $(FACTOR_0_LM_L2) $(FACTOR_1_LM_L2)
+	if test -d $*.$(L1)-$(L2)-factors-0-0_1 ; then \
+		rm -rf $*.$(L1)-$(L2)-factors-0-0_1 ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-factors-0-0_1 \
+		-corpus $*.factors -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(FACTOR_0_LM_L2).bin:8  \
+		-lm 1:3:`pwd`/$(FACTOR_1_LM_L2).bin:8  \
+		-translation-factors 0-0,1 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-input-factor-max 1 \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.hunpos-factors-0-0_1.untuned.tm.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) $(HUNPOS_FACTOR_0_LM_L2) $(HUNPOS_FACTOR_1_LM_L2)
+	if test -d $*.$(L1)-$(L2)-factors-0-0_1 ; then \
+		rm -rf $*.$(L1)-$(L2)-factors-0-0_1 ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-factors-0-0_1 \
+		-corpus $*.factors -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(HUNPOS_FACTOR_0_LM_L2).bin:8  \
+		-lm 1:3:`pwd`/$(HUNPOS_FACTOR_1_LM_L2).bin:8  \
+		-translation-factors 0-0,1 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-input-factor-max 1 \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.crf-factors-0-0_1.untuned.tm.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) $(CRF_FACTOR_0_LM_L2) $(CRF_FACTOR_1_LM_L2)
+	if test -d $*.$(L1)-$(L2)-factors-0-0_1 ; then \
+		rm -rf $*.$(L1)-$(L2)-factors-0-0_1 ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-factors-0-0_1 \
+		-corpus $*.factors -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(CRF_FACTOR_0_LM_L2).bin:8  \
+		-lm 1:3:`pwd`/$(CRF_FACTOR_1_LM_L2).bin:8  \
+		-translation-factors 0-0,1 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-input-factor-max 1 \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.factors-0-0_4.untuned.tm.$(L1)-$(L2): %.factors.$(L1) %.factors.$(L2) %.factor-0.blm.$(L2) %.factor-4.blm.$(L2)
+	if test -d $*.$(L1)-$(L2)-factors-0-0_4 ; then \
+		rm -rf $*.$(L1)-$(L2)-factors-0-0_4 ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-factors-0-0_4 -corpus $*.factors -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$*.factor-0.blm.$(L2).bin:8  \
+		-lm 4:3:`pwd`/$*.factor-4.blm.$(L2).bin:8  \
+		-translation-factors 0-0,1 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-input-factor-max 1 \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.factors-0_1-0.untuned.tm.$(L2)-$(L1): %.factors.$(L2) %.factors.$(L1) %.factor-0.blm.$(L1)
+	if test -d $*.$(L2)-$(L1)-factors-0_1-0 ; then \
+		rm -rf $*.$(L2)-$(L1)-factors-0_1-0 ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-factors-0_1-0 -corpus $*.factors -f $(L2) -e $(L1) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$*.factor-0.blm.$(L1).bin:8  \
+		-translation-factors 0,1-0 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-input-factor-max 1 \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.factors-0_4-0.untuned.tm.$(L2)-$(L1): %.factors.$(L2) %.factors.$(L1) %.factor-0.blm.$(L1)
+	if test -d $*.$(L2)-$(L1)-factors-0_4-0 ; then \
+		rm -rf $*.$(L2)-$(L1)-factors-0_4-0 ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1)-factors-0_4-0 -corpus $*.factors -f $(L2) -e $(L1) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$*.factor-0.blm.$(L2).bin:8  \
+		-translation-factors 0,4-0 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-input-factor-max 5 \
+		-sort-batch-size 253 -sort-compress gzip \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+# tuning
+%.factors-0-0_1.tuned.tm.$(L1)-$(L2): %.factors-0-0_1.untuned.tm.$(L1)-$(L2) \
+	$(FACTOR_0_LM_L2) $(FACTOR_1_LM_L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
+	cp -v $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
+		$*.$(L1)-$(L2)-factors-0-0_1/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-factors-0-0_1/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-factors-0-0_1/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-factors-0-0_1 \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES) $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L1)-$(L2)-factors-0-0_1/moses.ini $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini
+	touch $@
+
+%.hunpos-factors-0-0_1.tuned.tm.$(L1)-$(L2): %.hunpos-factors-0-0_1.untuned.tm.$(L1)-$(L2) \
+	$(HUNPOS_FACTOR_0_LM_L2) $(HUNPOS_FACTOR_1_LM_L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
+	cp -v $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
+		$*.$(L1)-$(L2)-factors-0-0_1/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-factors-0-0_1/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-factors-0-0_1/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-factors-0-0_1 \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES) $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L1)-$(L2)-factors-0-0_1/moses.ini $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini
+	touch $@
+
+%.crf-factors-0-0_1.tuned.tm.$(L1)-$(L2): %.crf-factors-0-0_1.untuned.tm.$(L1)-$(L2) \
+	$(CRF_FACTOR_0_LM_L2) $(CRF_FACTOR_1_LM_L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
+	cp -v $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
+		$*.$(L1)-$(L2)-factors-0-0_1/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-factors-0-0_1/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-factors-0-0_1/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-factors-0-0_1 \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES) $*.$(L1)-$(L2)-factors-0-0_1/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L1)-$(L2)-factors-0-0_1/moses.ini $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini
+	touch $@
+
+# binarising
+%.factors-0-0_1.tuned-binarised.tm.$(L1)-$(L2): %.factors-0-0_1.tuned.tm.$(L1)-$(L2)
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
+		-in $*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz \
+		-nscores 4 -out $*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
+		 -in $*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz \
+		 -out $*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0
+	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
+		-e "s:$*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz:$*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1:"\
+		-e "s:$*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0:"\
+		< $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini  > $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned-binarised.ini
+	touch $@
+
+%.hunpos-factors-0-0_1.tuned-binarised.tm.$(L1)-$(L2): %.hunpos-factors-0-0_1.tuned.tm.$(L1)-$(L2)
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
+		-in $*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz \
+		-nscores 4 -out $*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
+		 -in $*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz \
+		 -out $*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0
+	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
+		-e "s:$*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz:$*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1:"\
+		-e "s:$*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0:"\
+		< $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini  > $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned-binarised.ini
+	touch $@
+
+%.crf-factors-0-0_1.tuned-binarised.tm.$(L1)-$(L2): %.crf-factors-0-0_1.tuned.tm.$(L1)-$(L2)
+	$(MOSES_PROCESS_PHRASE_TABLE_MIN) $(THREADS_FLAGS) \
+		-in $*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz \
+		-nscores 4 -out $*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1
+	$(MOSES_PROCESS_LEXICAL_TABLE_MIN) $(THREADS_FLAGS) \
+		 -in $*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz \
+		 -out $*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0
+	$(SED) -e 's/PhraseDictionaryMemory/PhraseDictionaryCompact/' \
+		-e "s:$*.$(L1)-$(L2)-factors-0-0_1/model/phrase-table.0-0,1.gz:$*.$(L1)-$(L2)-factors-0-0_1/phrase-table.0-0,1:"\
+		-e "s:$*.$(L1)-$(L2)-factors-0-0_1/model/reordering-table.0-0.wbe-msd-bidirectional-fe.gz:$*.$(L1)-$(L2)-factors-0-0_1/reordering-table.0-0:"\
+		< $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned.ini  > $*.$(L1)-$(L2)-factors-0-0_1/model/moses-tuned-binarised.ini
+	touch $@
+# vim: set ft=automake:

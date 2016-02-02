@@ -36,21 +36,21 @@
 
 # SGML wrapping for others
 %.src.$(L1).sgml: %.$(L1).text
-	$(WRAP_XML) src $(L1) $(L2) $< | grep -v "<seg id[^>]*></seg>" > $@
+	$(WRAP_XML) src $(L1) $(L2) $< | $(SED) -e "s:<seg id\([^>]*\)></seg>:<seg id\1>^__^</seg>:" > $@
 
 %.src.$(L2).sgml: %.$(L2).text
-	$(WRAP_XML) src $(L2) $(L1) $< | grep -v "<seg id[^>]*></seg>" > $@
+	$(WRAP_XML) src $(L2) $(L1) $< | $(SED) -e "s:<seg id\([^>]*\)></seg>:<seg id\1>^__^</seg>:" > $@
 
 %.ref.$(L1).sgml: %.$(L1).text
-	$(WRAP_XML) ref $(L2) $(L1) $< | grep -v "<seg id[^>]*></seg>" > $@
+	$(WRAP_XML) ref $(L2) $(L1) $< | $(SED) -e "s:<seg id\([^>]*\)></seg>:<seg id\1>^__^</seg>:" > $@
 
 %.ref.$(L2).sgml: %.$(L2).text
-	$(WRAP_XML) ref $(L1) $(L2) $< | grep -v "<seg id[^>]*></seg>" > $@
+	$(WRAP_XML) ref $(L1) $(L2) $< | $(SED) -e "s:<seg id\([^>]*\)></seg>:<seg id\1>^__^</seg>:" > $@
 
 %.translated.$(L1).sgml: %.translated.$(L1)
-	$(WRAP_XML) tst $(L2) $(L1) $< | grep -v "<seg id[^>]*></seg>" > $@
+	$(WRAP_XML) tst $(L2) $(L1) $< | $(SED) -e "s:<seg id\([^>]*\)></seg>:<seg id\1>^__^</seg>:" > $@
 
 %.translated.$(L2).sgml: %.translated.$(L2)
-	$(WRAP_XML) tst $(L1) $(L2) $< | grep -v "<seg id[^>]*></seg>" > $@
+	$(WRAP_XML) tst $(L1) $(L2) $< | $(SED) -e "s:<seg id\([^>]*\)></seg>:<seg id\1>^__^</seg>:" > $@
 
 # vim: set ft=automake:

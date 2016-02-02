@@ -24,81 +24,35 @@ if CAN_TER
 %.$(MOSES_BASELINE_INFIX).$(TER_L1_L2): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-# tuned
-%.$(MOSES_TUNED_INFIX).$(TER_L1_L2): %.$(MOSES_TUNED_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_TUNED_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+%.$(MOSES_HIERARCHICAL_INFIX).$(TER_L1_L2): %.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-# Scale
-%.$(MOSES_BASELINE_INFIX)-half.$(TER_L1_L2): %.$(MOSES_BASELINE_INFIX)-half.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_BASELINE_INFIX)-half.$(TRANSLATION_L1_L2).sgml > $@
+%.$(MOSES_TARGETSYNTAX_INFIX).$(TER_L1_L2): %.$(MOSES_TARGETSYNTAX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_TARGETSYNTAX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-%.$(MOSES_BASELINE_INFIX)-quarter.$(TER_L1_L2): %.$(MOSES_BASELINE_INFIX)-quarter.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_BASELINE_INFIX)-quarter.$(TRANSLATION_L1_L2).sgml > $@
+%.$(MOSES_SOURCESYNTAX_INFIX).$(TER_L1_L2): %.$(MOSES_SOURCESYNTAX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_SOURCESYNTAX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-%.$(MOSES_BASELINE_INFIX)-eighth.$(TER_L1_L2): %.$(MOSES_BASELINE_INFIX)-eighth.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_BASELINE_INFIX)-eighth.$(TRANSLATION_L1_L2).sgml > $@
+%.$(MOSES_TARGETSYNTAX_INFIX)-rightbin.$(TER_L1_L2): %.$(MOSES_TARGETSYNTAX_INFIX)-rightbin.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_TARGETSYNTAX_INFIX)-rightbin.$(TRANSLATION_L1_L2).sgml > $@
 
-%.$(MOSES_BASELINE_INFIX)-sample.$(TER_L1_L2): %.$(MOSES_BASELINE_INFIX)-sample.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_BASELINE_INFIX)-sample.$(TRANSLATION_L1_L2).sgml > $@
+%.$(MOSES_SOURCESYNTAX_INFIX)-rightbin.$(TER_L1_L2): %.$(MOSES_SOURCESYNTAX_INFIX)-rightbin.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_SOURCESYNTAX_INFIX)-rightbin.$(TRANSLATION_L1_L2).sgml > $@
 
 # Morfessor baseline
 %.$(MORFESSOR_BASELINE_INFIX).$(TER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-# markers
-%.$(MORFESSOR_NOMARKERS_INFIX).$(TER_L1_L2): %.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
-%.$(MORFESSOR_PLUS_INFIX).$(TER_L1_L2): %.$(MORFESSOR_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
-%.$(MORFESSOR_SUFFIX_INFIX).$(TER_L1_L2): %.$(MORFESSOR_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
-
-
-# Segment uncommons
-%.$(MORFESSOR_5RARE_INFIX).$(TER_L1_L2): %.$(MORFESSOR_5RARE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_5RARE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
-%.$(MORFESSOR_2RARE_INFIX).$(TER_L1_L2): %.$(MORFESSOR_2RARE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_2RARE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
-# Tuned
-%.$(MORFESSOR_TUNED_INFIX).$(TER_L1_L2): %.$(MORFESSOR_TUNED_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_TUNED_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
-# Scale
-%.$(MORFESSOR_BASELINE_INFIX)-half.$(TER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX)-half.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_BASELINE_INFIX)-half.$(TRANSLATION_L1_L2).sgml > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-quarter.$(TER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX)-quarter.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_BASELINE_INFIX)-quarter.$(TRANSLATION_L1_L2).sgml > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-eighth.$(TER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX)-eighth.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_BASELINE_INFIX)-eighth.$(TRANSLATION_L1_L2).sgml > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-sample.$(TER_L1_L2): %.$(MORFESSOR_BASELINE_INFIX)-sample.$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MORFESSOR_BASELINE_INFIX)-sample.$(TRANSLATION_L1_L2).sgml > $@
-
 # Flatcat baseline
 %.$(FLATCAT_BASELINE_INFIX).$(TER_L1_L2): %.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-# Segment uncommons
-%.$(FLATCAT_5RARE_INFIX).$(TER_L1_L2): %.$(FLATCAT_5RARE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(FLATCAT_5RARE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
-%.$(FLATCAT_2RARE_INFIX).$(TER_L1_L2): %.$(FLATCAT_2_RARE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(FLATCAT_2RARE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
-# Tuned
-%.$(FLATCAT_TUNED_INFIX).$(TER_L1_L2): %.$(FLATCAT_TUNED_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(FLATCAT_TUNED_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-
 # Ape
 %.$(APERTIUM_BASELINE_INFIX).$(TER_L1_L2): %.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+
+%.$(APERTIUM_SEG_INFIX).$(TER_L1_L2): %.$(APERTIUM_SEG_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(APERTIUM_SEG_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 # HFST Baseline {{{
 %.$(HFST_COMPOUNDS_INFIX).$(TER_L1_L2): %.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
@@ -107,23 +61,16 @@ if CAN_TER
 %.$(HFST_MORPHS_INFIX).$(TER_L1_L2): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-# markers
-%.$(HFSTCOMP_NOMARKERS_INFIX).$(TER_L1_L2): %.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+%.$(MOSES_FACTORED_INFIX).$(TER_L1_L2): %.$(MOSES_FACTORED_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_FACTORED_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-%.$(HFSTCOMP_PLUS_INFIX).$(TER_L1_L2): %.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+%.$(MOSES_HUNPOSED_INFIX).$(TER_L1_L2): %.$(MOSES_HUNPOSED_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_HUNPOSED_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-%.$(HFSTCOMP_SUFFIX_INFIX).$(TER_L1_L2): %.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
+%.$(MOSES_CRFED_INFIX).$(TER_L1_L2): %.$(MOSES_CRFED_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(MOSES_CRFED_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-%.$(HFSTMORPH_NOMARKERS_INFIX).$(TER_L1_L2): %.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
-%.$(HFSTMORPH_PLUS_INFIX).$(TER_L1_L2): %.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
-%.$(HFSTMORPH_SUFFIX_INFIX).$(TER_L1_L2): %.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml %.ref.$(L2).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L2).sgml -h $*.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L1_L2).sgml > $@
 
 #  L2 to L1 {{{
 #
@@ -131,79 +78,35 @@ if CAN_TER
 %.$(MOSES_BASELINE_INFIX).$(TER_L2_L1): %.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-# Tuned
-%.$(MOSES_TUNED_INFIX).$(TER_L2_L1): %.$(MOSES_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+%.$(MOSES_HIERARCHICAL_INFIX).$(TER_L2_L1): %.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_HIERARCHICAL_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-# Scale
-%.$(MOSES_BASELINE_INFIX)-half.$(TER_L2_L1): %.$(MOSES_BASELINE_INFIX)-half.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_BASELINE_INFIX)-half.$(TRANSLATION_L2_L1).sgml > $@
+%.$(MOSES_SOURCESYNTAX_INFIX).$(TER_L2_L1): %.$(MOSES_SOURCESYNTAX_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_SOURCESYNTAX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-%.$(MOSES_BASELINE_INFIX)-quarter.$(TER_L2_L1): %.$(MOSES_BASELINE_INFIX)-quarter.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_BASELINE_INFIX)-quarter.$(TRANSLATION_L2_L1).sgml > $@
+%.$(MOSES_TARGETSYNTAX_INFIX).$(TER_L2_L1): %.$(MOSES_TARGETSYNTAX_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_TARGETSYNTAX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-%.$(MOSES_BASELINE_INFIX)-eighth.$(TER_L2_L1): %.$(MOSES_BASELINE_INFIX)-eighth.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_BASELINE_INFIX)-eighth.$(TRANSLATION_L2_L1).sgml > $@
+%.$(MOSES_SOURCESYNTAX_INFIX)-rightbin.$(TER_L2_L1): %.$(MOSES_SOURCESYNTAX_INFIX)-rightbin.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_SOURCESYNTAX_INFIX)-rightbin.$(TRANSLATION_L2_L1).sgml > $@
 
-%.$(MOSES_BASELINE_INFIX)-sample.$(TER_L2_L1): %.$(MOSES_BASELINE_INFIX)-sample.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_BASELINE_INFIX)-sample.$(TRANSLATION_L2_L1).sgml > $@
+%.$(MOSES_TARGETSYNTAX_INFIX)-rightbin.$(TER_L2_L1): %.$(MOSES_TARGETSYNTAX_INFIX)-rightbin.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_TARGETSYNTAX_INFIX)-rightbin.$(TRANSLATION_L2_L1).sgml > $@
 
 # Morfessor Baseline {{{
 %.$(MORFESSOR_BASELINE_INFIX).$(TER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-# marekrs
-%.$(MORFESSOR_NOMARKERS_INFIX).$(TER_L2_L1): %.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(MORFESSOR_PLUS_INFIX).$(TER_L2_L1): %.$(MORFESSOR_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(MORFESSOR_SUFFIX_INFIX).$(TER_L2_L1): %.$(MORFESSOR_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-# Tuned
-%.$(MORFESSOR_TUNED_INFIX).$(TER_L2_L1): %.$(MORFESSOR_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-# Scale
-%.$(MORFESSOR_BASELINE_INFIX)-half.$(TER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX)-half.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_BASELINE_INFIX)-half.$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-quarter.$(TER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX)-quarter.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_BASELINE_INFIX)-quarter.$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-eighth.$(TER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX)-eighth.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_BASELINE_INFIX)-eighth.$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(MORFESSOR_BASELINE_INFIX)-sample.$(TER_L2_L1): %.$(MORFESSOR_BASELINE_INFIX)-sample.$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_BASELINE_INFIX)-sample.$(TRANSLATION_L2_L1).sgml > $@
-
-# Segment uncommons
-%.$(MORFESSOR_5RARE_INFIX).$(TER_L2_L1): %.$(MORFESSOR_5RARE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_5RARE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(MORFESSOR_2RARE_INFIX).$(TER_L2_L1): %.$(MORFESSOR_2_RARE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MORFESSOR_2RARE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
 # Flatcat {{{
 %.$(FLATCAT_BASELINE_INFIX).$(TER_L2_L1): %.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(FLATCAT_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-# Tuned
-%.$(FLATCAT_TUNED_INFIX).$(TER_L2_L1): %.$(FLATCAT_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(FLATCAT_TUNED_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-# Uncommons
-%.$(FLATCAT_5RARE_INFIX).$(TER_L2_L1): %.$(FLATCAT_5RARE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(FLATCAT_5RARE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(FLATCAT_2RARE_INFIX).$(TER_L2_L1): %.$(FLATCAT_2RARE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(FLATCAT_2RARE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
 # Apertium baseline
 %.$(APERTIUM_BASELINE_INFIX).$(TER_L2_L1): %.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(APERTIUM_BASELINE_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+
+%.$(APERTIUM_SEG_INFIX).$(TER_L2_L1): %.$(APERTIUM_SEG_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(APERTIUM_SEG_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
 # HFST Baseline
 %.$(HFST_COMPOUNDS_INFIX).$(TER_L2_L1): %.$(HFST_COMPOUNDS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
@@ -212,24 +115,9 @@ if CAN_TER
 %.$(HFST_MORPHS_INFIX).$(TER_L2_L1): %.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
 	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFST_MORPHS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-# markers
-%.$(HFSTCOMP_NOMARKERS_INFIX).$(TER_L2_L1): %.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTCOMP_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
+%.$(MOSES_FACTORED_INFIX).$(TER_L2_L1): %.$(MOSES_FACTORED_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
+	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(MOSES_FACTORED_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 
-%.$(HFSTCOMP_PLUS_INFIX).$(TER_L2_L1): %.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTCOMP_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(HFSTCOMP_SUFFIX_INFIX).$(TER_L2_L1): %.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTCOMP_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(HFSTMORPH_NOMARKERS_INFIX).$(TER_L2_L1): %.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTMORPH_NOMARKERS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(HFSTMORPH_PLUS_INFIX).$(TER_L2_L1): %.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTMORPH_PLUS_INFIX).$(TRANSLATION_L2_L1).sgml > $@
-
-%.$(HFSTMORPH_SUFFIX_INFIX).$(TER_L2_L1): %.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml %.ref.$(L1).sgml
-	$(JAVA) -jar $(TERJAR) -r $*.ref.$(L1).sgml -h $*.$(HFSTMORPH_SUFFIX_INFIX).$(TRANSLATION_L2_L1).sgml > $@
 endif
 
 # vim: set ft=automake:

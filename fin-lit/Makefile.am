@@ -23,6 +23,7 @@ APERTIUM_TEST_PREFIX=story
 # Moses baseline as with the wiki page but without europarl
 MOSES_BASELINE_PREFIX=$(BASELINE_CORPUS).train
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
+include $(top_srcdir)/am-shared/settings-baseline-evals.am
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 include $(top_srcdir)/am-shared/settings-hfst-baseline.am
 #include $(top_srcdir)/am-shared/settings-apertium-baseline.am
@@ -142,7 +143,7 @@ include $(top_srcdir)/am-shared/preprocess-europarl.am
 include $(top_srcdir)/am-shared/preprocess-split.am
 
 
-include $(top_srcdir)/am-shared/train-language-models.am
+#include $(top_srcdir)/am-shared/train-language-models.am
 include $(top_srcdir)/am-shared/train-moses-baseline.am
 include $(top_srcdir)/am-shared/train-hfst.am
 

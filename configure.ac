@@ -1,4 +1,4 @@
-## Process this file with autoconf to produce configure scripts
+#/ Process this file with autoconf to produce configure scripts
 
 ## Copyright (c) 2014 Dublin City University / CNGL
 ## Authored by: Tommi A Pirinen <tommi.pirinen@computing.dcu.ie>
@@ -53,13 +53,19 @@ AC_ARG_ENABLE([parallel],
               [enable_parallel=no])
 AC_ARG_WITH([cores],
 	    [AS_HELP_STRING([--with-cores],
-	    		    [number of cores or threads per make job if parallel @<:@default=8@:>@])],
+	    		    [number of cores with whatevers support --cores @<:@default=4@:>@])],
 	    [with_cores=$withval],
-	    [with_cores=8])
+	    [with_cores=4])
+AC_ARG_WITH([threads],
+	    [AS_HELP_STRING([--with-threads],
+	    		    [number of threads for most threaded tools @<:@default=12@:>@])],
+	    [with_threads=$withval],
+	    [with_threads=12])
 AS_IF([test x$enable_parallel != xno], 
-      [AC_SUBST([PARALLEL_FLAGS], ["-parallel -cores $with_cores -sort-parallel $with_cores"])
-       AC_SUBST([PROCESS_PHRASE_TABLE_FLAGS], ["-threads $with_cores"])
-       AC_SUBST([TOKENIZER_FLAGS], ["-threads $with_cores"])])
+      [AC_SUBST([PARALLEL_FLAGS], ["-parallel"])
+       AC_SUBST([SORT_FLAGS], ["-sort-parallel $with_threads -sort-batch-size 253 -sort-compress gzip"])
+       AC_SUBST([CORES_FLAGS], ["-cores $with_cores"])
+       AC_SUBST([THREADS_FLAGS], ["-threads $with_threads"])])
 AC_ARG_ENABLE([secondary],
               [AS_HELP_STRING([--enable-secondary],
                               [use SECONDARY directive in Makefile (retain intermediate results) @<:@default=no@:>@])],
@@ -78,6 +84,11 @@ AC_ARG_WITH([slurm-mail],
             [with_slurm_mail=no])
 AC_SUBST([SLURM_EMAIL], [$with_slurm_mail])
 
+AC_ARG_WITH([berkeley-path],
+            [AS_HELP_STRING([--with-berkeley-path],
+                            [path to BerkeleyParser-1.7.jar @<:@default=.@:>@])],
+            [with_berkeley_path=$withval],
+            [with_berkeley_path=.])
 AC_ARG_WITH([tercom-path],
             [AS_HELP_STRING([--with-tercom-path],
                             [path to tercom.7.25.jar @<:@default=.@:>@])],
@@ -88,6 +99,11 @@ AC_ARG_WITH([meteor-path],
                             [path to meteor.1.5.jar @<:@default=.@:>@])],
             [with_meteor_path=$withval],
             [with_meteor_path=.])
+AC_ARG_WITH([marmot-path],
+            [AS_HELP_STRING([--with-marmot-path],
+                            [path to marmot.jar @<:@default=.@:>@])],
+            [with_marmot_path=$withval],
+            [with_marmot_path=.])
 
 # Programs
 AM_PATH_PYTHON([2.7])
@@ -104,8 +120,14 @@ AM_CONDITIONAL([CAN_LATEX], [test x$XELATEX != xfalse])
 
 # moses
 AC_PATH_PROG([MOSES], [moses], [false], [$PATH$PATH_SEPARATOR$with_moses/bin])
+AC_PATH_PROG([MOSES_CHART], [moses_chart], [false], [$PATH$PATH_SEPARATOR$with_moses/bin])
+AC_PATH_PROG([MOSES_RELAX_PARSE], [relax-parse], [false], [$PATH$PATH_SEPARATOR$with_moses/bin])
 AC_PATH_PROG([MOSES_TRAIN_MODEL], [train-model.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
 AC_PATH_PROG([MOSES_TOKENIZER], [tokenizer.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
+AC_PATH_PROG([MOSES_NORMALIZE_PUNCTUATION], [normalize-punctuation.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
+AC_PATH_PROG([MOSES_ESCAPE_SPECIAL_CHARS], [escape-special-chars.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
+AC_PATH_PROG([MOSES_DEESCAPE_SPECIAL_CHARS], [deescape-special-chars.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
+AC_PATH_PROG([MOSES_REMOVE_NON_PRINTING_CHAR], [remove-non-printing-char.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
 AC_PATH_PROG([MOSES_TRAIN_TRUECASER], [train-truecaser.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/recaser/])
 AC_PATH_PROG([MOSES_TRUECASE], [truecase.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/recaser/])
 AC_PATH_PROG([MOSES_DETOKENIZER], [detokenizer.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/tokenizer/])
@@ -115,9 +137,11 @@ AC_PATH_PROG([MOSES_BUILD_BINARY], [build_binary], [false], [$PATH$PATH_SEPARATO
 AC_PATH_PROG([MOSES_MERT], [mert-moses.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
 AC_PATH_PROG([MOSES_PROCESS_PHRASE_TABLE_MIN], [processPhraseTableMin], [false], [$PATH$PATH_SEPARATOR$with_moses/bin/])
 AC_PATH_PROG([MOSES_PROCESS_LEXICAL_TABLE_MIN], [processLexicalTableMin], [false], [$PATH$PATH_SEPARATOR$with_moses/bin/])
-AC_PATH_PROG([MOSES_FILTER_MODEL_GIVEN_INPUT], [filter-model-given-input.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/training/])
+AC_PATH_PROG([MOSES_FILTER_MODEL_GIVEN_INPUT], [filter-model-given-input.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
+AC_PATH_PROG([MOSES_FILTER_MODEL_GIVEN_INPUT_HIER], [filter-model-given-input-hier.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/])
 AC_PATH_PROG([MOSES_OOV], [oov.pl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/analysis/])
 AC_PATH_PROG([MOSES_MULTI_BLEU], [multi-bleu.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/generic/])
+AC_PATH_PROG([MOSES_BERKELEY2XML_PTB], [berkeleyparsed2mosesxml_PTB.perl], [false], [$PATH$PATH_SEPARATOR$with_moses/scripts/training/wrappers/])
 
 AS_IF([test x$MOSES = xfalse], [AC_MSG_ERROR([moses not found in $PATH$PATH_SEPARATOR:$with_moses, try --with-moses=PATH_TO_MOSES with downloaded mosesdecoder git src dir])])
 
@@ -134,6 +158,10 @@ AC_PATH_PROG([IRSTLM_COMPILE_LM], [compile-lm], [false], [$PATH$PATH_SEPARATOR$w
 AS_IF([test x$IRSTLM_COMPILE_LM = xfalse], [AC_MSG_ERROR([irstlm not found im $PATH$PATH_SEPARATOR$with_irstlm, try --with-irstlm=IRSTLM_PATH with path irstlm tells it installs to at the end of configure])])
 AC_SUBST([IRSTLM_DIR], [$with_irstlm])
 
+# KenLM
+AC_PATH_PROG([LMPLZ], [lmplz], [false])
+
+
 # Argh giza tools
 AC_PATH_PROG([MGIZA], [mgiza], [false], [$PATH$PATH_SEPARATOR$with_giza_tools/])
 AC_PATH_PROG([GIZAPP], [GIZA++], [false], [$PATH$PATH_SEPARATOR$with_giza_tools/])
@@ -143,7 +171,7 @@ AC_PATH_PROG([MGIZA_SNT2COOC], [snt2cooc.pl], [false], [$PATH$PATH_SEPARATOR$wit
 AC_PATH_PROG([MGIZA_SNT2COOCRMP], [snt2coocrmp], [false], [$PATH$PATH_SEPARATOR$with_giza_tools/])
 AS_IF([test -z $with_giza_tools], [AC_MSG_ERROR([giza tools must be copied to a directory and specified --with-giza-tools=DIR])])
 AC_SUBST([GIZA_TOOLDIR], [$with_giza_tools])
-AS_IF([test x$MGIZA != xfalse], [AC_SUBST([MGIZA_FLAGS], ["-mgiza -mgiza-cpus 8"])])
+AS_IF([test x$MGIZA != xfalse], [AC_SUBST([MGIZA_FLAGS], ["-mgiza -mgiza-cpus $with_threads"])])
 AS_IF([test x$MGIZA_SNT2COOC != xfalse], [AC_SUBST([SNT2COOC_FLAG], ["-snt2cooc snt2cooc.pl"])])
 
 # morfessor
@@ -155,6 +183,25 @@ AC_PATH_PROG([MORFESSOR_FLATCAT_TRAIN], [flatcat-train], [false])
 AC_PATH_PROG([MORFESSOR_FLATCAT_SEGMENT], [flatcat-segment], [false])
 AM_CONDITIONAL([CAN_MORFESS], [test x$MORFESSOR != xfalse])
 AM_CONDITIONAL([CAN_FLATCAT], [test x$MORFESSOR_FLATCAT != xfalse])
+
+# Berkeley
+AC_CHECK_FILE([$with_berkeley_path/BerkeleyParser-1.7.jar],
+              [AC_SUBST([BERKELEYPARSERJAR], [$with_berkeley_path/BerkeleyParser-1.7.jar],
+                        [AC_MSG_WARN([point --with-berkeley-path to dir of berkeley parser for berkeley parsing])])])
+AM_CONDITIONAL([CAN_BERKELEY], [test x$BERKELEYPARSERJAR != x])
+
+# marmot
+AC_CHECK_FILE([$with_marmot_path/marmot.jar],
+              [AC_SUBST([MARMOTPATH], [$with_marmot_path],
+                        [AC_MSG_WARN([point --with-marmot-path to dir of marmot parser and cp or ln the dated version to undated])])])
+AM_CONDITIONAL([CAN_MARMOT], [test x$MARMOTPATH != x])
+
+# java -cp /home/tpirinen/Koodit/cistern/marmot/marmot-2015-11-25.jar:/home/tpirinen/Koodit/cistern/marmot/lib/mallet.jar:/home/tpirinen/Koodit/cistern/marmot/lib/JSAP-2.1.jar chipmunk.segmenter.cmd.Segment --model-file fin.chipmunk.srl --input-file foo --output-file bar
+# MST parser
+AC_CHECK_FILE([$with_mstparser_path/lib/mstparser-0.5.1.jar],
+              [AC_SUBST([MSTPARSERJAR], [$with_mstparser_path/mstparser.jar],
+                        [AC_MSG_WARN([point --with-mstparser-path to dir of mstparser for mstparsing])])])
+AM_CONDITIONAL([CAN_MSTPARSE], [test x$MSTPARSERJAR != x])
 
 # NIST eval tools
 AC_PATH_PROG([NIST_BLEU13A], [mteval-v13a.pl], [false])
@@ -207,6 +254,9 @@ PKG_CHECK_MODULES([OMORFI], [omorfi],
 AC_PATH_PROG([HFST_LOOKUP], [hfst-lookup], [false])
 AM_CONDITIONAL([CAN_HFST], [test x$HFST_LOOKUP != xfalse])
 
+# HUNPOS
+AC_PATH_PROG([HUNPOS_TAG], [hunpos-tag], [false])
+
 # some oses are broken
 AC_PATH_PROGS_FEATURE_CHECK([SED], [gnused gsed sed],
               [[m4out=`echo aaa | $ac_path_SED 's/a/\n/g' | wc -l`
@@ -244,6 +294,7 @@ cat <<EOF
   * moses: $with_moses_path
     * moses bin: $MOSES
     * train model: $MOSES_TRAIN_MODEL
+    * parallel: $PARALLEL $PARALLEL_FLAGS $THREADS_FLAGS $CORES_FLAGS
   * irstlm: $IRSTLM_DIR
     * build lm: $IRSTLM_BUILD_LM
   * giza: $GIZA_TOOLDIR
