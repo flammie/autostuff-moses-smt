@@ -114,4 +114,11 @@
 %.norm.PTBtok.clean.true.esc.$(L2): %.norm.PTBtok.clean.true.$(L2)
 	$(MOSES_ESCAPE_SPECIAL_CHARS) < $< > $@
 
+# Clean factors
+%.factors.clean.$(L1).$(L1): %.factors.$(L1) %.factors.$(L2)
+	$(MOSES_CLEAN_CORPUS_N) $*.factors $(L1) $(L2) $*.factors.clean.$(L1) 1 80
+
+%.factors.clean.$(L2).$(L2): %.factors.$(L1) %.factors.$(L2)
+	$(MOSES_CLEAN_CORPUS_N) $*.factors $(L1) $(L2) $*.factors.clean.$(L2) 1 80
+
 # vim: set ft=automake:
