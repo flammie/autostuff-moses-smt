@@ -19,7 +19,7 @@ endif
 # {{{ SETTINGS
 # common prefixes
 BASELINE_CORPUS=europarl-v8.$(L2)-$(L1)
-BASELINE_TEST_PREFIX=europarl-v7.$(L1)-$(L2).test
+BASELINE_TEST_PREFIX=newstest2015.$(L1)$(L2)
 MTMATRIX_TEST_PREFIX=realtest2000
 UNDHR_TEST_PREFIX=undhr
 APERTIUM_TEST_PREFIX=story
@@ -27,8 +27,8 @@ WMT_TEST_PREFIX=newsdev2015-$(L1)$(L2)
 
 
 # Moses baseline as with the wiki page but without europarl
-MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).train
-MOSES_BASELINE_TUNE=$(BASELINE_CORPUS).dev
+MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS)
+MOSES_BASELINE_TUNE=newsdev2015-$(L1)$(L2)
 include $(top_srcdir)/am-shared/settings-moses-baseline.am
 
 # XXX: there's a dep between baseline evals and morfessor...
@@ -36,10 +36,22 @@ include $(top_srcdir)/am-shared/settings-baseline-evals.am
 
 # Morfessor baseline from full europarl 
 MORFESSOR_BASELINE_TRAIN=$(BASELINE_CORPUS)
+MORFESSOR_TUNE=$(MOSES_BASELINE_TUNE).morfessor.1best
 MORFESSOR_LM_L2=$(MORFESSOR_BASELINE_TRAIN).morfessor.1best.blm.$(L2)
 
+FLATCAT_FLAGS_L2=--perplexity-threshold 200
+FLATCAT_BASELINE_TRAIN=$(BASELINE_CORPUS)
+FLATCAT_TUNE=$(MOSES_BASELINE_TUNE).flatcat.1best
+FLATCAT_LM_L2=$(FLATCAT_BASELINE_TRAIN).flatcat.1best.blm.$(L2)
+
 FACTOR_0_LM_L2=$(BASELINE_CORPUS).blm.$(L2)
-FACTOR_1_LM_L2=$(BASELINE_CORPUS).chipmunk.factor-1.blm.$(L2)
+FACTOR_1_LM_L2=$(BASELINE_CORPUS).norm.tok.clean.chipmunk.factor-1.blm.$(L2)
+
+LABELSEGS_FACTOR_0_LM_L2=$(BASELINE_CORPUS).norm.tok.clean.omorfi-segments-labels.factor-0.blm.$(L2)
+LABELSEGS_FACTOR_1_LM_L2=$(BASELINE_CORPUS).norm.tok.clean.omorfi-segments-labels.factor-1.blm.$(L2)
+
+MOSES_LABELSEGS_TUNE=$(MOSES_BASELINE_TUNE).omorfi-labels-segments
+MOSES_CHIPMUNK_TUNE=$(MOSES_BASELINE_TUNE).norm.tok.clean.chipmunk.factor-0
 
 include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 
@@ -241,6 +253,7 @@ include $(top_srcdir)/am-shared/train-truecaser.am
 include $(top_srcdir)/am-shared/train-moses-baseline.am
 include $(top_srcdir)/am-shared/train-moses-morfessor.am
 include $(top_srcdir)/am-shared/train-moses-factors.am
+include $(top_srcdir)/am-shared/train-moses-labelsegs-factors.am
 include $(top_srcdir)/am-shared/train-hfst.am
 
 include $(top_srcdir)/am-shared/train-truecaser.am
