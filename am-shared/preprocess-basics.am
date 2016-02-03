@@ -34,10 +34,10 @@
 
 # Tokenising
 %.norm.tok.$(L1): %.norm.$(L1)
-	$(MOSES_TOKENIZER) $(THREADS_FLAGS) -l $(L1) < $< > $@
+	$(MOSES_TOKENIZER) $(THREADS_FLAGS) -l $(L1) -no-escape < $< > $@
 
 %.norm.tok.$(L2): %.norm.$(L2)
-	$(MOSES_TOKENIZER) $(THREADS_FLAGS) -l $(L2) < $< > $@
+	$(MOSES_TOKENIZER) $(THREADS_FLAGS) -l $(L2) -no-escape < $< > $@
 
 
 # Cleaning
