@@ -20,32 +20,30 @@
 # L2 is language code for morphologically complex language
 
 # Translation model training
-%.untuned.tm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L2)
+%.untuned.tm.$(L1)-$(L2): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(MOSES_BASELINE_L2)
 	if test -d $*.$(L1)-$(L2) ; then \
 		rm -rf $*.$(L1)-$(L2) ;\
 	fi
 	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2) \
 		-corpus $*.norm.tok.clean.true.esc -f $(L1) -e $(L2) \
 		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
-		-lm 0:3:`pwd`/$(BASELINE_LM_L2).bin:8  $(MGIZA_FLAGS) \
+		-lm 0:3:`pwd`/$(MOSES_BASELINE_L2).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
-		$(THREADS_FLAGS) \
 		$(CORES_FLAGS) \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
 	touch $@
 
-%.untuned.tm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(BASELINE_LM_L1)
+%.untuned.tm.$(L2)-$(L1): %.norm.tok.clean.true.esc.$(L1) %.norm.tok.clean.true.esc.$(L2) $(MOSES_BASELINE_L1)
 	if test -d $*.$(L2)-$(L1) ; then \
 		rm -rf $*.$(L2)-$(L1) ;\
 	fi
 	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L2)-$(L1) \
 		-corpus $*.norm.tok.clean.true.esc -f $(L2) -e $(L1) \
 		-alignment grow-diag-final-and -reordering msd-bidirectional-fe \
-		-lm 0:3:`pwd`/$(BASELINE_LM_L1).bin:8  $(MGIZA_FLAGS) \
+		-lm 0:3:`pwd`/$(MOSES_BASELINE_L1).bin:8  $(MGIZA_FLAGS) \
 		$(PARALLEL_FLAGS) \
 		$(SORT_FLAGS) \
-		$(THREADS_FLAGS) \
 		$(CORES_FLAGS) \
 		-sort-batch-size 253 -sort-compress gzip \
 		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
@@ -82,7 +80,7 @@
 
 # Tuning
 # baseline
-%.tuned.tm.$(L1)-$(L2):  %.binarised-untuned.tm.$(L1)-$(L2) $(BASELINE_LM_L2) \
+%.tuned.tm.$(L1)-$(L2):  %.binarised-untuned.tm.$(L1)-$(L2) $(MOSES_BASELINE_L2) \
 	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
 	cp -v $*.$(L1)-$(L2)/model/moses-binarised.ini \
@@ -99,7 +97,7 @@
 	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
 	touch $@
 
-%.tuned.tm.$(L2)-$(L1): %.binarised-untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1) \
+%.tuned.tm.$(L2)-$(L1): %.binarised-untuned.tm.$(L2)-$(L1) $(MOSES_BASELINE_L1) \
 	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
 	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2)
 	cp -v $*.$(L2)-$(L1)/model/moses-binarised.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
@@ -116,7 +114,7 @@
 	touch $@
 
 # specific pre-processed
-%.tuned-same.tm.$(L1)-$(L2): %.tune.clean.$(L1) %.tune.clean.$(L2) %.binarised-untuned.tm.$(L1)-$(L2) $(BASELINE_LM_L2)
+%.tuned-same.tm.$(L1)-$(L2): %.tune.clean.$(L1) %.tune.clean.$(L2) %.binarised-untuned.tm.$(L1)-$(L2) $(MOSES_BASELINE_L2)
 	cp -v $*.$(L1)-$(L2)/model/moses-binarised.ini $*.$(L1)-$(L2)/model/moses-untuned.ini
 	if test -d $*.$(L1)-$(L2)/filtered/ ; then \
 		rm -vrf $*.$(L1)-$(L2)/filtered/ ; \
@@ -129,7 +127,7 @@
 	cp -v $*.$(L1)-$(L2)/moses.ini $*.$(L1)-$(L2)/model/moses-tuned.ini
 	touch $@
 
-%.tuned-same.tm.$(L2)-$(L1): %.tune.clean.$(L1) %.tune.clean.$(L2) %.binarised-untuned.tm.$(L2)-$(L1) $(BASELINE_LM_L1)
+%.tuned-same.tm.$(L2)-$(L1): %.tune.clean.$(L1) %.tune.clean.$(L2) %.binarised-untuned.tm.$(L2)-$(L1) $(MOSES_BASELINE_L1)
 	cp -v $*.$(L2)-$(L1)/model/moses-binarised.ini $*.$(L2)-$(L1)/model/moses-untuned.ini
 	if test -d $*.$(L2)-$(L1)/filtered/ ; then \
 		rm -vrf $*.$(L2)-$(L1)/filtered/ ; \
