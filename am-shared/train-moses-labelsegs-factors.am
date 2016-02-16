@@ -1,0 +1,104 @@
+## Include this file to train translation models from text corpora and language
+## models
+
+## Copyright (c) 2014 Dublin City University / CNGL
+
+## This program is free software: you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation, either version 3 of the License, or
+## (at your option) any later version.
+
+## This program is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+
+## You should have received a copy of the GNU General Public License
+## along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+# L1 is language code for morphologically simpler language
+# L2 is language code for morphologically complex language
+
+
+
+# Translation model training
+%.labelsegs-factors-0-0_1.untuned.tm.$(L1)-$(L2): %.factors.clean.$(L1) %.factors.clean.$(L2) $(LABELSEGS_FACTOR_0_LM_L2) $(LABELSEGS_FACTOR_1_LM_L2)
+	$(top_srcdir)/assert-linecount.bash $*.factors.clean.$(L1) $*.factors.clean.$(L2)
+	$(AWK) -f $(top_srcdir)/verify-factors.awk --assign FACTORS=2 $*.factors.clean.$(L2)
+	if test -d $*.$(L1)-$(L2)-labelsegs-factors-0-0_1 ; then \
+		rm -rf $*.$(L1)-$(L2)-labelsegs-factors-0-0_1 ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-labelsegs-factors-0-0_1 \
+		-corpus $*.factors.clean -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(LABELSEGS_FACTOR_0_LM_L2).bin:8  \
+		-lm 1:3:`pwd`/$(LABELSEGS_FACTOR_1_LM_L2).bin:8  \
+		-translation-factors 0-0,1 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-input-factor-max 1 \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+%.labelsegs-factors-0-0.untuned.tm.$(L1)-$(L2): %.factors.clean.$(L1) %.factors.clean.$(L2) $(LABELSEGS_FACTOR_0_LM_L2)
+	$(top_srcdir)/assert-linecount.bash $*.factors.clean.$(L1) $*.factors.clean.$(L2)
+	if test -d $*.$(L1)-$(L2)-labelsegs-factors-0-0 ; then \
+		rm -rf $*.$(L1)-$(L2)-labelsegs-factors-0-0 ;\
+	fi
+	$(MOSES_TRAIN_MODEL) -root-dir $*.$(L1)-$(L2)-labelsegs-factors-0-0 \
+		-corpus $*.factors.clean -f $(L1) -e $(L2) \
+		-alignment grow-diag-final-and \
+		-reordering msd-bidirectional-fe,hier-mslr-bidirectional-fe,phrase-msd-bidirectional-fe \
+		-lm 0:3:`pwd`/$(LABELSEGS_FACTOR_0_LM_L2).bin:8  \
+		-translation-factors 0-0 \
+		$(MGIZA_FLAGS) \
+		$(PARALLEL_FLAGS) \
+		$(SORT_FLAGS) \
+		$(CORES_FLAGS) \
+		-input-factor-max 1 \
+		-external-bin-dir $(GIZA_TOOLDIR) $(SNT2COOC_FLAG) 
+	touch $@
+
+# tuning
+%.labelsegs-factors-0-0_1.tuned.tm.$(L1)-$(L2): %.labelsegs-factors-0-0_1.untuned.tm.$(L1)-$(L2) \
+	$(LABELSEGS_FACTOR_0_LM_L2) $(LABELSEGS_FACTOR_1_LM_L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_LABELSEGS_TUNE).norm.tok.clean.true.esc.$(L2)
+	$(top_srcdir)/assert-linecount.bash $(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) $(MOSES_LABELSEGS_TUNE).norm.tok.clean.true.esc.$(L2)
+	cp -v $*.$(L1)-$(L2)-labelsegs-factors-0-0_1/model/moses.ini \
+		$*.$(L1)-$(L2)-labelsegs-factors-0-0_1/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-labelsegs-factors-0-0_1/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-labelsegs-factors-0-0_1/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-labelsegs-factors-0-0_1 \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_LABELSEGS_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES) $*.$(L1)-$(L2)-labelsegs-factors-0-0_1/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L1)-$(L2)-labelsegs-factors-0-0_1/moses.ini $*.$(L1)-$(L2)-labelsegs-factors-0-0_1/model/moses-tuned.ini
+	touch $@
+
+%.labelsegs-factors-0-0.tuned.tm.$(L1)-$(L2): %.labelsegs-factors-0-0.untuned.tm.$(L1)-$(L2) \
+	$(LABELSEGS_FACTOR_0_LM_L2) \
+	$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+	$(MOSES_LABELSEGS_TUNE).norm.tok.clean.true.esc.$(L2)
+	$(top_srcdir)/assert-linecount.bash $(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) $(MOSES_LABELSEGS_TUNE).norm.tok.clean.true.esc.$(L2)
+	cp -v $*.$(L1)-$(L2)-labelsegs-factors-0-0/model/moses.ini \
+		$*.$(L1)-$(L2)-labelsegs-factors-0-0/model/moses-untuned.ini
+	if test -d $*.$(L1)-$(L2)-labelsegs-factors-0-0/filtered/ ; then \
+		rm -vrf $*.$(L1)-$(L2)-labelsegs-factors-0-0/filtered/ ; \
+	fi
+	$(MOSES_MERT) --working-dir `pwd`/$*.$(L1)-$(L2)-labelsegs-factors-0-0 \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L1) \
+		$(MOSES_BASELINE_TUNE).norm.tok.clean.true.esc.$(L2) \
+		$(MOSES) $*.$(L1)-$(L2)-labelsegs-factors-0-0/model/moses.ini \
+		--mertdir `dirname $(MOSES)` \
+		$(THREADS_FLAGS)
+	cp -v $*.$(L1)-$(L2)-labelsegs-factors-0-0/moses.ini $*.$(L1)-$(L2)-labelsegs-factors-0-0/model/moses-tuned.ini
+	touch $@
+
+# vim: set ft=automake:
