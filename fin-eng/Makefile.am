@@ -27,9 +27,13 @@ WMT_TEST_PREFIX=newsdev2015-$(L1)$(L2)
 
 
 # Moses baseline as with the wiki page but without europarl
-MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS).train
-MOSES_BASELINE_TUNE=$(BASELINE_CORPUS).dev
-include $(top_srcdir)/am-shared/settings-moses-baseline.am
+MOSES_BASELINE_TRAIN=$(BASELINE_CORPUS)
+MOSES_BASELINE_TUNE=newsdev2015
+MOSES_BASELINE_L2=europarl-v8.news.2014.commoncrawl.blm.$(L2)
+MOSES_BASELINE_L1_L2=europarl-v8.fi-en.tuned-binarised.tm.en-fi
+MOSES_BASELINE_L1_L2_DIR=europarl-v8.fi-en
+
+#MOSES_BASELINE_
 
 # XXX: there's a dep between baseline evals and morfessor...
 include $(top_srcdir)/am-shared/settings-baseline-evals.am
@@ -41,10 +45,10 @@ MORFESSOR_LM_L2=$(MORFESSOR_BASELINE_TRAIN).morfessor.1best.blm.$(L2)
 FACTOR_0_LM_L2=$(BASELINE_CORPUS).blm.$(L2)
 FACTOR_1_LM_L2=$(BASELINE_CORPUS).chipmunk.factor-1.blm.$(L2)
 
-include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
+#include $(top_srcdir)/am-shared/settings-morfessor-baseline.am
 
-include $(top_srcdir)/am-shared/settings-hfst-baseline.am
-include $(top_srcdir)/am-shared/settings-apertium-baseline.am
+#include $(top_srcdir)/am-shared/settings-hfst-baseline.am
+#include $(top_srcdir)/am-shared/settings-apertium-baseline.am
 
 include $(top_srcdir)/am-shared/check-oovs.am
 
@@ -270,6 +274,7 @@ segments: $(SEGMENTS)
 include $(top_srcdir)/am-shared/preprocess-morfessor-segmenting.am
 include $(top_srcdir)/am-shared/preprocess-hfst-segmenting.am
 include $(top_srcdir)/am-shared/preprocess-chipmunk-segmenting.am
+include $(top_srcdir)/am-shared/preprocess-omorfi-segmenting.am
 
 # }}}
 # {{{TRANSLATEing
