@@ -1,0 +1,32 @@
+## Include to automake project to use HFST segments for translations.
+
+# Omorfi segments
+if CAN_OMORFI
+%.norm.tok.omorfi-segments.1best.$(L2): %.norm.tok.$(L2)
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+
+%.norm.tok.omorfi-compounds.1best.$(L2): %.norm.tok.$(L2)
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+
+%.norm.tok.omorfi-morphs.1best.$(L2): %.norm.tok.$(L2)
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+
+%.norm.tok.omorfi-labelsegments.1best.factors.$(L2): %.norm.tok.$(L2)
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O moses-factors -i $< -o $@
+
+%.norm.tok.clean.omorfi-segments.1best.$(L2): %.norm.tok.clean.$(L2)
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+
+%.norm.tok.clean.omorfi-compounds.1best.$(L2): %.norm.tok.clean.$(L2)
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+
+%.norm.tok.clean.omorfi-morphs.1best.$(L2): %.norm.tok.clean.$(L2)
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+
+%.norm.tok.clean.omorfi-labelsegments.1best.factors.$(L2): %.norm.tok.clean.$(L2)
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O moses-factors -i $< -o $@
+
+endif
+
+
+# vim: set ft=automake:

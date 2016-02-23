@@ -104,6 +104,11 @@ AC_ARG_WITH([marmot-path],
                             [path to marmot.jar @<:@default=.@:>@])],
             [with_marmot_path=$withval],
             [with_marmot_path=.])
+AC_ARG_WITH([omorfi-prefix],
+            [AS_HELP_STRING([--with-omorfi-prefix],
+                            [path to omorfi installation @<:@default=/usr/local@:>@])],
+            [with_omorfi_path=$withval],
+            [with_omorfi_path=.])
 
 # Programs
 AM_PATH_PYTHON([2.7])
@@ -183,6 +188,13 @@ AC_PATH_PROG([MORFESSOR_FLATCAT_TRAIN], [flatcat-train], [false])
 AC_PATH_PROG([MORFESSOR_FLATCAT_SEGMENT], [flatcat-segment], [false])
 AM_CONDITIONAL([CAN_MORFESS], [test x$MORFESSOR != xfalse])
 AM_CONDITIONAL([CAN_FLATCAT], [test x$MORFESSOR_FLATCAT != xfalse])
+
+# omorfi
+AC_PATH_PROG([OMORFI_SEGMENT], [omorfi-segment.py], [false])
+AC_CHECK_FILE([$with_omorfi_prefix/share/omorfi/omorfi.segment.hfst], 
+	      [AC_SUBST([OMORFIDIR], [$with_omorfi_prefix/share/omorfi/],
+		        [AC_MSG_WARN([point --with-omorfi-prefix to installed automata for omorfi segmenting])])])
+AM_CONDITIONAL([CAN_OMORFI], [test x$OMORFI_SEGMENT != xfalse])
 
 # Berkeley
 AC_CHECK_FILE([$with_berkeley_path/BerkeleyParser-1.7.jar],
