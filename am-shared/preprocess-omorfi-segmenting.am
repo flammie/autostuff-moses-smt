@@ -6,10 +6,10 @@ if CAN_OMORFI
 	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
 
 %.norm.tok.omorfi-compounds.1best.$(L2): %.norm.tok.$(L2)
-	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --no-split-morphs --segment-marker '→ ←' -i $< -o $@
 
 %.norm.tok.omorfi-morphs.1best.$(L2): %.norm.tok.$(L2)
-	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --no-split-words --no-split-new-words --segment-marker '→ ←' -i $< -o $@
 
 %.norm.tok.omorfi-labelsegments.1best.factors.$(L2): %.norm.tok.$(L2)
 	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O moses-factors -i $< -o $@
@@ -18,10 +18,10 @@ if CAN_OMORFI
 	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
 
 %.norm.tok.clean.omorfi-compounds.1best.$(L2): %.norm.tok.clean.$(L2)
-	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --no-split-morphs --segment-marker '→ ←' -i $< -o $@
 
 %.norm.tok.clean.omorfi-morphs.1best.$(L2): %.norm.tok.clean.$(L2)
-	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --segment-marker '→ ←' -i $< -o $@
+	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O segments --no-split-words --no-split-new-words --segment-marker '→ ←' -i $< -o $@
 
 %.norm.tok.clean.omorfi-labelsegments.1best.factors.$(L2): %.norm.tok.clean.$(L2)
 	$(OMORFI_SEGMENT) -v -f $(OMORFIDIR) -O moses-factors -i $< -o $@
